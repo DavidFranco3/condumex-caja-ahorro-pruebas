@@ -432,6 +432,7 @@ return (
             eventKey="general"
             title="Estado de cuenta general"
             >
+            <br/>
             {
             razonSocialElegida === "Asociación de Empleados Sector Cables A.C." ?
                 (
