@@ -30,8 +30,6 @@ function Abonos(props) {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [page, setPage] = useState(1);
     const [noTotalAbonos, setNoTotalAbonos] = useState(0);
-
-    const enrutamiento = useHistory();
     
     //Para el registro de Rendimientos
     const eliminaAbonosMasivo = (content) => {
@@ -115,6 +113,7 @@ function Abonos(props) {
         }
     }, [location, page, rowsPerPage]);
 
+console.log(listAbonos)
 
     return (
         <>

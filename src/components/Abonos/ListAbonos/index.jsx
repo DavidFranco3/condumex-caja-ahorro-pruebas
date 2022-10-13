@@ -14,7 +14,7 @@ import NombreSocioSindicalizado from "../../utils/NombresSocios/NombreSocioSindi
 
 function ListAbonos(props) {
     const { listAbonos, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, noTotalAbonos } = props;
-
+    
     // Configura el idioma a español
     moment.locale("es");
 

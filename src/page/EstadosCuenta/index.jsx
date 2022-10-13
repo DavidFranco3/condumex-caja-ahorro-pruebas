@@ -20,9 +20,58 @@ getStatementsBySocio,
         sendEmail,
 } from '../../api/statements';
 import { useLocale } from '../../hooks/useLocale';
+import {listarSociosEmpleados} from "../../api/sociosEmpleados";
+import {listarSocioSindicalizado} from "../../api/sociosSindicalizados";
+import {map} from "lodash";
 
-        function EstadosCuenta({ setRefreshCheckLogin }) {
+        function EstadosCuenta({ setRefreshCheckLogin, location }) {
         const [tab, setTab] = useState('general')
+        
+        // Almacena los datos de los abonos
+    const [listSociosSindicalizados, setListSociosSindicalizados] = useState(null);  
+    
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarSocioSindicalizado().then(response => {
+                const { data } = response;
+                // console.log(data)
+                if(!listSociosSindicalizados && data){
+                        setListSociosSindicalizados(formatModelSocios(data));
+                    } else {
+                        const datosSocios = formatModelSocios(data);
+                        setListSociosSindicalizados(datosSocios)
+                    }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location]);
+    
+    // Almacena los datos de los abonos
+    const [listSociosEmpleados, setListSociosEmpleados] = useState(null);  
+    
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarSociosEmpleados().then(response => {
+                const { data } = response;
+                // console.log(data)
+                if(!listSociosEmpleados && data){
+                        setListSociosEmpleados(formatModelSocios(data));
+                    } else {
+                        const datosSocios = formatModelSocios(data);
+                        setListSociosEmpleados(datosSocios)
+                    }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location]);     
 
                 const [showModal, setShowModal] = useState(false)
                 const [contentModal, setContentModal] = useState(null)
@@ -36,7 +85,7 @@ import { useLocale } from '../../hooks/useLocale';
                 const [loading, setLoading] = useState(false)
 
                 const [razonSocial] = useState(getRazonSocial())
-
+                
                 const [statementsByRazon, setStatementsByRazon] = useState({
         contributions: 0,
                 yields: 0,
@@ -116,8 +165,38 @@ import { useLocale } from '../../hooks/useLocale';
                 }
                 }, [])
                 // Termina cerrado de sesión automatico
+                
+    const [listaFichasEmpleados, setListaFichasEmpleados] = useState([]);
 
-                const loadTotales = async () => {
+    useEffect(() => {
+        
+        let listaFichasTemp = [];
+        map(listSociosEmpleados, (empleado, index) => {
+            const tempFicha = empleado.ficha.split("T");
+            listaFichasTemp.push(tempFicha[0])
+        })
+        let listaFichasEmpleados = listaFichasTemp.filter((item,index)=>{
+            return listaFichasTemp.indexOf(item) === index;
+        })
+        setListaFichasEmpleados(listaFichasEmpleados);
+    }, [listSociosEmpleados]);
+    
+    const [listaFichasSindicalizados, setListaFichasSindicalizados] = useState([]);
+
+    useEffect(() => {
+        
+        let listaFichasTemp = [];
+        map(listSociosSindicalizados, (sindicalizado, index) => {
+            const tempFicha = sindicalizado.ficha.split("T");
+            listaFichasTemp.push(tempFicha[0])
+        })
+        let listaFichasSindicalizados = listaFichasTemp.filter((item,index)=>{
+            return listaFichasTemp.indexOf(item) === index;
+        })
+        setListaFichasSindicalizados(listaFichasSindicalizados);
+    }, [listSociosSindicalizados]);
+
+        const loadTotales = async () => {
         setLoading(true)
 
                 const response = await getStatementsByRazon(razonSocial)
@@ -173,6 +252,44 @@ import { useLocale } from '../../hooks/useLocale';
         }
 
         setLoading(false)
+        }
+        
+        const handleSendEmailMasiveSindicalizados = async () => {
+        setLoading(true)
+        
+        for (let i = 0; i < listaFichasSindicalizados.length; i++) {
+
+                const response = await sendEmail(parseInt(listaFichasSindicalizados[i]))
+                
+        
+                
+        if (response.status === 200) {
+        toast.success('Correo enviado')
+        } else {
+        toast.error('Error al enviar el correo')
+        }
+
+        setLoading(false)
+        }
+        }
+        
+        const handleSendEmailMasiveEmpleados = async () => {
+        setLoading(true)
+        
+        for (let i = 0; i < listaFichasEmpleados.length; i++) {
+
+                const response = await sendEmail(parseInt(listaFichasEmpleados[i]))
+                
+        
+                
+        if (response.status === 200) {
+        toast.success('Correo enviado')
+        } else {
+        toast.error('Error al enviar el correo')
+        }
+
+        setLoading(false)
+        }
         }
 
         const Card = ({ title, value }) => {
@@ -315,6 +432,18 @@ return (
             eventKey="general"
             title="Estado de cuenta general"
             >
+            {
+            razonSocialElegida === "Asociación de Empleados Sector Cables A.C." ?
+                (
+                    <>
+            <Button onClick={handleSendEmailMasiveEmpleados}>Enviar por correo</Button>
+                    </>
+                                                    ) : (
+                    <>
+                    <Button onClick={handleSendEmailMasiveSindicalizados}>Enviar por correo</Button>
+                    </>                                   
+                )
+                                                } 
             {!loading ? (
                 <Suspense fallback={ < Spinner / > }>
                 <div className="p-5 space-x-5">
@@ -624,6 +753,23 @@ return (
 </BasicModal>
 </>
 )
+}
+
+function formatModelSocios(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            id: data._id,
+            ficha: String(data.ficha),
+            nombre: data.nombre,
+            tipo: data.tipo,
+            correo: data.correo ? data.correo : "No especificado",
+            estado: data.estado === "true" ? "Activo" : "Inactivo",
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
 }
 
 export default withRouter(EstadosCuenta);

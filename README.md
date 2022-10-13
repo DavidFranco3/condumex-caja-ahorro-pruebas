@@ -46,11 +46,4 @@ Consulte la sección sobre [implementación](https://facebook.github.io/create-r
 
 ## Autor ✒️
 
-* **José David Ayala Franco** - *Programación* - [David-Franco](https://github.com/DavidFranco3)
-
-<<<<<<< HEAD
-=======
----
-⌨️ con ❤️ por [David-Franco](https://github.com/DavidFranco3) para ISOTECH 😊
-
->>>>>>> 79e4e98 (se carga todo el proyecto)
+- **José David Ayala Franco** - _Programación_ - [David-Franco](https://github.com/DavidFranco3)
