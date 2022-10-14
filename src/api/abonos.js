@@ -3,6 +3,7 @@ import {
   ENDPOINTAbonos,
   ENDPOINTRegistroAbonos,
   ENDPOINTListarAbonos,
+  ENDPOINTListarAbonos2,
   ENDPOINTTotalAbonos,
   ENDPOINTTotalxTipoAbonos,
   ENDPOINTListarPaginandoAbonos,
@@ -13,7 +14,7 @@ import {
   ENDPOINTActualizarAbonos,
   ENDPOINTObtenerAbonosAcumuladosByRazon,
   ENDPOINTEliminarAbonos,
-  ENDPOINTEliminarAbonosMasivo
+  ENDPOINTEliminarAbonosMasivo,
 } from './endpoints'
 import axios from 'axios'
 import { getTokenApi } from './auth'
@@ -57,7 +58,29 @@ export async function listarAbonos(razonSocial, inicio, fin) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTListarAbonos + `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`, config)
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarAbonos +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+// Listar todos los abonos
+export async function listarAbonos2(razonSocial, inicio, fin) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarAbonos2 +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
 }
 
 // Obtener el total de registros de abonos
@@ -207,5 +230,3 @@ export async function eliminaAbonosMasivo(fecha) {
     config
   )
 }
-
-

@@ -4,12 +4,13 @@ import {eliminaAbonosMasivo} from "../../../api/abonos";
 import {toast} from "react-toastify";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
+import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
 
 function EliminaAbonosMasivo(props) {
     
     const [formData, setFormData] = useState(initialFormData());
     
-    const { location, history, setShowModal, setRefreshCheckLogin } = props;
+    const { listaFichas, listaAbonos2, listaFechas, location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
     const cancelarEliminacion = () => {
         setShowModal(false)
@@ -30,6 +31,14 @@ function EliminaAbonosMasivo(props) {
 
         try {
             eliminaAbonosMasivo(formData.fecha).then(response => {
+                
+                
+                for (let i = 0; i < listaFechas.length; i++) {
+            
+            if (formData.fecha == listaFechas[i]) { 
+                    actualizacionDeudaSocio(parseInt(listaFichas[i]), parseFloat(listaAbonos2[i]), "0", "Eliminación abono", formData.fecha);
+        }
+    }
                 
                 const { data } = response;
                 toast.success(data.mensaje)

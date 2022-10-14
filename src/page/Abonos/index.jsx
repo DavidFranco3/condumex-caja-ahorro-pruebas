@@ -9,7 +9,8 @@ import {
     listarPaginacionAbonos,
     listarPaginacionAbonosxTipo,
     totalAbonos,
-    totalxTipoAbonos
+    totalxTipoAbonos,
+    listarAbonos2
 } from "../../api/abonos";
 import ListAbonos from "../../components/Abonos/ListAbonos";
 import BasicModal from "../../components/Modal/BasicModal";
@@ -18,6 +19,7 @@ import CargaMasivaAbonos from '../../components/Abonos/CargaMasivaAbonos'
 import RegistroAbonos from "../../components/Abonos/RegistroAbonos";
 import Lottie from 'react-lottie-player';
 import AnimacionLoading from '../../assets/json/loading.json';
+import {map} from "lodash";
 
 function Abonos(props) {
     const { datos, setRefreshCheckLogin, location, history } = props;
@@ -112,8 +114,67 @@ function Abonos(props) {
             console.log(e)
         }
     }, [location, page, rowsPerPage]);
+    
+    // Almacena los datos de los abonos
+    const [listAbonos2, setListAbonos2] = useState(null);  
+    
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarAbonos2(getRazonSocial()).then(response => {
+                const { data } = response;
+                // console.log(data)
+                if(!listAbonos2 && data){
+                        setListAbonos2(formatModelAbonos2(data));
+                    } else {
+                        const datosAbonos = formatModelAbonos2(data);
+                        setListAbonos2(datosAbonos)
+                    }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location]);
+    
+     const [listaFichas, setListaFichas] = useState([]);
 
-console.log(listAbonos)
+    useEffect(() => {
+        
+        let listaFichasTemp = [];
+        map(listAbonos2, (abono, index) => {
+            const tempFicha = abono.fichaSocio.split("T");
+            listaFichasTemp.push(tempFicha[0])
+        })
+        setListaFichas(listaFichasTemp);
+    }, [listAbonos2]);
+    
+     const [listaAbonos2, setListaAbonos2] = useState([]);
+
+    useEffect(() => {
+        
+        let listaAbonosTemp = [];
+        map(listAbonos2, (abono, index) => {
+            const tempAbono = abono.abono.split("T");
+            listaAbonosTemp.push(tempAbono[0])
+        })
+        setListaAbonos2(listaAbonosTemp);
+    }, [listAbonos2]);
+    
+     const [listaFechas, setListaFechas] = useState([]);
+
+    useEffect(() => {
+        
+        let listaFechasTemp = [];
+        map(listAbonos2, (prestamo, index) => {
+            const tempFecha = prestamo.fechaCreacion.split("T");
+            listaFechasTemp.push(tempFecha[0])
+        })
+        setListaFechas(listaFechasTemp);
+    }, [listAbonos2]);
+    
+    console.log(listaFechas)
 
     return (
         <>
@@ -131,6 +192,9 @@ console.log(listAbonos)
                 onClick={() => {
                   eliminaAbonosMasivo(
                     <EliminaAbonosMasivo
+                      listaFichas={listaFichas}
+                      listaAbonos2={listaAbonos2}
+                      listaFechas={listaFechas}
                       setShowModal={setShowModal}
                       location={location}
                       history={history}
@@ -220,6 +284,22 @@ function formatModelAbonos(data) {
             fichaSocio: parseInt(data.fichaSocio),
             tipo: data.tipo,
             abono: data.abono,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelAbonos2(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            id: data._id,
+            folio: data.folio,
+            fichaSocio: String(data.fichaSocio),
+            tipo: data.tipo,
+            abono: String(data.abono),
             fechaCreacion: data.createdAt,
             fechaActualizacion: data.updatedAt
         });

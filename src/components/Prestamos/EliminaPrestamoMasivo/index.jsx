@@ -1,51 +1,21 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaPrestamosMasivo, obtenerInfoxFechaPrestamos} from "../../../api/prestamos";
+import {eliminaPrestamosMasivo} from "../../../api/prestamos";
 import {toast} from "react-toastify";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
 import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
 
 function EliminaPrestamoMasivo(props) {
+
+    const { listPrestamos2, listaFichas, listaPrestamos2, listaFechas, location, history, setShowModal, setRefreshCheckLogin } = props;
     
-    const [formData, setFormData] = useState(initialFormData());
-    
-    const { location, history, setShowModal, setRefreshCheckLogin } = props;
+        const [formData, setFormData] = useState(initialFormData());
     //console.log(datos)
     const cancelarEliminacion = () => {
         setShowModal(false)
     }
     
-    // Para almacenar el nombre del cliente
-    const [fichaSocio, setFichaSocio] = useState();
-    
-    // Para almacenar el nombre del cliente
-    const [prestamoTotal, setPrestamoTotal] = useState();
-
-    useEffect(() => {
-        //
-        try {
-            obtenerInfoxFechaPrestamos(formData.fecha).then(response => {
-                const { data } = response;
-                
-                // console.log(data)
-                const { fichaSocio, prestamoTotal } = data;
-                setFichaSocio(fichaSocio)
-                setPrestamoTotal(prestamoTotal)
-            }).catch(e => {
-                //console.log(e)
-                if(e.message === 'Network Error') {
-                    //console.log("No hay internet")
-                    toast.error("Conexión al servidor no disponible");
-                }
-            })
-        } catch (e) {
-            console.log(e)
-        }
-    }, [formData.fecha]);
-    
-    console.log(formData.fecha, {fichaSocio}, {prestamoTotal});
-
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
@@ -57,13 +27,21 @@ function EliminaPrestamoMasivo(props) {
             return;
         }
         
+        console.log(listPrestamos2);
+        console.log(listaFichas);
+        
         setLoading(true)
 
         try {
-            eliminaPrestamosMasivo(formData.fecha).then(response => {
+            eliminaPrestamosMasivo(formData.fecha).then(response => { 
                 
-            actualizacionDeudaSocio(fichaSocio, "0", prestamoTotal, "Eliminación prestamo", formData.fecha);
-                
+        for (let i = 0; i < listaFechas.length; i++) {
+            
+            if (formData.fecha == listaFechas[i]) { 
+                    actualizacionDeudaSocio(parseInt(listaFichas[i]), "0", parseFloat(listaPrestamos2[i]), "Eliminación prestamo", formData.fecha);
+        }
+    }
+        
                 const { data } = response;
                 toast.success(data.mensaje)
 

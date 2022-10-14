@@ -3,9 +3,9 @@ import {
   ENDPOINTPrestamos,
   ENDPOINTRegistroPrestamos,
   ENDPOINTListarPrestamos,
+  ENDPOINTListarPrestamos2,
   ENDPOINTTotalPrestamos,
   ENDPOINTTotalxTipoPrestamos,
-  ENDPOINTTotalxTipoSocioPrestamos,
   ENDPOINTListarPaginandoPrestamos,
   ENDPOINTListarPaginandoPrestamosxTipo,
   ENDPOINTObtenerFolioPrestamos,
@@ -59,7 +59,27 @@ export async function listarPrestamos(razonSocial, inicio, fin) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTListarPrestamos + `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`, config)
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarPrestamos +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+// Listar todos los abonos
+export async function listarPrestamos2(razonSocial) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarPrestamos2 + `/?tipo=${razonSocial}`,
+    config
+  )
 }
 
 // Obtener el total de registros de prestamos
@@ -99,7 +119,10 @@ export async function totalxTipoSocioPrestamos(razonSocial, ficha) {
     },
   }
   return await axios.get(
-    API_HOST + ENDPOINTTotalxTipoPrestamos + `/?tipo=${razonSocial}` + `/?fichaSocio=${ficha}`,
+    API_HOST +
+      ENDPOINTTotalxTipoPrestamos +
+      `/?tipo=${razonSocial}` +
+      `/?fichaSocio=${ficha}`,
     config
   )
 }
@@ -210,7 +233,6 @@ export async function actualizaPrestamos(id, data) {
   )
 }
 
-
 export async function eliminaPrestamosMasivo(fecha) {
   const config = {
     headers: {
@@ -228,24 +250,30 @@ export async function eliminaPrestamosMasivo(fecha) {
 
 // Obtener datos del saldo del socio indicando la ficha del socio
 export async function obtenerInfoxPrestamos(fichaSocio) {
-    const config = {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getTokenApi()}`
-        }
-    };
-    return await axios.get(API_HOST + ENDPOINTObtenerxFichaPrestamos + `/${fichaSocio}`, config);
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTObtenerxFichaPrestamos + `/${fichaSocio}`,
+    config
+  )
 }
 
 // Obtener datos del saldo del socio indicando la ficha del socio
 export async function obtenerInfoxFechaPrestamos(fecha) {
-    const config = {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getTokenApi()}`
-        }
-    };
-    return await axios.get(API_HOST + ENDPOINTObtenerxFechaPrestamos + `/?fecha=${fecha}`, config);
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTObtenerxFechaPrestamos + `/?fecha=${fecha}`,
+    config
+  )
 }

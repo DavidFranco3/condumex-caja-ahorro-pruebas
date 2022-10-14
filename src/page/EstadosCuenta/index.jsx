@@ -439,7 +439,7 @@ return (
                     <>
             <Button onClick={handleSendEmailMasiveEmpleados}>Enviar por correo</Button>
                     </>
-                                                    ) : (
+                ) : (
                     <>
                     <Button onClick={handleSendEmailMasiveSindicalizados}>Enviar por correo</Button>
                     </>                                   

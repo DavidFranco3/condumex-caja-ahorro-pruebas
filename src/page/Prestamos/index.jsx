@@ -9,7 +9,8 @@ import {
     listarPaginacionPrestamos,
     listarPaginacionPrestamosxTipo,
     totalPrestamos,
-    totalxTipoPrestamos
+    totalxTipoPrestamos,
+    listarPrestamos2
 } from "../../api/prestamos";
 import ListPrestamos from "../../components/Prestamos/ListPrestamos";
 import RegistroPrestamos from "../../components/Prestamos/RegistroPrestamos";
@@ -18,6 +19,7 @@ import CargaMasivaPrestamos from '../../components/Prestamos/CargaMasivaPrestamo
 import EliminaPrestamoMasivo from '../../components/Prestamos/EliminaPrestamoMasivo';
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
+import {map} from "lodash";
 
 function Prestamos(props) {
     const { datos, setRefreshCheckLogin, location, history } = props;
@@ -113,7 +115,65 @@ function Prestamos(props) {
             console.log(e)
         }
     }, [location, page, rowsPerPage]);
+    
+    // Almacena los datos de los abonos
+    const [listPrestamos2, setListPrestamos2] = useState(null);  
+    
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarPrestamos2(getRazonSocial()).then(response => {
+                const { data } = response;
+                // console.log(data)
+                if(!listPrestamos2 && data){
+                        setListPrestamos2(formatModelPrestamos2(data));
+                    } else {
+                        const datosPrestamos = formatModelPrestamos2(data);
+                        setListPrestamos2(datosPrestamos)
+                    }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location]);
+    
+     const [listaFichas, setListaFichas] = useState([]);
 
+    useEffect(() => {
+        
+        let listaFichasTemp = [];
+        map(listPrestamos2, (prestamo, index) => {
+            const tempFicha = prestamo.fichaSocio.split("T");
+            listaFichasTemp.push(tempFicha[0])
+        })
+        setListaFichas(listaFichasTemp);
+    }, [listPrestamos2]);
+    
+     const [listaPrestamos2, setListaPrestamos2] = useState([]);
+
+    useEffect(() => {
+        
+        let listaPrestamosTemp = [];
+        map(listPrestamos2, (prestamo, index) => {
+            const tempPrestamo = prestamo.prestamoTotal.split("T");
+            listaPrestamosTemp.push(tempPrestamo[0])
+        })
+        setListaPrestamos2(listaPrestamosTemp);
+    }, [listPrestamos2]);
+    
+     const [listaFechas, setListaFechas] = useState([]);
+
+    useEffect(() => {
+        
+        let listaFechasTemp = [];
+        map(listPrestamos2, (prestamo, index) => {
+            const tempFecha = prestamo.fechaCreacion.split("T");
+            listaFechasTemp.push(tempFecha[0])
+        })
+        setListaFechas(listaFechasTemp);
+    }, [listPrestamos2]);
 
     return (
         <>
@@ -131,6 +191,10 @@ function Prestamos(props) {
                 onClick={() => {
                   eliminaPrestamoMasivo(
                     <EliminaPrestamoMasivo
+                      listPrestamos2={listPrestamos2}
+                      listaFichas={listaFichas}
+                      listaPrestamos2={listaPrestamos2}
+                      listaFechas={listaFechas}
                       setShowModal={setShowModal}
                       location={location}
                       history={history}
@@ -183,6 +247,7 @@ function Prestamos(props) {
                             <Suspense fallback={<Spinner />}>
                                 <ListPrestamos
                                     listPrestamos={listPrestamos}
+                                    listPrestamos2={listPrestamos2}
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
@@ -222,6 +287,24 @@ function formatModelPrestamos(data) {
             tipo: data.tipo,
             prestamo: data.prestamo,
             prestamoTotal: data.prestamoTotal,
+            tasaInteres: data.tasaInteres,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelPrestamos2(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            id: data._id,
+            folio: data.folio,
+            fichaSocio: String(data.fichaSocio),
+            tipo: data.tipo,
+            prestamo: String(data.prestamo),
+            prestamoTotal: String(data.prestamoTotal),
             tasaInteres: data.tasaInteres,
             fechaCreacion: data.createdAt,
             fechaActualizacion: data.updatedAt
