@@ -152,9 +152,7 @@ function ListRendimientos(props) {
 
     const paginationComponentOptions = {
         rowsPerPageText: 'Filas por página',
-        rangeSeparatorText: 'de',
-        selectAllRowsItem: true,
-        selectAllRowsItemText: 'Todos'
+        rangeSeparatorText: 'de'
     };
 
     const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
