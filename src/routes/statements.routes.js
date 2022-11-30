@@ -364,13 +364,13 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
       port: 465,
       secure: true,
       auth: {
-        user: "no_reply@isotech.mx",
-        pass: "z0$01,@6Z!8j",
+        user: "ccahocondutel@gmail.com",
+        pass: "ccasocemp&sind.22",
       },
     });
 
     const mailOptions = {
-      from: "CAJA DE AHORRO CONDUMEX <no_reply@isotech.mx>",
+      from: "CAJA DE AHORRO CONDUMEX <ccahocondutel@gmail.com>",
       to: associate.correo,
       subject: "Estado de cuenta",
       text: "Estado de cuenta",
