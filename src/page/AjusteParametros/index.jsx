@@ -1,11 +1,11 @@
 import { useState, useEffect, Suspense } from 'react';
-import {useHistory, withRouter} from "react-router-dom";
-import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {toast} from "react-toastify";
-import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
-import {listarPaginacionParametros, listarParametros, totalParametros} from "../../api/parametros";
+import { useHistory, withRouter } from "react-router-dom";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
+import { toast } from "react-toastify";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { listarPaginacionParametros, listarParametros, totalParametros } from "../../api/parametros";
 import ListAjusteParametros from "../../components/AjusteParametros/ListAjusteParametros";
 import BasicModal from "../../components/Modal/BasicModal";
 import RegistroAjusteParametros from "../../components/AjusteParametros/RegistroAjusteParametros";
@@ -30,8 +30,8 @@ function AjusteParametros(props) {
 
     // Cerrado de sesión automatico
     useEffect(() => {
-        if(getTokenApi()) {
-            if(isExpiredToken(getTokenApi())) {
+        if (getTokenApi()) {
+            if (isExpiredToken(getTokenApi())) {
                 toast.warning("Sesión expirada");
                 toast.success("Sesión cerrada por seguridad");
                 logoutApi();
@@ -48,12 +48,12 @@ function AjusteParametros(props) {
         try {
             listarParametros().then(response => {
                 const { data } = response;
-                if(!data){
+                if (!data) {
                     setCamposHabilitados(false)
                 } else {
                     setCamposHabilitados(true)
                 }
-                if(!listadoParametrosSistemas && data){
+                if (!listadoParametrosSistemas && data) {
                     setListadoParametrosSistemas(formatModelAjusteParametros(data));
                 } else {
                     const datosAjusteParametros = formatModelAjusteParametros(data);
@@ -74,7 +74,7 @@ function AjusteParametros(props) {
     const [razonSocialElegida, setRazonSocialElegida] = useState("Sin Selección");
 
     useEffect(() => {
-        if(getRazonSocial()) {
+        if (getRazonSocial()) {
             setRazonSocialElegida(getRazonSocial)
         } else {
             setRazonSocialElegida("Sin Selección")
@@ -148,16 +148,17 @@ function formatModelAjusteParametros(data) {
     data.forEach(data => {
         dataTemp.push({
             id: data._id,
-            tasaInteres: data.tasaInteres,
-            inicioPeriodoSyE: data.inicioPeriodoSyE,
-            inicioPeriodoContabilidad: data.inicioPeriodoContabilidad,
-            inicioPeriodoPeregrinacion: data.inicioPeriodoPeregrinacion,
-            finPeriodoSyE: data.finPeriodoSyE,
-            finPeriodoContabilidad: data.finPeriodoContabilidad,
-            finPeriodoPeregrinacion: data.finPeriodoPeregrinacion,
-            fechaEnvioEstadosCuenta: data.fechaEnvioEstadosCuenta,
+            
+            inicioPeriodoEmpleados: data.inicioPeriodoEmpleados,
+            finPeriodoEmpleados: data.finPeriodoEmpleados,
+            fechaEnvioEstadosCuentaEmpleados: data.fechaEnvioEstadosCuentaEmpleados,
             fechaAporteEmpleados: data.fechaAporteEmpleados,
+
+            inicioPeriodoSindicalizados: data.inicioPeriodoSindicalizados,
+            finPeriodoSindicalizados: data.finPeriodoSindicalizados,
+            fechaEnvioEstadosCuentaSindicalizados: data.fechaEnvioEstadosCuentaSindicalizados,
             fechaAporteSindicalizados: data.fechaAporteSindicalizados,
+
             fechaCreacion: data.createdAt,
             fechaActualizacion: data.updatedAt
         });

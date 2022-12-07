@@ -3,45 +3,37 @@ import { useHistory } from "react-router-dom";
 import moment from "moment";
 // import BasicModal from "../../Modal/BasicModal";
 import { Button, Col, Form, Row, Spinner, Container, Badge, InputGroup } from "react-bootstrap";
-import EliminaAjusteParametros from "../EliminaAjusteParametros";
-import ModificaAjusteParametros from "../ModificaAjusteParametros";
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import "./ListAjusteParametros.scss"
-import { FormControl } from "@mui/material";
 import DatePicker, { CalendarContainer, registerLocale } from "react-datepicker";
-import es from 'date-fns/locale/es';
-import { parseISO } from "date-fns";
 import { actualizaParametros } from "../../../api/parametros";
 import { toast } from "react-toastify";
 import queryString from "query-string";
 import Lottie from "react-lottie-player"
 import AnimacionLoading from "../../../assets/json/loading.json";
 
-function ListAjusteParametros (props) {
+function ListAjusteParametros(props) {
     const { setRefreshCheckLogin, listAjusteParametros, history, location, rowsPerPage, setRowsPerPage, page, setPage, totalSocios, camposHabilitados, setCamposHabilitados, razonSocialElegida } = props;
 
-    // console.log(listAjusteParametros[0])
-    const { id, tasaInteres, inicioPeriodoSyE, inicioPeriodoContabilidad, inicioPeriodoPeregrinacion, finPeriodoSyE, finPeriodoContabilidad, finPeriodoPeregrinacion, fechaEnvioEstadosCuenta, fechaAporteEmpleados, fechaAporteSindicalizados } = listAjusteParametros[0];
+    console.log(listAjusteParametros[0])
+    const { id, inicioPeriodoEmpleados, finPeriodoEmpleados, fechaEnvioEstadosCuentaEmpleados, fechaAporteEmpleados, inicioPeriodoSindicalizados, finPeriodoSindicalizados, fechaEnvioEstadosCuentaSindicalizados, fechaAporteSindicalizados } = listAjusteParametros[0];
 
-    registerLocale("es", es);
+    // Para almacenar los datos del formulario
+    const [formData, setFormData] = useState(initialFormData(listAjusteParametros[0]));
+
+    console.log(formData)
 
     // Estados para controlar las fecha de inicio y de periodos
 
-    // Tasa de interes
-    const [tasaInteresAlmacenado, setTasaInteresAlmacenado] = useState(tasaInteres);
     // Inicio de periodos
-    const [inicioPeriodoSyEAlmacenado, setInicioPeriodoSyEAlmacenado] = useState(Date.parse(inicioPeriodoSyE));
-    const [inicioPeriodoContabilidadAlmacenado, setInicioPeriodoContabilidadAlmacenado] = useState(Date.parse(inicioPeriodoContabilidad));
-    const [inicioPeriodoPeregrinacionAlmacenado, setInicioPeriodoPeregrinacionAlmacenado] = useState(Date.parse(inicioPeriodoPeregrinacion));
-    // Fin de periodos
-    const [finPeriodoSyEAlmacenado, setFinPeriodoSyEAlmacenado] = useState(Date.parse(finPeriodoSyE));
-    const [finPeriodoContabilidadAlmacenado, setFinPeriodoContabilidadAlmacenado] = useState(Date.parse(finPeriodoContabilidad));
-    const [finPeriodoPeregrinacionAlmacenado, setFinPeriodoPeregrinacionAlmacenado] = useState(Date.parse(finPeriodoPeregrinacion));
-    // Fechas de control del sistema
-    const [fechaEnvioEstadoCuentaAlmacenado, setFechaEnvioEstadoCuentaAlmacenado] = useState(Date.parse(fechaEnvioEstadosCuenta));
-    const [fechaAportacionesEmpleados, setFechaAportacionesEmpleados] = useState(fechaAporteEmpleados);
-    const [fechaAportacionesSindicalizados, setFechaAportacionesSindicalizados] = useState(fechaAporteSindicalizados);
+    const [inicioPeriodoEmpleadosAlmacenado, setInicioPeriodoEmpleadosAlmacenado] = useState(inicioPeriodoEmpleados);
+    const [finPeriodoEmpleadosAlmacenado, setFinPeriodoEmpleadosAlmacenado] = useState(finPeriodoEmpleados);
+    const [fechaEnvioEstadoCuentaEmpleadosAlmacenado, setFechaEnvioEstadoCuentaEmpleadosAlmacenado] = useState(fechaEnvioEstadosCuentaEmpleados);
+    const [fechaAporteEmpleadosAlmacenado, setFechaAporteEmpleadosAlmacenado] = useState(fechaAporteEmpleados);
+
+    const [inicioPeriodoSindicalizadosAlmacenado, setInicioPeriodoSindicalizadosAlmacenado] = useState(inicioPeriodoSindicalizados);
+    const [finPeriodoSindicalizadosAlmacenado, setFinPeriodoSindicalizadosAlmacenado] = useState(finPeriodoSindicalizados);
+    const [fechaEnvioEstadoCuentaSindicalizadosAlmacenado, setFechaEnvioEstadoCuentaSindicalizadosAlmacenado] = useState(fechaEnvioEstadosCuentaSindicalizados);
+    const [fechaAporteSindicalizadosAlmacenado, setFechaAporteSindicalizadosAlmacenado] = useState(fechaAporteSindicalizados);
 
     moment.locale("es");
 
@@ -78,34 +70,24 @@ function ListAjusteParametros (props) {
         e.preventDefault()
         setCamposHabilitados(true)
         setLoading(true)
-
-        // Inicia procesamiento de fechas, para antes de guardarlas
-        const inicioPeriodoSyETemp = new Date(inicioPeriodoSyEAlmacenado);
-        const inicioPeriodoContabilidadTemp = new Date(inicioPeriodoContabilidadAlmacenado);
-        const inicioPeriodoPeregrinacionTemp = new Date(inicioPeriodoPeregrinacionAlmacenado);
-        const finPeriodoSyETemp = new Date(finPeriodoSyEAlmacenado);
-        const finPeriodoContabilidadTemp = new Date(finPeriodoContabilidadAlmacenado);
-        const finPeriodoPeregrinacionTemp = new Date(finPeriodoPeregrinacionAlmacenado);
-        const fechaEnvioEstadosCuentaTemp = new Date(fechaEnvioEstadoCuentaAlmacenado);
         // console.log(date.toUTCString()) --- Procesamiento en UTC
         // Termina procesamiento de fechas, para antes de guadarlas
 
         const dataTemp = {
-            tasaInteres: tasaInteresAlmacenado,
-            inicioPeriodoSyE: inicioPeriodoSyEAlmacenado === Date.parse(inicioPeriodoSyE) ? inicioPeriodoSyETemp : inicioPeriodoSyEAlmacenado,
-            inicioPeriodoContabilidad: inicioPeriodoContabilidadAlmacenado === Date.parse(inicioPeriodoContabilidad) ? inicioPeriodoContabilidadTemp : inicioPeriodoContabilidadAlmacenado,
-            inicioPeriodoPeregrinacion: inicioPeriodoPeregrinacionAlmacenado === Date.parse(inicioPeriodoPeregrinacion) ? inicioPeriodoPeregrinacionTemp : inicioPeriodoPeregrinacionAlmacenado,
-            finPeriodoSyE: finPeriodoSyEAlmacenado === Date.parse(finPeriodoSyE) ? finPeriodoSyETemp : finPeriodoSyEAlmacenado,
-            finPeriodoContabilidad: finPeriodoContabilidadAlmacenado === Date.parse(finPeriodoContabilidad) ? finPeriodoContabilidadTemp : finPeriodoContabilidadAlmacenado,
-            finPeriodoPeregrinacion: finPeriodoPeregrinacionAlmacenado === Date.parse(finPeriodoPeregrinacion) ? finPeriodoPeregrinacionTemp : finPeriodoPeregrinacionAlmacenado,
-            fechaEnvioEstadosCuenta: fechaEnvioEstadoCuentaAlmacenado === Date.parse(fechaEnvioEstadosCuenta) ? fechaEnvioEstadosCuentaTemp : fechaEnvioEstadoCuentaAlmacenado,
-            fechaAporteEmpleados: fechaAportacionesEmpleados,
-            fechaAporteSindicalizados: fechaAportacionesSindicalizados
+            inicioPeriodoEmpleados: formData.inicioPeriodoEmpleados,
+            finPeriodoEmpleados: formData.finPeriodoEmpleados,
+            fechaEnvioEstadosCuentaEmpleados: formData.fechaEnvioEstadosCuentaEmpleados,
+            fechaAporteEmpleados: formData.fechaAporteEmpleados,
+
+            inicioPeriodoSindicalizados: formData.inicioPeriodoSindicalizados,
+            finPeriodoSindicalizados: formData.finPeriodoSindicalizados,
+            fechaEnvioEstadosCuentaSindicalizados: formData.fechaEnvioEstadosCuentaSindicalizados,
+            fechaAporteSindicalizados: formData.fechaAporteSindicalizados,
         }
 
-        // console.log(inicioPeriodoSyEAlmacenado)
+        console.log(dataTemp)
 
-        // console.log(dataTemp)
+
         // console.log(id)
 
         // Inicia modificación de parametros
@@ -138,6 +120,10 @@ function ListAjusteParametros (props) {
         }
     };
 
+    const onChange = e => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
+    }
+
     return (
         <>
             {/* Inicia estructura base para separación de razones sociales */}
@@ -159,8 +145,8 @@ function ListAjusteParametros (props) {
                                 <>
                                     {/* Inicia empleados */}
                                     <div className="datosParametros">
-                                        <Form onSubmit={onSubmit}>
-                                            
+                                        <Form onSubmit={onSubmit} onChange={onChange}>
+
                                             {/* Inicio y Fin periodo sindicalizados y empleados */}
                                             <hr />
                                             <div className="sindicalizadosyEmpleados">
@@ -172,34 +158,28 @@ function ListAjusteParametros (props) {
                                                 <Row className="mb-3">
                                                     <Form.Group as={Col} controlId="formGridFechaInicioPeriodoSyE">
                                                         <Form.Label>Inicio del periodo</Form.Label>
-                                                        <DatePicker
-                                                            locale="es"
-                                                            selected={inicioPeriodoSyEAlmacenado}
-                                                            onChange={(date) => { setInicioPeriodoSyEAlmacenado(date) }}
+                                                        <Form.Control
+                                                            className="mb-3"
+                                                            type="datetime-local"
+                                                            defaultValue={formData.inicioPeriodoEmpleados}
+                                                            placeholder="Fecha"
+                                                            name="inicioPeriodoEmpleados"
                                                             disabled={camposHabilitados}
-                                                            calendarContainer={contenedorFechas}
-                                                            peekNextMonth
-                                                            showMonthDropdown
-                                                            showYearDropdown
-                                                            dropdownMode="select"
-                                                            todayButton="Fecha actual"
-                                                        />
+                                                        >
+                                                        </Form.Control>
                                                     </Form.Group>
 
                                                     <Form.Group as={Col} controlId="formGridFechaFinPeriodoSyE">
                                                         <Form.Label>Fin del periodo</Form.Label>
-                                                        <DatePicker
-                                                            locale="es"
-                                                            selected={finPeriodoSyEAlmacenado}
-                                                            onChange={(date) => { setFinPeriodoSyEAlmacenado(date) }}
+                                                        <Form.Control
+                                                            className="mb-3"
+                                                            type="datetime-local"
+                                                            defaultValue={formData.finPeriodoEmpleados}
+                                                            placeholder="Fecha"
+                                                            name="finPeriodoEmpleados"
                                                             disabled={camposHabilitados}
-                                                            calendarContainer={contenedorFechas}
-                                                            peekNextMonth
-                                                            showMonthDropdown
-                                                            showYearDropdown
-                                                            dropdownMode="select"
-                                                            todayButton="Fecha actual"
-                                                        />
+                                                        >
+                                                        </Form.Control>
                                                     </Form.Group>
                                                 </Row>
                                             </div>
@@ -217,33 +197,30 @@ function ListAjusteParametros (props) {
                                                 <Row className="mb-3">
                                                     <Form.Group as={Col} controlId="formGridFechaEstadosCuenta">
                                                         <Form.Label>Envio de estados de cuenta</Form.Label>
-                                                        <DatePicker
-                                                            locale="es"
-                                                            selected={fechaEnvioEstadoCuentaAlmacenado}
-                                                            onChange={(date) => { setFechaEnvioEstadoCuentaAlmacenado(date) }}
+                                                        <Form.Control
+                                                            className="mb-3"
+                                                            type="datetime-local"
+                                                            defaultValue={formData.fechaEnvioEstadosCuentaEmpleados}
+                                                            placeholder="Fecha"
+                                                            name="fechaEnvioEstadosCuentaEmpleados"
                                                             disabled={camposHabilitados}
-                                                            calendarContainer={contenedorFechas}
-                                                            peekNextMonth
-                                                            showMonthDropdown
-                                                            showYearDropdown
-                                                            dropdownMode="select"
-                                                            todayButton="Fecha actual"
-                                                        />
+                                                        >
+                                                        </Form.Control>
                                                     </Form.Group>
 
                                                     <Form.Group as={Col} controlId="formGridFechaAportacionesEmpleados">
                                                         <Form.Label>Aportaciones de empleados</Form.Label>
                                                         {/* Seleción -> Semanal, Quincenal */}
-                                                        <Form.Select
-                                                            name="aportacionesEmpleados"
-                                                            defaultValue={fechaAportacionesEmpleados}
-                                                            onChange={(e) => setFechaAportacionesEmpleados(e.target.value)}
+                                                        <Form.Control
+                                                            as="select"
+                                                            defaultValue={formData.fechaAporteEmpleados}
                                                             disabled={camposHabilitados}
+                                                            name="fechaAporteEmpleados"
                                                         >
                                                             <option value="" selected>Elige....</option>
-                                                            <option value="Semanal" selected={fechaAportacionesEmpleados === "Semanal"}>Semanal</option>
-                                                            <option value="Quincenal" selected={fechaAportacionesEmpleados === "Quincenal"}>Quincenal</option>
-                                                        </Form.Select>
+                                                            <option value="Semanal" selected={formData.fechaAporteEmpleados === "Semanal"}>Semanal</option>
+                                                            <option value="Quincenal" selected={formData.fechaAporteEmpleados === "Quincenal"}>Quincenal</option>
+                                                        </Form.Control>
                                                     </Form.Group>
 
                                                 </Row>
@@ -304,52 +281,49 @@ function ListAjusteParametros (props) {
                                 razonSocialElegida === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." ?
                                     (
                                         <>
-                                            {/* Inicia sindicalizados */}
+                                            {/* Inicia empleados */}
                                             <div className="datosParametros">
-                                                <Form onSubmit={onSubmit}>
+                                                <Form onSubmit={onSubmit} onChange={onChange}>
+
                                                     {/* Inicio y Fin periodo sindicalizados y empleados */}
                                                     <hr />
                                                     <div className="sindicalizadosyEmpleados">
                                                         <Badge bg="secondary" className="tituloSeccion">
                                                             <h4>
-                                                                Fechas indicativas del periodo
+                                                                Fechas indicativas periodo
                                                             </h4>
                                                         </Badge>
                                                         <Row className="mb-3">
                                                             <Form.Group as={Col} controlId="formGridFechaInicioPeriodoSyE">
                                                                 <Form.Label>Inicio del periodo</Form.Label>
-                                                                <DatePicker
-                                                                    locale="es"
-                                                                    selected={inicioPeriodoSyEAlmacenado}
-                                                                    onChange={(date) => { setInicioPeriodoSyEAlmacenado(date) }}
+                                                                <Form.Control
+                                                                    className="mb-3"
+                                                                    type="datetime-local"
+                                                                    defaultValue={formData.inicioPeriodoSindicalizados}
+                                                                    placeholder="Fecha"
+                                                                    name="inicioPeriodoSindicalizados"
                                                                     disabled={camposHabilitados}
-                                                                    calendarContainer={contenedorFechas}
-                                                                    peekNextMonth
-                                                                    showMonthDropdown
-                                                                    showYearDropdown
-                                                                    dropdownMode="select"
-                                                                    todayButton="Fecha actual"
-                                                                />
+                                                                >
+                                                                </Form.Control>
                                                             </Form.Group>
 
                                                             <Form.Group as={Col} controlId="formGridFechaFinPeriodoSyE">
                                                                 <Form.Label>Fin del periodo</Form.Label>
-                                                                <DatePicker
-                                                                    locale="es"
-                                                                    selected={finPeriodoSyEAlmacenado}
-                                                                    onChange={(date) => { setFinPeriodoSyEAlmacenado(date) }}
+                                                                <Form.Control
+                                                                    className="mb-3"
+                                                                    type="datetime-local"
+                                                                    defaultValue={formData.finPeriodoSindicalizados}
+                                                                    placeholder="Fecha"
+                                                                    name="finPeriodoSindicalizados"
                                                                     disabled={camposHabilitados}
-                                                                    calendarContainer={contenedorFechas}
-                                                                    peekNextMonth
-                                                                    showMonthDropdown
-                                                                    showYearDropdown
-                                                                    dropdownMode="select"
-                                                                    todayButton="Fecha actual"
-                                                                />
+                                                                >
+                                                                </Form.Control>
                                                             </Form.Group>
                                                         </Row>
                                                     </div>
                                                     {/* Inicio y Fin periodo Contabilidad */}
+                                                    <hr />
+                                                    {/* Fecha de envio de estados de cuenta, fecha de aportaciones de empleados, Fecha de aporte de sindicalizados */}
                                                     <hr />
                                                     <div className="detallesFinales">
                                                         <Badge bg="secondary" className="tituloSeccion">
@@ -361,33 +335,30 @@ function ListAjusteParametros (props) {
                                                         <Row className="mb-3">
                                                             <Form.Group as={Col} controlId="formGridFechaEstadosCuenta">
                                                                 <Form.Label>Envio de estados de cuenta</Form.Label>
-                                                                <DatePicker
-                                                                    locale="es"
-                                                                    selected={fechaEnvioEstadoCuentaAlmacenado}
-                                                                    onChange={(date) => { setFechaEnvioEstadoCuentaAlmacenado(date) }}
-                                                                    disabled={camposHabilitados}
-                                                                    calendarContainer={contenedorFechas}
-                                                                    peekNextMonth
-                                                                    showMonthDropdown
-                                                                    showYearDropdown
-                                                                    dropdownMode="select"
-                                                                    todayButton="Fecha actual"
-                                                                />
-                                                            </Form.Group>
-
-                                                            {/* Aportaciones de sindicalizados */}
-                                                            <Form.Group as={Col} controlId="formGridFechaAportacionesSindicalizados">
-                                                                <Form.Label>Aportaciones de sindicalizados</Form.Label>
-                                                                <Form.Select
-                                                                    name="aportacionesSindicalizados"
-                                                                    defaultValue={fechaAportacionesSindicalizados}
-                                                                    onChange={(e) => setFechaAportacionesSindicalizados(e.target.value)}
+                                                                <Form.Control
+                                                                    className="mb-3"
+                                                                    type="datetime-local"
+                                                                    defaultValue={formData.fechaEnvioEstadosCuentaSindicalizados}
+                                                                    placeholder="Fecha"
+                                                                    name="fechaEnvioEstadosCuentaSindicalizados"
                                                                     disabled={camposHabilitados}
                                                                 >
+                                                                </Form.Control>
+                                                            </Form.Group>
+
+                                                            <Form.Group as={Col} controlId="formGridFechaAportacionesEmpleados">
+                                                                <Form.Label>Aportaciones de empleados</Form.Label>
+                                                                {/* Seleción -> Semanal, Quincenal */}
+                                                                <Form.Control
+                                                                    as="select"
+                                                                    defaultValue={formData.fechaAporteSindicalizados}
+                                                                    disabled={camposHabilitados}
+                                                                    name="fechaAporteSindicalizados"
+                                                                >
                                                                     <option value="" selected>Elige....</option>
-                                                                    <option value="Semanal" selected={fechaAportacionesEmpleados === "Semanal"}>Semanal</option>
-                                                                    <option value="Quincenal" selected={fechaAportacionesEmpleados === "Quincenal"}>Quincenal</option>
-                                                                </Form.Select>
+                                                                    <option value="Semanal" selected={formData.fechaAporteSindicalizados === "Semanal"}>Semanal</option>
+                                                                    <option value="Quincenal" selected={formData.fechaAporteSindicalizados === "Quincenal"}>Quincenal</option>
+                                                                </Form.Control>
                                                             </Form.Group>
 
                                                         </Row>
@@ -445,225 +416,35 @@ function ListAjusteParametros (props) {
                                     )
                                     :
                                     (
-                                        razonSocialElegida === "CONDUMEX S.A. DE C.V." ?
-                                            (
-                                                <>
-                                                    {/* Inicia especiales */}
-                                                    <div className="datosParametros">
-                                                        <Form onSubmit={onSubmit}>
-                                                            {/* Inicio y Fin periodo Contabilidad */}
-                                                            <hr />
-                                                            <div className="contabilidad">
-                                                                <Badge bg="secondary" className="tituloSeccion">
-                                                                    <h4>
-                                                                        Contabilidad
-                                                                    </h4>
-                                                                </Badge>
-
-                                                                <Row className="mb-3">
-                                                                    <Form.Group as={Col} controlId="formGridFechaInicioPeriodoContabilidad">
-                                                                        <Form.Label>Inicio del periodo</Form.Label>
-                                                                        <DatePicker
-                                                                            locale="es"
-                                                                            selected={inicioPeriodoContabilidadAlmacenado}
-                                                                            onChange={(date) => { setInicioPeriodoContabilidadAlmacenado(date) }}
-                                                                            disabled={camposHabilitados}
-                                                                            calendarContainer={contenedorFechas}
-                                                                            peekNextMonth
-                                                                            showMonthDropdown
-                                                                            showYearDropdown
-                                                                            dropdownMode="select"
-                                                                            todayButton="Fecha actual"
-                                                                        />
-                                                                    </Form.Group>
-
-                                                                    <Form.Group as={Col} controlId="formGridFechaFinPeriodoContabilidad">
-                                                                        <Form.Label>Fin del periodo</Form.Label>
-                                                                        <DatePicker
-                                                                            locale="es"
-                                                                            selected={finPeriodoContabilidadAlmacenado}
-                                                                            onChange={(date) => { setFinPeriodoContabilidadAlmacenado(date) }}
-                                                                            disabled={camposHabilitados}
-                                                                            calendarContainer={contenedorFechas}
-                                                                            peekNextMonth
-                                                                            showMonthDropdown
-                                                                            showYearDropdown
-                                                                            dropdownMode="select"
-                                                                            todayButton="Fecha actual"
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Row>
-                                                            </div>
-                                                            {/* Inicio y Fin periodo Peregrinación */}
-                                                            <hr />
-                                                            <div className="peregrinacion">
-                                                                <Badge bg="secondary" className="tituloSeccion">
-                                                                    <h4>
-                                                                        Peregrinación
-                                                                    </h4>
-                                                                </Badge>
-
-                                                                <Row className="mb-3">
-                                                                    <Form.Group as={Col} controlId="formGridFechaInicioPeriodoPeregrinacion">
-                                                                        <Form.Label>Inicio del periodo</Form.Label>
-                                                                        <DatePicker
-                                                                            locale="es"
-                                                                            selected={inicioPeriodoPeregrinacionAlmacenado}
-                                                                            onChange={(date) => { setInicioPeriodoPeregrinacionAlmacenado(date) }}
-                                                                            disabled={camposHabilitados}
-                                                                            calendarContainer={contenedorFechas}
-                                                                            peekNextMonth
-                                                                            showMonthDropdown
-                                                                            showYearDropdown
-                                                                            dropdownMode="select"
-                                                                            todayButton="Fecha actual"
-                                                                        />
-                                                                    </Form.Group>
-
-                                                                    <Form.Group as={Col} controlId="formGridFechaFinPeriodoPeregrinacion">
-                                                                        <Form.Label>Fin del periodo</Form.Label>
-                                                                        <DatePicker
-                                                                            locale="es"
-                                                                            selected={finPeriodoPeregrinacionAlmacenado}
-                                                                            onChange={(date) => { setFinPeriodoPeregrinacionAlmacenado(date) }}
-                                                                            disabled={camposHabilitados}
-                                                                            calendarContainer={contenedorFechas}
-                                                                            peekNextMonth
-                                                                            showMonthDropdown
-                                                                            showYearDropdown
-                                                                            dropdownMode="select"
-                                                                            todayButton="Fecha actual"
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Row>
-                                                            </div>
-                                                            {/* Fecha de envio de estados de cuenta, fecha de aportaciones de empleados, Fecha de aporte de sindicalizados */}
-                                                            <hr />
-                                                            <div className="detallesFinales">
-                                                                <Badge bg="secondary" className="tituloSeccion">
-                                                                    <h4>
-                                                                        Fechas generales
-                                                                    </h4>
-                                                                </Badge>
-
-                                                                <Row className="mb-3">
-                                                                    <Form.Group as={Col} controlId="formGridFechaEstadosCuenta">
-                                                                        <Form.Label>Envio de estados de cuenta</Form.Label>
-                                                                        <DatePicker
-                                                                            locale="es"
-                                                                            selected={fechaEnvioEstadoCuentaAlmacenado}
-                                                                            onChange={(date) => { setFechaEnvioEstadoCuentaAlmacenado(date) }}
-                                                                            disabled={camposHabilitados}
-                                                                            calendarContainer={contenedorFechas}
-                                                                            peekNextMonth
-                                                                            showMonthDropdown
-                                                                            showYearDropdown
-                                                                            dropdownMode="select"
-                                                                            todayButton="Fecha actual"
-                                                                        />
-                                                                    </Form.Group>
-
-                                                                    <Form.Group as={Col} controlId="formGridFechaAportacionesEmpleados">
-                                                                        <Form.Label>Aportaciones de empleados</Form.Label>
-                                                                        {/* Seleción -> Semanal, Quincenal */}
-                                                                        <Form.Select
-                                                                            name="aportacionesEmpleados"
-                                                                            defaultValue={fechaAportacionesEmpleados}
-                                                                            onChange={(e) => setFechaAportacionesEmpleados(e.target.value)}
-                                                                            disabled={camposHabilitados}
-                                                                        >
-                                                                            <option value="" selected>Elige....</option>
-                                                                            <option value="Semanal" selected={fechaAportacionesEmpleados === "Semanal"}>Semanal</option>
-                                                                            <option value="Quincenal" selected={fechaAportacionesEmpleados === "Quincenal"}>Quincenal</option>
-                                                                        </Form.Select>
-                                                                    </Form.Group>
-
-                                                                </Row>
-                                                            </div>
-                                                            {/* Botones */}
-                                                            {
-                                                                camposHabilitados ?
-                                                                    (
-                                                                        <>
-                                                                            <Form.Group as={Row} className="botones">
-                                                                                <Button
-                                                                                    onClick={() => {
-                                                                                        editarInformacion()
-                                                                                    }}
-                                                                                    variant="success"
-                                                                                    className="editaParametros"
-                                                                                >
-                                                                                    {camposHabilitados ? "Edita la información" : "Guarda los cambios"}
-                                                                                </Button>
-                                                                            </Form.Group>
-                                                                        </>
-                                                                    )
-                                                                    :
-                                                                    (
-                                                                        <>
-                                                                            <Form.Group as={Row} className="botones">
-                                                                                <Col>
-                                                                                    <Button
-                                                                                        type="submit"
-                                                                                        variant="success"
-                                                                                        className="registrar"
-                                                                                    >
-                                                                                        {!loading ? "Guarda los cambios" : <Spinner animation="border" />}
-                                                                                    </Button>
-                                                                                </Col>
-                                                                                <Col>
-                                                                                    <Button
-                                                                                        variant="danger"
-                                                                                        className="cancelar"
-                                                                                        onClick={() => {
-                                                                                            cancelarModificacion()
-                                                                                        }}
-                                                                                    >
-                                                                                        Cancelar
-                                                                                    </Button>
-                                                                                </Col>
-                                                                            </Form.Group>
-                                                                        </>
-                                                                    )
-                                                            }
-                                                        </Form>
-                                                    </div>
-                                                    {/* Termina especiales */}
-                                                </>
-                                            )
-                                            :
-                                            (
-                                                <>
-                                                    <Lottie
-                                                        loop={true}
-                                                        play={true}
-                                                        animationData={AnimacionLoading}
-                                                    />
-                                                </>
-                                            )
+                                        <>
+                                            <Lottie
+                                                loop={true}
+                                                play={true}
+                                                animationData={AnimacionLoading}
+                                            />
+                                        </>
                                     )
                             )
                     )
+
             }
             {/* Termina estructura base para separación de razones sociales */}
         </>
     );
 }
 
-function initialFormData (datos) {
-    const { tasaInteres, inicioPeriodoSyE, inicioPeriodoContabilidad, inicioPeriodoPeregrinacion, finPeriodoSyE, finPeriodoContabilidad, finPeriodoPeregrinacion, fechaEnvioEstadosCuenta, fechaAporteEmpleados, fechaAporteSindicalizados } = datos;
+function initialFormData(data) {
 
     return {
-        tasaInteres: tasaInteres,
-        inicioPeriodoSyE: inicioPeriodoSyE,
-        inicioPeriodoContabilidad: inicioPeriodoContabilidad,
-        inicioPeriodoPeregrinacion: inicioPeriodoPeregrinacion,
-        finPeriodoSyE: finPeriodoSyE,
-        finPeriodoContabilidad: finPeriodoContabilidad,
-        finPeriodoPeregrinacion: finPeriodoPeregrinacion,
-        fechaEnvioEstadosCuenta: fechaEnvioEstadosCuenta,
-        fechaAporteEmpleados: fechaAporteEmpleados,
-        fechaAporteSindicalizados: fechaAporteSindicalizados
+        inicioPeriodoEmpleados: data.inicioPeriodoEmpleados,
+        finPeriodoEmpleados: data.finPeriodoEmpleados,
+        fechaEnvioEstadosCuentaEmpleados: data.fechaEnvioEstadosCuentaEmpleados,
+        fechaAporteEmpleados: data.fechaAporteEmpleados,
+
+        inicioPeriodoSindicalizados: data.inicioPeriodoSindicalizados,
+        finPeriodoSindicalizados: data.finPeriodoSindicalizados,
+        fechaEnvioEstadosCuentaSindicalizados: data.fechaEnvioEstadosCuentaSindicalizados,
+        fechaAporteSindicalizados: data.fechaAporteSindicalizados,
     }
 }
 
