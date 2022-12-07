@@ -370,7 +370,7 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
     });
 
     const mailOptions = {
-      from: "CAJA DE AHORRO CONDUMEX < ccahocondutel@gmail.com>",
+      from: "CAJA DE AHORRO CONDUMEX <ccahocondutel@gmail.com>",
       to: associate.correo,
       subject: "Estado de cuenta",
       text: "Estado de cuenta",
