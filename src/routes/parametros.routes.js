@@ -65,15 +65,22 @@ router.delete("/eliminar/:id", verifyToken, async (req, res) => {
 router.put("/actualizar/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
   const {
-    tasaInteres,
-    inicioPeriodoSyE,
-    inicioPeriodoContabilidad,
-    inicioPeriodoPeregrinacion,
-    finPeriodoSyE,
-    finPeriodoContabilidad,
-    finPeriodoPeregrinacion,
-    fechaEnvioEstadosCuenta,
+    inicioPeriodoEmpleados,
+    inicioPeriodoContabilidadEmpleados,
+    inicioPeriodoPeregrinacionEmpleados,
+    finPeriodoEmpleados,
+    finPeriodoContabilidadEmpleados,
+    finPeriodoPeregrinacionEmpleados,
+    fechaEnvioEstadosCuentaEmpleados,
     fechaAporteEmpleados,
+
+    inicioPeriodoSindicalizados,
+    inicioPeriodoContabilidadSindicalizados,
+    inicioPeriodoPeregrinacionSindicalizados,
+    finPeriodoSindicalizados,
+    finPeriodoContabilidadSindicalizados,
+    finPeriodoPeregrinacionSindicalizados,
+    fechaEnvioEstadosCuentaSindicalizados,
     fechaAporteSindicalizados,
   } = req.body;
   await parametros
@@ -81,15 +88,14 @@ router.put("/actualizar/:id", verifyToken, async (req, res) => {
       { _id: id },
       {
         $set: {
-          tasaInteres,
-          inicioPeriodoSyE,
-          inicioPeriodoContabilidad,
-          inicioPeriodoPeregrinacion,
-          finPeriodoSyE,
-          finPeriodoContabilidad,
-          finPeriodoPeregrinacion,
-          fechaEnvioEstadosCuenta,
+          inicioPeriodoEmpleados,
+          finPeriodoEmpleados,
+          fechaEnvioEstadosCuentaEmpleados,
           fechaAporteEmpleados,
+
+          inicioPeriodoSindicalizados,
+          finPeriodoSindicalizados,
+          fechaEnvioEstadosCuentaSindicalizados,
           fechaAporteSindicalizados,
         },
       }

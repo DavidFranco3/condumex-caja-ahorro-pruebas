@@ -3,15 +3,14 @@ const { Schema } = mongoose;
 
 const parametros = new Schema(
   {
-    tasaInteres: { type: mongoose.Decimal128, required: true },
-    inicioPeriodoSyE: { type: String },
-    inicioPeriodoContabilidad: { type: String },
-    inicioPeriodoPeregrinacion: { type: String },
-    finPeriodoSyE: { type: String },
-    finPeriodoContabilidad: { type: String },
-    finPeriodoPeregrinacion: { type: String },
-    fechaEnvioEstadosCuenta: { type: String },
+    inicioPeriodoEmpleados: { type: String },
+    finPeriodoEmpleados: { type: String },
+    fechaEnvioEstadosCuentaEmpleados: { type: String },
     fechaAporteEmpleados: { type: String },
+
+    inicioPeriodoSindicalizados: { type: String },
+    finPeriodoSindicalizados: { type: String },
+    fechaEnvioEstadosCuentaSindicalizados: { type: String },
     fechaAporteSindicalizados: { type: String },
   },
   {
