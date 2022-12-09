@@ -265,9 +265,8 @@ function BusquedaSocios(props) {
   }
 
   function labelDisplayRows({ _from, to, count }) {
-    return `Visualizando ${to} de ${
-      count !== -1 ? count + ' Registros' : `more than ${to}`
-    }`
+    return `Visualizando ${to} de ${count !== -1 ? count + ' Registros' : `more than ${to}`
+      }`
   }
 
   return (
@@ -354,13 +353,17 @@ function BusquedaSocios(props) {
                 >
                   <Form.Label>¿Como desea buscar al socio?</Form.Label>
                   <Col>
-                    <Form.Select name="tipo" defaultValue={formData.tipo}>
+                    <Form.Control
+                      as="select"
+                      name="tipo"
+                      defaultValue={formData.tipo}
+                    >
                       <option value="" selected>
                         Elige....
                       </option>
                       <option value="ficha">Por ficha</option>
                       <option value="nombre">Por nombre</option>
-                    </Form.Select>
+                    </Form.Control>
                   </Col>
                 </Form.Group>
               </Row>

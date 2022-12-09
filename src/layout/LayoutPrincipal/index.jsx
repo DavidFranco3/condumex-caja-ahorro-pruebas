@@ -102,7 +102,8 @@ function LayoutPrincipal (props) {
                                     <div className="hidden sm:block sm:ml-6">
                                         {/* Informacion en el menu principal */}
                                         {/* Seleccionable con razones sociales */}
-                                        <Form.Select
+                                        <Form.Control
+                                            as="select"
                                             aria-label="indicadorRazonSocial"
                                             name="razonSocial"
                                             defaultValue={razonSocialElegida}
@@ -113,7 +114,7 @@ function LayoutPrincipal (props) {
                                             <option value="" selected>Selecciona la razón social</option>
                                             <option value="Asociación de Empleados Sector Cables A.C." selected={razonSocialElegida === "Asociación de Empleados Sector Cables A.C."}>Asociación de Empleados Sector Cables A.C.</option>
                                             <option value="Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." selected={razonSocialElegida === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C."}>Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.</option>
-                                        </Form.Select>
+                                        </Form.Control>
                                     </div>
                                 </div>
                                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -162,7 +163,8 @@ function LayoutPrincipal (props) {
                             <div className="px-2 pt-2 pb-3 space-y-1">
                                 {/* Informacion en el menu principal */}
                                 {/* Seleccionable con razones sociales */}
-                                <Form.Select
+                                <Form.Control
+                                    as="select"
                                     aria-label="indicadorRazonSocial"
                                     name="razonSocial"
                                     defaultValue={razonSocialElegida}
@@ -173,7 +175,7 @@ function LayoutPrincipal (props) {
                                     <option value="" selected>Selecciona la razón social</option>
                                     <option value="Asociación de Empleados Sector Cables A.C." selected={razonSocialElegida === "Asociación de Empleados Sector Cables A.C."}>Asociación de Empleados Sector Cables A.C.</option>
                                     <option value="Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." selected={razonSocialElegida === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C."}>Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.</option>
-                                </Form.Select>
+                                </Form.Control>
                             </div>
                         </Disclosure.Panel>
                     </>
