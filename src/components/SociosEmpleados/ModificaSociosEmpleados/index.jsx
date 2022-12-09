@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import {Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {size, values} from "lodash";
 import {toast} from "react-toastify";
 import {isEmailValid} from "../../../utils/validations";
 import queryString from "query-string";
@@ -40,13 +39,7 @@ function ModificaSociosEmpleados(props) {
     const onSubmit = (e) => {
         e.preventDefault()
 
-        let validCount = 0
-        values(formData).some(value => {
-            value && validCount++;
-            return null;
-        });
-
-        if(size(formData) !== validCount || !formData.createdAt){
+        if(!formData.nombre || !formData.tipo || !formData.createdAt){
             toast.warning("Completa el formulario")
         } else {
             if (!isEmailValid(formData.correo)) {
@@ -57,7 +50,8 @@ function ModificaSociosEmpleados(props) {
                     nombre: formData.nombre,
                     tipo: formData.tipo,
                     correo: formData.correo,
-                    ficha: formData.ficha
+                    ficha: formData.ficha,
+                    createdAt: formData.createdAt
                 }
 
                 try{
@@ -152,7 +146,7 @@ function ModificaSociosEmpleados(props) {
                                 type="datetime-local"
                                 defaultValue={formData.createdAt}
                                 placeholder="Fecha"
-                                name="fecha"
+                                name="createdAt"
                                 />                            
                         </Form.Group>
                     </Row>

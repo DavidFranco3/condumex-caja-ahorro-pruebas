@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { map, size, values } from "lodash";
 import { toast } from "react-toastify";
 import { isEmailValid } from "../../../utils/validations";
 import queryString from "query-string";
@@ -35,17 +34,18 @@ function RegistroSociosSindicalizados (props) {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
+    const hoy = new Date();
+    // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
+    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getDate() + '-' + hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '/' + hoy.getDate();
+
+    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
+
+    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
+
     const onSubmit = (e) => {
         e.preventDefault()
 
-        // console.log(formData)
-        let validCount = 0
-        values(formData).some(value => {
-            value && validCount++;
-            return null;
-        });
-
-        if (size(formData) !== validCount || !formData.fecha) {
+        if (!formData.ficha || !formData.nombre || !formData.tipo) {
             toast.warning("Completa el formulario")
         } else {
             if (!isEmailValid(formData.correo)) {
@@ -57,7 +57,7 @@ function RegistroSociosSindicalizados (props) {
                     nombre: formData.nombre,
                     tipo: formData.tipo,
                     correo: formData.correo,
-                    createdAt: formData.fecha,
+                    createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
                     estado: "true"
                 }
                 try {
@@ -187,9 +187,11 @@ function RegistroSociosSindicalizados (props) {
 
 function initialFormData () {
     return {
+        ficha: "",
         nombre: "",
         tipo: "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.",
-        correo: ""
+        correo: "",
+        fecha: ""
     }
 
 }

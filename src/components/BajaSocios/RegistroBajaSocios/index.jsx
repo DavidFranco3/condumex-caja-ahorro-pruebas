@@ -69,15 +69,20 @@ function RegistroBajaSocios (props) {
     const [patrimonioSocioElegido, setPatrimonioSocioElegido] = useState(0);
     const [totalEntregarSocioElegido, setTotalEntregarSocioElegido] = useState(0);
 
+    const hoy = new Date();
+    // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
+    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getDate() + '-' + hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '/' + hoy.getDate();
+
+    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
+
+    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
+
     const onSubmit = (e) => {
         e.preventDefault()
 
         if(!fichaSocioElegido) {
             toast.warning("Debe elegir un socio")
         }  else {
-            if(!formData.fecha) {
-                toast.warning("Por favor selecciona una fecha")
-            } else {
                 setLoading(true)
                 // Realiza registro de la aportación
                 obtenerFolioActualBajaSocios().then(response => {
@@ -95,7 +100,7 @@ function RegistroBajaSocios (props) {
                         patrimonio: patrimonioSocioElegido,
                         rendimiento: rendimientoSocioElegido,
                         total: total,
-                        createdAt: formData.fecha
+                        createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
                     }
 
                     registraBajaSocios(dataTemp).then(response => {
@@ -128,8 +133,6 @@ function RegistroBajaSocios (props) {
                 }).catch(e => {
                     console.log(e)
                 })
-
-            }
         }
     }
     
@@ -350,7 +353,7 @@ function RegistroBajaSocios (props) {
                         <Form.Control
                         className="mb-3"
                         type="datetime-local"
-                        defaultValue={formData.fecha}
+                        defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
                         placeholder="Fecha"
                         name="fecha"
                         />
@@ -394,7 +397,7 @@ function RegistroBajaSocios (props) {
     
     function initialFormData () {
     return {
-        createdAt: ""
+        fecha: ""
     }
     
 }

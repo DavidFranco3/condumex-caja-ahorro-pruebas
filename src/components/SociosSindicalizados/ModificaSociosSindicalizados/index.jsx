@@ -1,26 +1,26 @@
 import { useState, useEffect } from 'react';
-import {Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {size, values} from "lodash";
-import {toast} from "react-toastify";
-import {isEmailValid} from "../../../utils/validations";
+import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { size, values } from "lodash";
+import { toast } from "react-toastify";
+import { isEmailValid } from "../../../utils/validations";
 import queryString from "query-string";
-import {actualizaSocioSindicalizado} from "../../../api/sociosSindicalizados";
+import { actualizaSocioSindicalizado } from "../../../api/sociosSindicalizados";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 const initialFormData = ({ nombre, tipo, correo, ficha, fechaCreacion }) => ({
-        nombre,
-        tipo,
-        correo,
-        ficha,
-        createdAt: fechaToCurrentTimezone(fechaCreacion),
+    nombre,
+    tipo,
+    correo,
+    ficha,
+    createdAt: fechaToCurrentTimezone(fechaCreacion),
 });
 
 function ModificaSociosSindicalizados(props) {
@@ -46,7 +46,7 @@ function ModificaSociosSindicalizados(props) {
             return null;
         });
 
-        if(size(formData) !== validCount || !formData.createdAt){
+        if (formData.nombre || !formData.ficha || !formData.createdAt) {
             toast.warning("Completa el formulario")
         } else {
             if (!isEmailValid(formData.correo)) {
@@ -54,12 +54,13 @@ function ModificaSociosSindicalizados(props) {
             } else {
                 setLoading(true)
                 const dataTemp = {
+                    ficha: formData.ficha,
                     nombre: formData.nombre,
                     tipo: formData.tipo,
                     correo: formData.correo,
                 }
 
-                try{
+                try {
                     actualizaSocioSindicalizado(id, dataTemp).then(response => {
                         const { data } = response;
                         toast.success(data.mensaje)
@@ -96,7 +97,7 @@ function ModificaSociosSindicalizados(props) {
                             <Form.Control
                                 type="text"
                                 name="ficha"
-                                defaultValue={ficha}
+                                defaultValue={formData.ficha}
                             />
                         </Form.Group>
 
@@ -118,10 +119,11 @@ function ModificaSociosSindicalizados(props) {
                             <Form.Label>
                                 Tipo de socio
                             </Form.Label>
-                            <Form.Control as="select"
-                                          defaultValue={formData.tipo}
-                                          name="tipo"
-                                          disabled
+                            <Form.Control
+                                as="select"
+                                defaultValue={formData.tipo}
+                                name="tipo"
+                                disabled
                             >
                                 <option>Elige una opción</option>
                                 <option value="Asociación de Empleados Sector Cables A.C.">Empleado</option>
@@ -141,18 +143,18 @@ function ModificaSociosSindicalizados(props) {
                             />
                         </Form.Group>
                     </Row>
-                    
+
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
-                                <Form.Control
+                            <Form.Control
                                 type="datetime-local"
                                 defaultValue={formData.createdAt}
                                 placeholder="Fecha"
                                 name="fecha"
-                                />                            
+                            />
                         </Form.Group>
                     </Row>
 
