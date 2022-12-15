@@ -4,6 +4,7 @@ import {eliminaPatrimonioMasivo} from "../../../api/patrimonio";
 import {toast} from "react-toastify";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 
 function EliminaMasivo(props) {
     
@@ -18,6 +19,15 @@ function EliminaMasivo(props) {
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
+
     const onSubmit = (e) => {
         e.preventDefault()
         
@@ -29,7 +39,7 @@ function EliminaMasivo(props) {
         setLoading(true)
 
         try {
-            eliminaPatrimonioMasivo(formData.fecha).then(response => {
+            eliminaPatrimonioMasivo(formData.fecha, razonSocialElegida).then(response => {
                 
                 const { data } = response;
                 toast.success(data.mensaje)

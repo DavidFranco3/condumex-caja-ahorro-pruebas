@@ -1,47 +1,54 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaPrestamosMasivo} from "../../../api/prestamos";
-import {toast} from "react-toastify";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaPrestamosMasivo } from "../../../api/prestamos";
+import { toast } from "react-toastify";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
+import { actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 
 function EliminaPrestamoMasivo(props) {
 
     const { listPrestamos2, listaFichas, listaPrestamos2, listaFechas, location, history, setShowModal, setRefreshCheckLogin } = props;
-    
-        const [formData, setFormData] = useState(initialFormData());
+
+    const [formData, setFormData] = useState(initialFormData());
     //console.log(datos)
     const cancelarEliminacion = () => {
         setShowModal(false)
     }
-    
+
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
+
     const onSubmit = (e) => {
         e.preventDefault()
-        
-        if(!formData.fecha){
+
+        if (!formData.fecha) {
             toast.error("Por favor selecciona una fecha");
             return;
         }
-        
+
         console.log(listPrestamos2);
         console.log(listaFichas);
-        
+
         setLoading(true)
 
         try {
-            eliminaPrestamosMasivo(formData.fecha).then(response => { 
-                
-        for (let i = 0; i < listaFechas.length; i++) {
-            
-            if (formData.fecha == listaFechas[i]) { 
-                    actualizacionDeudaSocio(parseInt(listaFichas[i]), "0", parseFloat(listaPrestamos2[i]), "Eliminación prestamo", formData.fecha);
-        }
-    }
-        
+            eliminaPrestamosMasivo(formData.fecha, razonSocialElegida).then(response => {
+
+                for (let i = 0; i < listaFechas.length; i++) {
+
+                    if (formData.fecha == listaFechas[i]) {
+                        actualizacionDeudaSocio(parseInt(listaFichas[i]), "0", parseFloat(listaPrestamos2[i]), "Eliminación prestamo", formData.fecha);
+                    }
+                }
+
                 const { data } = response;
                 toast.success(data.mensaje)
 
@@ -60,7 +67,7 @@ function EliminaPrestamoMasivo(props) {
             console.log(e)
         }
     }
-    
+
     const onChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -77,22 +84,22 @@ function EliminaPrestamoMasivo(props) {
                 </Alert>
 
                 <Form onChange={onChange} onSubmit={onSubmit}>
-                    
+
                     <Form.Group as={Row} controlId="formGridPrestamos">
-                            <Col sm={4}>
+                        <Col sm={4}>
                             <Form.Label>Selecciona una fecha:</Form.Label>
-                            </Col>
-                            <Col sm={8}>
+                        </Col>
+                        <Col sm={8}>
                             <Form.Control
                                 className="mb-3"
                                 type="date"
                                 defaultValue={formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
-                                />
-                                </Col>
-                        </Form.Group>
-                    
+                            />
+                        </Col>
+                    </Form.Group>
+
                     <Form.Group as={Row} className="botones">
                         <Col>
                             <Button

@@ -1,19 +1,19 @@
 import { API_HOST } from '../utils/constants'
 import {
-    ENDPOINTDeudaSocio,
-    ENDPOINTRegistroDeudaSocio,
-    ENDPOINTListarDeudaSocio,
-    ENDPOINTTotalDeudaSocio,
-    ENDPOINTTotalxTipoDeudaSocio,
-    ENDPOINTListarPaginandoDeudaSocio,
-    ENDPOINTListarPaginandoDeudaSocioxTipo,
-    ENDPOINTObtenerFolioDeudaSocio,
-    ENDPOINTObtenerDeudaSocio,
-    ENDPOINTObtenerxFichaDeudaSocio,
-    ENDPOINTEliminarDeudaSocio,
-    ENDPOINTActualizarDeudaSocio,
-    ENDPOINTObtenerDeudaSocioAcumuladosByRazon,
-    ENDPOINTEliminarDeudaSocioMasivo,
+  ENDPOINTDeudaSocio,
+  ENDPOINTRegistroDeudaSocio,
+  ENDPOINTListarDeudaSocio,
+  ENDPOINTTotalDeudaSocio,
+  ENDPOINTTotalxTipoDeudaSocio,
+  ENDPOINTListarPaginandoDeudaSocio,
+  ENDPOINTListarPaginandoDeudaSocioxTipo,
+  ENDPOINTObtenerFolioDeudaSocio,
+  ENDPOINTObtenerDeudaSocio,
+  ENDPOINTObtenerxFichaDeudaSocio,
+  ENDPOINTEliminarDeudaSocio,
+  ENDPOINTActualizarDeudaSocio,
+  ENDPOINTObtenerDeudaSocioAcumuladosByRazon,
+  ENDPOINTEliminarDeudaSocioMasivo,
 } from './endpoints'
 import axios from 'axios'
 import { getTokenApi } from './auth'
@@ -57,7 +57,12 @@ export async function listarDeudaSocio(razonSocial, inicio, fin) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTListarDeudaSocio + `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`, config)
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarDeudaSocio +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
 }
 
 // Obtener el total de registros de deuda socio
@@ -142,7 +147,10 @@ export async function obtenerDeudaSocio(id) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTObtenerDeudaSocio + `/${id}`, config)
+  return await axios.get(
+    API_HOST + ENDPOINTObtenerDeudaSocio + `/${id}`,
+    config
+  )
 }
 
 // Obtener el listado de deuda socio de un cliente, indicando ficha del socio
@@ -193,7 +201,7 @@ export async function actualizaDeudaSocio(id, data) {
   )
 }
 
-export async function eliminaDeudaSocioMasivo(fecha) {
+export async function eliminaDeudaSocioMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -203,9 +211,9 @@ export async function eliminaDeudaSocioMasivo(fecha) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarDeudaSocioMasivo + `/${fecha}`,
+    API_HOST +
+      ENDPOINTEliminarDeudaSocioMasivo +
+      `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }
-
-

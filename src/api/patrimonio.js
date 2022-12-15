@@ -5,7 +5,7 @@ import {
   ENDPOINTTotalPatrimonio,
   ENDPOINTListarPatrimonio,
   ENDPOINTTotalxTipoPatrimonio,
-  ENDPOINTTotalxTipoSocioPatrimonio,
+  // ENDPOINTTotalxTipoSocioPatrimonio,
   ENDPOINTListarPaginandoPatrimonio,
   ENDPOINTListarPaginandoPatrimonioxTipo,
   ENDPOINTObtenerFolioPatrimonio,
@@ -57,7 +57,12 @@ export async function listarPatrimonio(razonSocial, inicio, fin) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTListarPatrimonio + `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`, config)
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarPatrimonio +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
 }
 
 // Obtener el total de registros de patrimonios
@@ -97,7 +102,10 @@ export async function totalxTipoSocioPatrimonio(razonSocial, ficha) {
     },
   }
   return await axios.get(
-    API_HOST + ENDPOINTTotalxTipoPatrimonio + `/?tipo=${razonSocial}` + `/?fichaSocio=${ficha}`,
+    API_HOST +
+      ENDPOINTTotalxTipoPatrimonio +
+      `/?tipo=${razonSocial}` +
+      `/?fichaSocio=${ficha}`,
     config
   )
 }
@@ -157,7 +165,10 @@ export async function obtenerPatrimonio(id) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTObtenerPatrimonio + `/${id}`, config)
+  return await axios.get(
+    API_HOST + ENDPOINTObtenerPatrimonio + `/${id}`,
+    config
+  )
 }
 
 // Obtener el listado de prestamos de un cliente, indicando ficha del socio
@@ -208,8 +219,7 @@ export async function actualizaPatrimonio(id, data) {
   )
 }
 
-
-export async function eliminaPatrimonioMasivo(fecha) {
+export async function eliminaPatrimonioMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -219,19 +229,24 @@ export async function eliminaPatrimonioMasivo(fecha) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarPatrimoniosMasivo + `/${fecha}`,
+    API_HOST +
+      ENDPOINTEliminarPatrimoniosMasivo +
+      `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }
 
 // Obtener datos del saldo del socio indicando la ficha del socio
 export async function obtenerInfoxPatrimonio(fichaSocio) {
-    const config = {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getTokenApi()}`
-        }
-    };
-    return await axios.get(API_HOST + ENDPOINTObtenerxFichaPatrimonio + `/${fichaSocio}`, config);
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTObtenerxFichaPatrimonio + `/${fichaSocio}`,
+    config
+  )
 }

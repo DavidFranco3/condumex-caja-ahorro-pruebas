@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaDeudaSocioMasivo} from "../../../api/deudaSocio";
-import {toast} from "react-toastify";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaDeudaSocioMasivo } from "../../../api/deudaSocio";
+import { toast } from "react-toastify";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 import queryString from "query-string";
 
 function EliminaDeudaSocioMasivo(props) {
-    
+
     const [formData, setFormData] = useState(initialFormData());
-    
+
     const { location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
     const cancelarEliminacion = () => {
@@ -18,19 +19,28 @@ function EliminaDeudaSocioMasivo(props) {
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
+
     const onSubmit = (e) => {
         e.preventDefault()
-        
-        if(!formData.fecha){
+
+        if (!formData.fecha) {
             toast.error("Por favor selecciona una fecha");
             return;
         }
-        
+
         setLoading(true)
 
         try {
-            eliminaDeudaSocioMasivo(formData.fecha).then(response => {
-                
+            eliminaDeudaSocioMasivo(formData.fecha, razonSocialElegida).then(response => {
+
                 const { data } = response;
                 toast.success(data.mensaje)
 
@@ -49,7 +59,7 @@ function EliminaDeudaSocioMasivo(props) {
             console.log(e)
         }
     }
-    
+
     const onChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -66,22 +76,22 @@ function EliminaDeudaSocioMasivo(props) {
                 </Alert>
 
                 <Form onChange={onChange} onSubmit={onSubmit}>
-                    
+
                     <Form.Group as={Row} controlId="formGridAbonos">
-                            <Col sm={4}>
+                        <Col sm={4}>
                             <Form.Label>Selecciona una fecha:</Form.Label>
-                            </Col>
-                            <Col sm={8}>
+                        </Col>
+                        <Col sm={8}>
                             <Form.Control
                                 className="mb-3"
                                 type="date"
                                 defaultValue={formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
-                                />
-                                </Col>
-                        </Form.Group>
-                    
+                            />
+                        </Col>
+                    </Form.Group>
+
 
                     <Form.Group as={Row} className="botones">
                         <Col>

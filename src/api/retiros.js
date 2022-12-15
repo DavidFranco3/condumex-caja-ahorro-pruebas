@@ -13,7 +13,7 @@ import {
   ENDPOINTActualizarRetiros,
   ENDPOINTObtenerRetirosAcumuladasByRazon,
   ENDPOINTRetiros,
-  ENDPOINTEliminarRetirosMasivo
+  ENDPOINTEliminarRetirosMasivo,
 } from './endpoints'
 import axios from 'axios'
 import { getTokenApi } from './auth'
@@ -58,7 +58,12 @@ export async function listarRetiros(razonSocial, inicio, fin) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTListarRetiros + `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`, config)
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarRetiros +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
 }
 
 // Obtener el total de retiros
@@ -194,8 +199,7 @@ export async function actualizaRetiros(id, data) {
   )
 }
 
-
-export async function eliminaRetirosMasivo(fecha) {
+export async function eliminaRetirosMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -205,7 +209,7 @@ export async function eliminaRetirosMasivo(fecha) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarRetirosMasivo + `/${fecha}`,
+    API_HOST + ENDPOINTEliminarRetirosMasivo + `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }

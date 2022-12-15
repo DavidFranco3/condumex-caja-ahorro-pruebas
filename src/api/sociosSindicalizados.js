@@ -12,7 +12,7 @@ import {
   ENDPOINTDeshabilitarSociosSindicalizados,
   ENDPOINTActualizarSociosSindicalizados,
   ENDPOINTObtenerSindicalizadosByNombre,
-  ENDPOINTEliminarSindicalizadosMasivo
+  ENDPOINTEliminarSindicalizadosMasivo,
 } from './endpoints'
 import axios from 'axios'
 import { getTokenApi } from './auth'
@@ -200,7 +200,7 @@ export async function actualizaSocioSindicalizado(id, data) {
   )
 }
 
-export async function eliminaSindicalizadosMasivo(fecha) {
+export async function eliminaSindicalizadosMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -210,7 +210,9 @@ export async function eliminaSindicalizadosMasivo(fecha) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarSindicalizadosMasivo + `/${fecha}`,
+    API_HOST +
+      ENDPOINTEliminarSindicalizadosMasivo +
+      `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }

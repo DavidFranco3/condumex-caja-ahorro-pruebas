@@ -4,6 +4,7 @@ import {eliminaSindicalizadosMasivo} from "../../../api/sociosSindicalizados";
 import {toast} from "react-toastify";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 
 function EliminaSindicalizadosMasivo(props) {
     
@@ -18,6 +19,15 @@ function EliminaSindicalizadosMasivo(props) {
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
+
     const onSubmit = (e) => {
         e.preventDefault()
         
@@ -29,7 +39,7 @@ function EliminaSindicalizadosMasivo(props) {
         setLoading(true)
 
         try {
-            eliminaSindicalizadosMasivo(formData.fecha).then(response => {
+            eliminaSindicalizadosMasivo(formData.fecha, razonSocialElegida).then(response => {
                 
                 const { data } = response;
                 toast.success(data.mensaje)

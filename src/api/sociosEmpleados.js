@@ -12,7 +12,7 @@ import {
   ENDPOINTDeshabilitarSociosEmpleados,
   ENDPOINTActualizarSociosEmpleados,
   ENDPOINTObtenerEmpleadosByNombre,
-  ENDPOINTEliminarEmpleadosMasivo
+  ENDPOINTEliminarEmpleadosMasivo,
 } from './endpoints'
 import axios from 'axios'
 import { getTokenApi } from './auth'
@@ -199,7 +199,7 @@ export async function actualizaSocioEmpleado(id, data) {
   )
 }
 
-    export async function eliminaEmpleadosMasivo(fecha) {
+export async function eliminaEmpleadosMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -209,9 +209,9 @@ export async function actualizaSocioEmpleado(id, data) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarEmpleadosMasivo + `/${fecha}`,
+    API_HOST +
+      ENDPOINTEliminarEmpleadosMasivo +
+      `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }
-
-

@@ -4,6 +4,7 @@ import {eliminaRendimientosMasivo} from "../../../api/rendimientos";
 import {toast} from "react-toastify";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 
 function EliminaRendimientoMasivo(props) {
     
@@ -18,6 +19,15 @@ function EliminaRendimientoMasivo(props) {
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
+     // Almacena la razón social, si ya fue elegida
+     const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+     useEffect(() => {
+         if (getRazonSocial()) {
+             setRazonSocialElegida(getRazonSocial)
+         }
+     }, []);
+
     const onSubmit = (e) => {
         e.preventDefault()
         
@@ -29,7 +39,7 @@ function EliminaRendimientoMasivo(props) {
         setLoading(true)
 
         try {
-            eliminaRendimientosMasivo(formData.fecha).then(response => {
+            eliminaRendimientosMasivo(formData.fecha, razonSocialElegida).then(response => {
                 
                 const { data } = response;
                 toast.success(data.mensaje)

@@ -233,7 +233,7 @@ export async function actualizaPrestamos(id, data) {
   )
 }
 
-export async function eliminaPrestamosMasivo(fecha) {
+export async function eliminaPrestamosMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -243,7 +243,9 @@ export async function eliminaPrestamosMasivo(fecha) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarPrestamosMasivo + `/${fecha}`,
+    API_HOST +
+      ENDPOINTEliminarPrestamosMasivo +
+      `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }
