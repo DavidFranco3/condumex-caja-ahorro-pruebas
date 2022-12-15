@@ -83,7 +83,7 @@ router.post("/registro", async (req, res) => {
   // Inicia validacion para no registrar abonos con el mismo folio
   const busqueda = await abonos.findOne({ folio });
 
-  if (busqueda && busqueda.fichaSocio === folio) {
+  if (busqueda && busqueda.folio === folio) {
     return res
       .status(401)
       .json({ mensaje: "Ya existe un abono con este folio" });
@@ -101,7 +101,7 @@ router.post("/registro", async (req, res) => {
 // Obtener todos los abonos
 router.get("/listar", async (req, res) => {
   const { tipo, inicio, fin } = req.query;
-    await abonos
+  await abonos
     .find({ tipo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
@@ -111,7 +111,7 @@ router.get("/listar", async (req, res) => {
 // Obtener todos los abonos
 router.get("/listar2", async (req, res) => {
   const { tipo } = req.query;
-    await abonos
+  await abonos
     .find({ tipo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
@@ -218,12 +218,12 @@ router.delete("/eliminar/:id", async (req, res) => {
 // Actualizar datos del usuario
 router.put("/actualizar/:id", async (req, res) => {
   const { id } = req.params;
-  const {  abono, movimiento, createdAt  } =
+  const { abono, movimiento, createdAt } =
     req.body;
   await abonos
     .updateOne(
       { _id: id },
-      { $set: {  abono, movimiento, createdAt } }
+      { $set: { abono, movimiento, createdAt } }
     )
     .then((data) =>
       res.status(200).json({ mensaje: "Abono actualizados" })
@@ -232,15 +232,16 @@ router.put("/actualizar/:id", async (req, res) => {
 });
 
 // Borrar muchos rendimientos
-router.delete("/eliminarMasivo/:fecha", async (req, res) => {
-  const { fecha } = req.params;
+router.delete("/eliminarMasivo", async (req, res) => {
+  const { fecha, tipo } = req.query;
   await abonos
-    .remove( {
-        $and: [
-        {createdAt: {$gte: (fecha+"T00:00:00.000Z")}},
-        {createdAt: {$lte: (fecha+"T23:59:59.999Z")}}
-        ]
-        } )
+    .remove({
+      tipo: tipo,
+      $and: [
+        { createdAt: { $gte: (fecha + "T00:00:00.000Z") } },
+        { createdAt: { $lte: (fecha + "T23:59:59.999Z") } }
+      ]
+    })
     .then((_data) => res.status(200).json({ mensaje: "Abonos eliminados" }))
     .catch((error) => res.json({ message: error }));
 });
