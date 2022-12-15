@@ -86,6 +86,15 @@ router.get("/listar", async (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+router.get("/listarPatrimonios", async (req, res) => {
+  const { tipo } = req.query;
+    await patrimonio
+    .find({ tipo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
 // Registro de patrimonios
 router.post("/registro", async (req, res) => {
   const { folio } = req.body;

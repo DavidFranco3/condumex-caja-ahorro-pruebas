@@ -108,6 +108,15 @@ router.get("/listar", async (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+router.get("/listarDeudaSocio", async (req, res) => {
+  const { tipo } = req.query;
+    await deudaSocio
+    .find({ tipo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
 // Obtener el numero total de registros de deudas
 router.get("/numeroDeudas", async (req, res) => {
   await deudaSocio

@@ -7,7 +7,7 @@ const endPeriodoAportacion = (date) => {
 
   tmp.setHours(0, 0, 0, 0);
   tmp.setDate(28);
-  
+
   return tmp;
 };
 
@@ -326,9 +326,19 @@ router.post("/registro2", async (req, res) => {
 
 // Obtener todos los rendimientos
 router.get("/listar", async (_req, res) => {
-    const { tipo, inicio, fin } = _req.query;
-    await rendimientos
-    .find( { tipo, createdAt: { $gte: new Date(inicio+'T00:00:00.000Z'), $lte: new Date(fin+'T23:59:59.999Z') } } )
+  const { tipo, inicio, fin } = _req.query;
+  await rendimientos
+    .find({ tipo, createdAt: { $gte: new Date(inicio + 'T00:00:00.000Z'), $lte: new Date(fin + 'T23:59:59.999Z') } })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
+// Obtener todos los rendimientos
+router.get("/listarRendimientos", async (_req, res) => {
+  const { tipo } = _req.query;
+  await rendimientos
+    .find({ tipo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
@@ -397,7 +407,7 @@ router.get("/obtenerFolio", async (_req, res) => {
       .find({})
       .sort({ folio: -1 })
       .limit(1);
-    
+
     const nextFolio = ultimarendimiento.folio + 1;
     res.status(200).json({ folio: nextFolio });
   }
@@ -466,7 +476,7 @@ router.put("/actualizar/:id", async (req, res) => {
         createDate: createdAt,
       },
     })
-    .then((_data) => res.status(200).json({message: "Interes actualizado" }))
+    .then((_data) => res.status(200).json({ message: "Interes actualizado" }))
     .catch((error) => res.json({ message: error }));
 });
 

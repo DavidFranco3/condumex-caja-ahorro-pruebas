@@ -125,8 +125,18 @@ router.post("/registro2", async (req, res) => {
 // Obtener todos los retiros
 router.get("/listar", async (_req, res) => {
   const { tipo, inicio, fin } = _req.query;
-    await retiros
-    .find( {tipo, createdAt: { $gte: new Date(inicio+'T00:00:00.000Z'), $lte: new Date(fin+'T23:59:59.999Z') } })
+  await retiros
+    .find({ tipo, createdAt: { $gte: new Date(inicio + 'T00:00:00.000Z'), $lte: new Date(fin + 'T23:59:59.999Z') } })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
+// Obtener todos los retiros
+router.get("/listarRetiros", async (_req, res) => {
+  const { tipo } = _req.query;
+  await retiros
+    .find({ tipo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));

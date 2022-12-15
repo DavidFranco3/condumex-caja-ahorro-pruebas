@@ -102,14 +102,14 @@ router.post("/registro", async (req, res) => {
 router.get("/listar", async (req, res) => {
   const { tipo, inicio, fin } = req.query;
   await abonos
-    .find({ tipo })
+    .find({ tipo, createdAt: { $gte: new Date(inicio+'T00:00:00.000Z'), $lte: new Date(fin+'T23:59:59.999Z') } })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 });
 
 // Obtener todos los abonos
-router.get("/listar2", async (req, res) => {
+router.get("/listarAbonos", async (req, res) => {
   const { tipo } = req.query;
   await abonos
     .find({ tipo })

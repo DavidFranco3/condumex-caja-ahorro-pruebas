@@ -29,9 +29,10 @@ router.post("/registro", verifyToken, async (req, res) => {
 });
 
 // Obtener todos los saldos de socios
-router.get("/listar", verifyToken, async (_req, res) => {
+router.get("/listar", verifyToken, async (req, res) => {
+  const { tipo } = req.query;
   await saldosSocios
-    .find()
+    .find({ tipo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));

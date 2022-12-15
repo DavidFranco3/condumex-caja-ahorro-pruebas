@@ -109,7 +109,7 @@ router.get("/listar", async (req, res) => {
 });
 
 // Obtener todos los abonos
-router.get("/listar2", async (req, res) => {
+router.get("/listarPrestamos", async (req, res) => {
   const { tipo } = req.query;
     await prestamos
     .find({ tipo })
