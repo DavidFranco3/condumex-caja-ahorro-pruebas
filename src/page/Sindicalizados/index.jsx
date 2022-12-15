@@ -215,7 +215,7 @@ function formatModelSocios(data) {
     data.forEach(data => {
         dataTemp.push({
             id: data._id,
-            ficha: parseInt(data.ficha),
+            ficha: String(data.ficha),
             nombre: data.nombre,
             tipo: data.tipo,
             correo: data.correo ? data.correo : "No especificado",

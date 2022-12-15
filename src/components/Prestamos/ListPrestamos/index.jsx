@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowDownLong} from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
+import { Badge, Container, Button, Col, Form } from "react-bootstrap";
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import DataTable from "react-data-table-component";
 import EliminaPrestamos from "../EliminaPrestamos";
 import ModificaPrestamos from "../ModificaPrestamos";
-import {estilos} from "../../../utils/tableStyled";
+import { estilos } from "../../../utils/tableStyled";
+import styled from 'styled-components';
 
 function ListPrestamos(props) {
     const { listPrestamos, history, location, setRefreshCheckLogin } = props;
@@ -40,14 +41,14 @@ function ListPrestamos(props) {
         {
             name: "Préstamo",
             selector: row => (
-                    <>
-                ${''}
-                        {new Intl.NumberFormat('es-MX', {
+                <>
+                    ${''}
+                    {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                        }).format(row.prestamo)} MXN    
+                    }).format(row.prestamo)} MXN
                 </>
-        ),
+            ),
             sortable: false,
             center: true,
             reorder: false
@@ -55,14 +56,14 @@ function ListPrestamos(props) {
         {
             name: "Interés",
             selector: row => (
-                    <>
-                ${''}
-                        {new Intl.NumberFormat('es-MX', {
+                <>
+                    ${''}
+                    {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                        }).format(row.prestamoTotal - row.prestamo)} MXN    
+                    }).format(row.prestamoTotal - row.prestamo)} MXN
                 </>
-        ),
+            ),
             sortable: false,
             center: true,
             reorder: false
@@ -70,14 +71,14 @@ function ListPrestamos(props) {
         {
             name: "Total",
             selector: row => (
-                    <>
-                ${''}
-                        {new Intl.NumberFormat('es-MX', {
+                <>
+                    ${''}
+                    {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                        }).format(row.prestamoTotal)} MXN    
+                    }).format(row.prestamoTotal)} MXN
                 </>
-        ),
+            ),
             sortable: false,
             center: true,
             reorder: false
@@ -93,42 +94,42 @@ function ListPrestamos(props) {
             name: "Acciones",
             selector: row => (
                 <>
-                   <div className="flex justify-end items-center space-x-4">
-                    <Badge
-                bg="success"
-                className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                onClick={() => {
-                  modificacionPrestamos(
-                    <ModificaPrestamos
-                      datos={row}
-                      location={location}
-                      history={history}
-                      setShowModal={setShowModal}
-                      setRefreshCheckLogin={setRefreshCheckLogin}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faPenToSquare} className="text-lg" />
-              </Badge>
-                    <Badge
-                bg="danger"
-                className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                onClick={() => {
-                  eliminacionPrestamos(
-                    <EliminaPrestamos
-                      datos={row}
-                      location={location}
-                      history={history}
-                      setShowModal={setShowModal}
-                      setRefreshCheckLogin={setRefreshCheckLogin}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-              </Badge>
-              </div>
+                    <div className="flex justify-end items-center space-x-4">
+                        <Badge
+                            bg="success"
+                            className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                            onClick={() => {
+                                modificacionPrestamos(
+                                    <ModificaPrestamos
+                                        datos={row}
+                                        location={location}
+                                        history={history}
+                                        setShowModal={setShowModal}
+                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faPenToSquare} className="text-lg" />
+                        </Badge>
+                        <Badge
+                            bg="danger"
+                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                            onClick={() => {
+                                eliminacionPrestamos(
+                                    <EliminaPrestamos
+                                        datos={row}
+                                        location={location}
+                                        history={history}
+                                        setShowModal={setShowModal}
+                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
+                        </Badge>
+                    </div>
                 </>
             ),
             sortable: false,
@@ -137,31 +138,18 @@ function ListPrestamos(props) {
         },
     ];
 
-    const handleChangePage = (page) => {
-        // console.log("Nueva pagina "+ newPage)
-        setPage(page);
-    };
-
-    const handleChangeRowsPerPage = (newPerPage) => {
-        // console.log("Registros por pagina "+ parseInt(event.target.value, 10))
-        setRowsPerPage(newPerPage)
-        //setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(1);
-    };
-
-
-      // Elimina prestamos
-        const eliminacionPrestamos = (content) => {
+    // Elimina prestamos
+    const eliminacionPrestamos = (content) => {
         setTitulosModal("Eliminando préstamos");
         setContentModal(content);
         setShowModal(true);
-        }
+    }
 
-        const modificacionPrestamos = (content) => {
+    const modificacionPrestamos = (content) => {
         setTitulosModal("Modificación prestamos");
-                setContentModal(content);
-                setShowModal(true);
-        }
+        setContentModal(content);
+        setShowModal(true);
+    }
 
 
     // Definiendo estilos para data table
@@ -183,14 +171,81 @@ function ListPrestamos(props) {
         rangeSeparatorText: 'de'
     };
 
+    const[filterText, setFilterText] = useState("");
     const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
+
+    // Defino barra de busqueda
+    const ClearButton = styled(Button)` 
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        height: 34px;
+        width: 32px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+
+    const TextField = styled.input` 
+        height: 32px;
+        border-radius: 3px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border: 1px solid #e5e5e5;
+        padding: 0 32px 0 16px;
+      &:hover {
+        cursor: pointer;
+      }
+    `;
+
+
+    const filteredItems = listPrestamos.filter(
+        item => item.fichaSocio && item.fichaSocio.toLowerCase().includes(filterText.toLowerCase())
+    );
+
+    const subHeaderComponentMemo = useMemo(() => {
+        const handleClear = () => {
+            if (filterText) {
+                setResetPaginationToogle(!resetPaginationToogle);
+                setFilterText('');
+            }
+        };
+
+        return (
+            <>
+                <Col className="flex items-center mb-1">
+                    <Form.Control
+                        id="search"
+                        type="text"
+                        placeholder="Busqueda por ficha del socio"
+                        aria-label="Search Input"
+                        value={filterText}
+                        onChange={e => setFilterText(e.target.value)}
+                    />
+                    <ClearButton
+                        type="button"
+                        variant="info"
+                        title="Limpiar la busqueda"
+                        onClick={handleClear}>
+                        X
+                    </ClearButton>
+                </Col>
+            </>
+        );
+    }, [filterText, resetPaginationToogle]);
 
     return (
         <>
             <Container fluid>
                 <DataTable
                     columns={columns}
-                    data={listPrestamos}
+                    data={filteredItems}
+                    subHeader
+                    subHeaderComponent={subHeaderComponentMemo}
                     progressPending={pending}
                     paginationComponentOptions={paginationComponentOptions}
                     paginationResetDefaultPage={resetPaginationToogle}

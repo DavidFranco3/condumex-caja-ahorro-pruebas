@@ -375,7 +375,7 @@ function formatModelRendimientos(data) {
         dataTemp.push({
             id: data._id,
             folio: data.folio,
-            fichaSocio: parseInt(data.fichaSocio),
+            fichaSocio: String(data.fichaSocio),
             tipo: data.tipo,
             rendimiento: data.rendimiento,
             fechaCreacion: data.createdAt,

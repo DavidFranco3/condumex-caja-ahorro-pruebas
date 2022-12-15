@@ -38,12 +38,12 @@ function EliminaAportaciones(props) {
                 toast.success(data.mensaje)
 
                 // Revierte saldos para eliminar la aportacion correspondiente
-                registroMovimientosSaldosSocios(fichaSocio, aportacion, "0", "0", "0", "0", "0", "0", "Eliminación aportación")
+                registroMovimientosSaldosSocios(parseInt(fichaSocio), aportacion, "0", "0", "0", "0", "0", "0", "Eliminación aportación")
                 
                 // Registra Saldos
-                registroSaldoInicial(fichaSocio, aportacion, "0", "0", folio, "Eliminación aportación")
+                registroSaldoInicial(parseInt(fichaSocio), aportacion, "0", "0", folio, "Eliminación aportación")
                 
-                actualizacionSaldosSocios(fichaSocio, aportacion, "0", "0", folio, "Eliminación aportación")
+                actualizacionSaldosSocios(parseInt(fichaSocio), aportacion, "0", "0", folio, "Eliminación aportación")
 
                 setTimeout(() => {
                     setLoading(false)

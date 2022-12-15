@@ -182,7 +182,7 @@ function formatModelAportaciones(data) {
     dataTemp.push({
       id: data._id,
       folio: data.folio,
-      fichaSocio: parseInt(data.fichaSocio),
+      fichaSocio: String(data.fichaSocio),
       tipo: data.tipo,
       aportacion: data.aportacion,
       fechaCreacion: data.createdAt,

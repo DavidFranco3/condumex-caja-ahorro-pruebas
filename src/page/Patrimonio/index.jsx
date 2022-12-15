@@ -181,7 +181,7 @@ function formatModelPatrimonio(data) {
         dataTemp.push({
             id: data._id,
             folio: data.folio,
-            fichaSocio: parseInt(data.fichaSocio),
+            fichaSocio: String(data.fichaSocio),
             tipo: data.tipo,
             patrimonio: data.patrimonio,
             fechaCreacion: data.createdAt,

@@ -48,10 +48,10 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
         setLoading(true);
 
         const response = await actualizaAportaciones(formData.id, formData);
-        registroMovimientosSaldosSocios(formData.fichaSocio, formData.aportacion, "0", "0", "0", "0", "0", "0", "Modificacion aportación")
+        registroMovimientosSaldosSocios(parseInt(formData.fichaSocio), formData.aportacion, "0", "0", "0", "0", "0", "0", "Modificacion aportación")
         
         // Registra Saldos
-        registroSaldoInicial(formData.fichaSocio, formData.aportacion, "0", "0", formData.folio, "Modificacion aportación")
+        registroSaldoInicial(parseInt(formData.fichaSocio), formData.aportacion, "0", "0", formData.folio, "Modificacion aportación")
         
         const { status, data: { mensaje } } = response
 
