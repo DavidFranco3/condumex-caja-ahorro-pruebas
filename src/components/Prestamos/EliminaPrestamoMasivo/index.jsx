@@ -20,6 +20,9 @@ function EliminaPrestamoMasivo(props) {
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
     useEffect(() => {
         if (getRazonSocial()) {
             setRazonSocialElegida(getRazonSocial)
