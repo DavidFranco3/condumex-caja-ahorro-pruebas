@@ -241,7 +241,7 @@ function ListSociosSindicalizados(props) {
 
 
     const filteredItems = listSocios.filter(
-        item => item.ficha && item.ficha.toLowerCase().includes(filterText.toLowerCase())
+        item => filterText == "" ? item.ficha.toLowerCase().includes(filterText.toLowerCase()) : item.ficha == filterText
     );
 
     const subHeaderComponentMemo = useMemo(() => {

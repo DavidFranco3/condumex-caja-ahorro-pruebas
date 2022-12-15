@@ -176,7 +176,7 @@ function ListRetiros(props) {
 
 
   const filteredItems = listRetiros.filter(
-    item => item.fichaSocio && item.fichaSocio.toLowerCase().includes(filterText.toLowerCase())
+    item => filterText == "" ? item.fichaSocio.toLowerCase().includes(filterText.toLowerCase()) : item.fichaSocio == filterText
   );
 
   const subHeaderComponentMemo = useMemo(() => {

@@ -171,7 +171,7 @@ function ListPrestamos(props) {
         rangeSeparatorText: 'de'
     };
 
-    const[filterText, setFilterText] = useState("");
+    const [filterText, setFilterText] = useState("");
     const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
 
     // Defino barra de busqueda
@@ -204,7 +204,7 @@ function ListPrestamos(props) {
 
 
     const filteredItems = listPrestamos.filter(
-        item => item.fichaSocio && item.fichaSocio.toLowerCase().includes(filterText.toLowerCase())
+        item => filterText == "" ? item.fichaSocio.toLowerCase().includes(filterText.toLowerCase()) : item.fichaSocio == filterText
     );
 
     const subHeaderComponentMemo = useMemo(() => {

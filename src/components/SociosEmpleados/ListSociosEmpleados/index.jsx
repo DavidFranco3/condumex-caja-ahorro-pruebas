@@ -14,6 +14,7 @@ import ModificaSociosEmpleados from "../ModificaSociosEmpleados";
 import EliminaSocioEmpleado from "../EliminaSocioEmpleado";
 import { estilos } from "../../../utils/tableStyled";
 import styled from 'styled-components';
+import { filter } from 'lodash';
 
 function ListSociosEmpleados(props) {
     const { listSocios, history, location, setRefreshCheckLogin } = props;
@@ -240,9 +241,8 @@ function ListSociosEmpleados(props) {
       }
     `;
 
-
     const filteredItems = listSocios.filter(
-        item => item.ficha && item.ficha.toLowerCase().includes(filterText.toLowerCase())
+        item => filterText == "" ? item.ficha.toLowerCase().includes(filterText.toLowerCase()) : item.ficha == filterText
     );
 
     const subHeaderComponentMemo = useMemo(() => {
@@ -258,7 +258,7 @@ function ListSociosEmpleados(props) {
                 <Col className="flex items-center mb-1">
                     <Form.Control
                         id="search"
-                        type="text"
+                        type="Number"
                         placeholder="Busqueda por ficha del socio"
                         aria-label="Search Input"
                         value={filterText}
