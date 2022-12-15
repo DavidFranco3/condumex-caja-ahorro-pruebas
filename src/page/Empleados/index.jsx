@@ -184,6 +184,7 @@ function Empleados(props) {
                             </Button>
                             <Button
                                 className="btnRegistro"
+                                style={{ marginRight: '10px' }}
                                 onClick={() => {
                                     registroSocios(
                                         <RegistroSociosEmpleados

@@ -20,6 +20,7 @@ import RegistroAbonos from "../../components/Abonos/RegistroAbonos";
 import Lottie from 'react-lottie-player';
 import AnimacionLoading from '../../assets/json/loading.json';
 import { map } from "lodash";
+import "./Abonos.scss"
 
 function Abonos(props) {
     const { datos, setRefreshCheckLogin, location, history } = props;
@@ -169,6 +170,7 @@ function Abonos(props) {
 
                             <Button
                                 className="btnRegistro"
+                                style={{ marginRight: '10px' }}
                                 onClick={() => {
                                     registroAbonos(
                                         <RegistroAbonos

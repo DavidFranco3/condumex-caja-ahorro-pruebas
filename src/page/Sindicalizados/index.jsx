@@ -1,49 +1,51 @@
 import { useState, useEffect, Suspense } from 'react';
-import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCirclePlus, faTrashCan, faFileExcel} from "@fortawesome/free-solid-svg-icons";
-import {listarPaginacionSocioSindizalizado,
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus, faTrashCan, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import {
+    listarPaginacionSocioSindizalizado,
     totalRegistrosSocioSindicalizado,
-    listarSocioSindicalizado}
-from "../../api/sociosSindicalizados";
+    listarSocioSindicalizado
+}
+    from "../../api/sociosSindicalizados";
 import ListSociosSindicalizados from "../../components/SociosSindicalizados/ListSociosSindicalizados";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import RegistroSociosSindicalizados from "../../components/SociosSindicalizados/RegistroSociosSindicalizados";
 import CargaMasivaSociosSindicalizados from "../../components/SociosSindicalizados/CargaMasivaSociosSindicalizados";
 import EliminaSociosSindicalizadosMasivo from "../../components/SociosSindicalizados/EliminaSociosSindicalizadosMasivo";
 import BasicModal from "../../components/Modal/BasicModal";
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
-import {exportCSVFile} from "../../utils/exportCSV";
+import { exportCSVFile } from "../../utils/exportCSV";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha);
+    const date = new Date(fecha);
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 function Sindicalizados(props) {
     const { setRefreshCheckLogin, location, history } = props;
-    
-     // Almacena los datos de los abonos
-    const [listSociosCSV, setListSociosCSV] = useState(null);  
-    
+
+    // Almacena los datos de los abonos
+    const [listSociosCSV, setListSociosCSV] = useState(null);
+
     useEffect(() => {
         try {
             // Inicia listado de detalles de los articulos vendidos
             listarSocioSindicalizado().then(response => {
                 const { data } = response;
                 // console.log(data)
-                if(!listSociosCSV && data){
-                        setListSociosCSV(formatModelSocios2(data));
-                    } else {
-                        const datosSocios = formatModelSocios2(data);
-                        setListSociosCSV(datosSocios)
-                    }
+                if (!listSociosCSV && data) {
+                    setListSociosCSV(formatModelSocios2(data));
+                } else {
+                    const datosSocios = formatModelSocios2(data);
+                    setListSociosCSV(datosSocios)
+                }
             }).catch(e => {
                 console.log(e)
             })
@@ -51,7 +53,7 @@ function Sindicalizados(props) {
             console.log(e)
         }
     }, [location]);
-    
+
     const generacionCSV = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
@@ -60,7 +62,7 @@ function Sindicalizados(props) {
             console.log(e)
         }
     }
-    
+
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
@@ -72,14 +74,14 @@ function Sindicalizados(props) {
         setContentModal(content);
         setShowModal(true);
     }
-    
+
     // Para la carga masiva de socios
     const registroMasivoSociosSindicalizados = (content) => {
         setTitulosModal("Registro masivo de socios");
         setContentModal(content);
         setShowModal(true);
     }
-    
+
     // Para la carga masiva de socios
     const eliminaMasivoSociosSindicalizados = (content) => {
         setTitulosModal("Elimina elementos");
@@ -113,95 +115,96 @@ function Sindicalizados(props) {
 
     return (
         <>
-    <Alert className="fondoPrincipalAlert">
-        <Row>
-          <Col xs={12} md={4} className="titulo">
-          <h1 className="font-bold">Sindicalizados</h1>
-          </Col>
-          <Col xs={6} md={8}>
-            <div style={{ float: 'right' }}>
-            
-            <Button
-                className="btnMasivo"
-                style={{ marginRight: '10px' }}
-                onClick={() => {
-                generacionCSV()
-                }}
-                >
-                <FontAwesomeIcon icon={faFileExcel}/> Descargar CSV
-            </Button>
-            
-            <Button
-                className="btnMasivo"
-                style={{ marginRight: '10px' }}
-                onClick={() => {
-                  eliminaMasivoSociosSindicalizados(
-                    <EliminaSociosSindicalizadosMasivo
-                      setShowModal={setShowModal}
-                      location={location}
-                      history={history}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
-              </Button>
-            
-              <Button
-                className="btnRegistro"
-                style={{ marginRight: '10px' }}
-                onClick={() => {
-                  registroMasivoSociosSindicalizados(
-                    <CargaMasivaSociosSindicalizados
-                      setShowModal={setShowModal}
-                      location={location}
-                      history={history}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faCirclePlus} /> Registro Masivo
-              </Button>
-              <Button
-                className="btnRegistro"
-                onClick={() => {
-                   registroSocios(
-                      <RegistroSociosSindicalizados
-                         setShowModal={setShowModal}
-                         location={location}
-                          history={history}
-                          />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faCirclePlus} /> Registrar socio
-              </Button>
-            </div>
-          </Col>
-        </Row>
-    </Alert>
+            <Alert className="fondoPrincipalAlert">
+                <Row>
+                    <Col xs={12} md={4} className="titulo">
+                        <h1 className="font-bold">Sindicalizados</h1>
+                    </Col>
+                    <Col xs={6} md={8}>
+                        <div style={{ float: 'right' }}>
 
-                {
-                    listSociosSindicalizados ?
-                        (
-                            <>
-                                <Suspense fallback={<Spinner />}>
-                                    <ListSociosSindicalizados
-                                        listSocios={listSociosSindicalizados}
-                                        history={history}
-                                        location={location}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
-                                    />
-                                </Suspense>
-                            </>
-                        )
-                        :
-                        (
-                            <>
+                            <Button
+                                className="btnMasivo"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    generacionCSV()
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
+                            </Button>
+
+                            <Button
+                                className="btnMasivo"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    eliminaMasivoSociosSindicalizados(
+                                        <EliminaSociosSindicalizadosMasivo
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
+                            </Button>
+
+                            <Button
+                                className="btnRegistro"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    registroMasivoSociosSindicalizados(
+                                        <CargaMasivaSociosSindicalizados
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faCirclePlus} /> Registro Masivo
+                            </Button>
+                            <Button
+                                className="btnRegistro"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    registroSocios(
+                                        <RegistroSociosSindicalizados
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faCirclePlus} /> Registrar socio
+                            </Button>
+                        </div>
+                    </Col>
+                </Row>
+            </Alert>
+
+            {
+                listSociosSindicalizados ?
+                    (
+                        <>
+                            <Suspense fallback={<Spinner />}>
+                                <ListSociosSindicalizados
+                                    listSocios={listSociosSindicalizados}
+                                    history={history}
+                                    location={location}
+                                    setRefreshCheckLogin={setRefreshCheckLogin}
+                                />
+                            </Suspense>
+                        </>
+                    )
+                    :
+                    (
+                        <>
                             <Lottie loop={true} play={true} animationData={AnimacionLoading} />
-                            </>
-                        )
-                }
+                        </>
+                    )
+            }
 
             <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
                 {contentModal}

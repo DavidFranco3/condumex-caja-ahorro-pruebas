@@ -254,23 +254,27 @@ function ListSociosSindicalizados(props) {
 
         return (
             <>
-                <Col className="flex items-center mb-1">
-                    <Form.Control
-                        id="search"
-                        type="text"
-                        placeholder="Busqueda por ficha del socio"
-                        aria-label="Search Input"
-                        value={filterText}
-                        onChange={e => setFilterText(e.target.value)}
-                    />
-                    <ClearButton
-                        type="button"
-                        variant="info"
-                        title="Limpiar la busqueda"
-                        onClick={handleClear}>
-                        X
-                    </ClearButton>
+                <Col></Col>
+                <Col>
+                    <div className="flex items-center mb-1">
+                        <Form.Control
+                            id="search"
+                            type="text"
+                            placeholder="Busqueda por ficha del socio"
+                            aria-label="Search Input"
+                            value={filterText}
+                            onChange={e => setFilterText(e.target.value)}
+                        />
+                        <ClearButton
+                            type="button"
+                            variant="info"
+                            title="Limpiar la busqueda"
+                            onClick={handleClear}>
+                            X
+                        </ClearButton>
+                    </div>
                 </Col>
+                <Col></Col>
             </>
         );
     }, [filterText, resetPaginationToogle]);
@@ -280,6 +284,7 @@ function ListSociosSindicalizados(props) {
             <Container fluid>
                 <DataTable
                     columns={columns}
+                    noDataComponent="No hay registros para mostrar"
                     data={filteredItems}
                     subHeader
                     subHeaderComponent={subHeaderComponentMemo}

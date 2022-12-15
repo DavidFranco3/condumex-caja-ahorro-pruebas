@@ -175,6 +175,7 @@ function Prestamos(props) {
 
                             <Button
                                 className="btnRegistro"
+                                style={{ marginRight: '10px' }}
                                 onClick={() => {
                                     registroPrestamos(
                                         <RegistroPrestamos

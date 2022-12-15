@@ -332,6 +332,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
               </Button>
               <Button
                 className="btnRegistro"
+                style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroRendimiento(
                     <RegistroRendimientos
