@@ -216,7 +216,7 @@ export async function actualizaAbonos(id, data) {
   )
 }
 
-export async function eliminaAbonosMasivo(fecha) {
+export async function eliminaAbonosMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -226,7 +226,7 @@ export async function eliminaAbonosMasivo(fecha) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarAbonosMasivo + `/${fecha}`,
+    API_HOST + ENDPOINTEliminarAbonosMasivo + `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }

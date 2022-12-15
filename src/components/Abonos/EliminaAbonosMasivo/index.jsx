@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
 import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 
 function EliminaAbonosMasivo(props) {
     
@@ -19,6 +20,15 @@ function EliminaAbonosMasivo(props) {
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
+
     const onSubmit = (e) => {
         e.preventDefault()
         
@@ -30,7 +40,7 @@ function EliminaAbonosMasivo(props) {
         setLoading(true)
 
         try {
-            eliminaAbonosMasivo(formData.fecha).then(response => {
+            eliminaAbonosMasivo(formData.fecha, razonSocialElegida).then(response => {
                 
                 
                 for (let i = 0; i < listaFechas.length; i++) {

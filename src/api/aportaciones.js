@@ -15,7 +15,7 @@ import {
   ENDPOINTObtenerAportacionesAcumuladasByTipo,
   ENDPOINTObtenerAportacionesAcumuladasByRazon,
   ENDPOINTAportaciones,
-  ENDPOINTEliminarAportacionesMasivo
+  ENDPOINTEliminarAportacionesMasivo,
 } from './endpoints'
 import axios from 'axios'
 import { getTokenApi } from './auth'
@@ -82,7 +82,12 @@ export async function listarAportaciones(razonSocial, inicio, fin) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTListarAportaciones + `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`, config)
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarAportaciones +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
 }
 
 // Obtener el total de las aportaciones
@@ -221,7 +226,7 @@ export async function actualizaAportaciones(id, data) {
   )
 }
 
-export async function eliminaAportacionesMasivo(fecha) {
+export async function eliminaAportacionesMasivo(fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -231,7 +236,9 @@ export async function eliminaAportacionesMasivo(fecha) {
   }
 
   return await axios.delete(
-    API_HOST + ENDPOINTEliminarAportacionesMasivo + `/${fecha}`,
+    API_HOST +
+      ENDPOINTEliminarAportacionesMasivo +
+      `/?fecha=${fecha}&&tipo=${tipo}`,
     config
   )
 }
