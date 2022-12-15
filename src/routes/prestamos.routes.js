@@ -263,15 +263,16 @@ router.put("/actualizar/:id", async (req, res) => {
 });
 
 // Borrar muchos rendimientos
-router.delete("/eliminarMasivo/:fecha", async (req, res) => {
-  const { fecha } = req.params;
+router.delete("/eliminarMasivo", async (req, res) => {
+  const { fecha, tipo } = req.query;
   await prestamos
-    .remove( {
-        $and: [
-        {createdAt: {$gte: (fecha+"T00:00:00.000Z")}},
-        {createdAt: {$lte: (fecha+"T23:59:59.999Z")}}
-        ]
-        } )
+    .remove({
+      tipo: tipo,
+      $and: [
+        { createdAt: { $gte: (fecha + "T00:00:00.000Z") } },
+        { createdAt: { $lte: (fecha + "T23:59:59.999Z") } }
+      ]
+    })
     .then((_data) => res.status(200).json({ mensaje: "Prestamos eliminados" }))
     .catch((error) => res.json({ message: error }));
 });

@@ -324,7 +324,7 @@ router.delete("/eliminarMasivo", async (req, res) => {
         { createdAt: { $lte: (fecha + "T23:59:59.999Z") } }
       ]
     })
-    .then((_data) => res.status(200).json({ mensaje: "Abonos eliminados" }))
+    .then((_data) => res.status(200).json({ mensaje: "Aportaciones eliminadas" }))
     .catch((error) => res.json({ message: error }));
 });
 

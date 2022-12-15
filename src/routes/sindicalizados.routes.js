@@ -165,16 +165,17 @@ router.put("/actualizar/:id", verifyToken, async (req, res) => {
 });
 
 // Borrar muchos rendimientos
-router.delete("/eliminarMasivo/:fecha", async (req, res) => {
-  const { fecha } = req.params;
+router.delete("/eliminarMasivo", async (req, res) => {
+  const { fecha, tipo } = req.query;
   await sindicalizados
-    .remove( {
-        $and: [
-        {createdAt: {$gte: (fecha+"T00:00:00.000Z")}},
-        {createdAt: {$lte: (fecha+"T23:59:59.999Z")}}
-        ]
-        } )
-    .then((_data) => res.status(200).json({ mensaje: "Socios eliminados" }))
+    .remove({
+      tipo: tipo,
+      $and: [
+        { createdAt: { $gte: (fecha + "T00:00:00.000Z") } },
+        { createdAt: { $lte: (fecha + "T23:59:59.999Z") } }
+      ]
+    })
+    .then((_data) => res.status(200).json({ mensaje: "Socios sindicalizados eliminados" }))
     .catch((error) => res.json({ message: error }));
 });
 

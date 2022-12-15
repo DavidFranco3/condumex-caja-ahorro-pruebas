@@ -162,16 +162,17 @@ router.put("/actualizar/:id", verifyToken, async (req, res) => {
 });
 
 // Borrar muchos rendimientos
-router.delete("/eliminarMasivo/:fecha", verifyToken, async (req, res) => {
-  const { fecha } = req.params;
+router.delete("/eliminarMasivo", verifyToken, async (req, res) => {
+  const { fecha, tipo } = req.query;
   await empleados
-    .remove( {
-        $and: [
-        {createdAt: {$gte: (fecha+"T00:00:00.000Z")}},
-        {createdAt: {$lte: (fecha+"T23:59:59.999Z")}}
-        ]
-        } )
-    .then((_data) => res.status(200).json({ mensaje: "Socios eliminados" }))
+    .remove({
+      tipo: tipo,
+      $and: [
+        { createdAt: { $gte: (fecha + "T00:00:00.000Z") } },
+        { createdAt: { $lte: (fecha + "T23:59:59.999Z") } }
+      ]
+    })
+    .then((_data) => res.status(200).json({ mensaje: "Empleados eliminados" }))
     .catch((error) => res.json({ message: error }));
 });
 
