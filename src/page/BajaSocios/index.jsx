@@ -9,7 +9,8 @@ import {
     listarPaginacionBajaSocios,
     listarPaginacionBajaSociosxTipo,
     totalBajaSocios,
-    totalxTipoBajaSocios
+    totalxTipoBajaSocios,
+    listarBajaSocio
 } from "../../api/bajaSocios";
 import ListBajaSocios from "../../components/BajaSocios/ListBajaSocios";
 import RegistroBajaSocios from "../../components/BajaSocios/RegistroBajaSocios";
@@ -34,11 +35,6 @@ function BajaSocios(props) {
         setShowModal(true);
     }
 
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [noTotalBajasSocios, setNoTotalBajasSocios] = useState(0);
-
     // Cerrado de sesión automatico
     useEffect(() => {
         if(getTokenApi()) {
@@ -57,49 +53,23 @@ function BajaSocios(props) {
 
     useEffect(() => {
         try {
-            totalxTipoBajaSocios(getRazonSocial()).then(response => {
+            // Inicia listado de detalles de los articulos vendidos
+            listarBajaSocio(getRazonSocial()).then(response => {
                 const { data } = response;
-                setNoTotalBajasSocios(data)
-            }).catch(e => {
-                // console.log(e)
-                if(e.message === 'Network Error') {
-                    toast.error("Conexión al servidor no disponible");
+                // console.log(data)
+                if (!listBajasSocios && data) {
+                    setListBajasSocios(formatModelBajaSocios(data));
+                } else {
+                    const datosBajas = formatModelBajaSocios(data);
+                    setListBajasSocios(datosBajas)
                 }
+            }).catch(e => {
+                console.log(e)
             })
-
-            // listarPaginacionRetiros(page, rowsPerPage)
-            if(page === 0) {
-                setPage(1)
-                listarPaginacionBajaSociosxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    // console.log(data)
-                    if(!listBajasSocios && data){
-                        setListBajasSocios(formatModelBajaSocios(data));
-                    } else {
-                        const datosBajasSocios = formatModelBajaSocios(data);
-                        setListBajasSocios(datosBajasSocios)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            } else {
-                listarPaginacionBajaSociosxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    // console.log(data)
-                    if(!listBajasSocios && data){
-                        setListBajasSocios(formatModelBajaSocios(data));
-                    } else {
-                        const datosBajasSocios = formatModelBajaSocios(data);
-                        setListBajasSocios(datosBajasSocios)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            }
         } catch (e) {
             console.log(e)
         }
-    }, [location, page, rowsPerPage]);
+    }, [location]);
 
 
     return (
@@ -111,8 +81,6 @@ function BajaSocios(props) {
                             Baja de socios
                         </h1>
                     </Col>
-                    
-                    
                     
                     <Col xs={6} md={4}>
                         <Col align="right">
@@ -145,11 +113,6 @@ function BajaSocios(props) {
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
-                                    rowsPerPage={rowsPerPage}
-                                    setRowsPerPage={setRowsPerPage}
-                                    page={page}
-                                    setPage={setPage}
-                                    noTotalBajasSocios={noTotalBajasSocios}
                                 />
                             </Suspense>
                         </>

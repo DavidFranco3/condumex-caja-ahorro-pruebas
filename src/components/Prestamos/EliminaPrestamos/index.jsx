@@ -37,9 +37,9 @@ function EliminaPrestamos(props) {
                 toast.success(data.mensaje)
 
                 // Revierte saldos para eliminar el prestamo correspondiente
-                registroMovimientosSaldosSocios(fichaSocio, "0", "0", prestamoTotal, "0", "0", "0", "0", "Eliminación prestamo");
+                registroMovimientosSaldosSocios(parseInt(fichaSocio), "0", "0", parseFloat(prestamoTotal), "0", "0", "0", "0", "Eliminación prestamo");
                 
-                actualizacionDeudaSocio(fichaSocio, "0", prestamoTotal, "Eliminación prestamo", fechaCreacion);
+                actualizacionDeudaSocio(parseInt(fichaSocio), "0", parseFloat(prestamoTotal), "Eliminación prestamo", fechaCreacion);
                
                 setTimeout(() => {
                     setLoading(false)

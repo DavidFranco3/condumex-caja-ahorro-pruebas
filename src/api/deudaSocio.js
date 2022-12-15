@@ -14,6 +14,7 @@ import {
   ENDPOINTActualizarDeudaSocio,
   ENDPOINTObtenerDeudaSocioAcumuladosByRazon,
   ENDPOINTEliminarDeudaSocioMasivo,
+  ENDPOINTListarDeudasSocios,
 } from './endpoints'
 import axios from 'axios'
 import { getTokenApi } from './auth'
@@ -61,6 +62,21 @@ export async function listarDeudaSocio(razonSocial, inicio, fin) {
     API_HOST +
       ENDPOINTListarDeudaSocio +
       `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+// Listar todos los deuda socio
+export async function listarDeudasSocios(razonSocial) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarDeudasSocios + `/?tipo=${razonSocial}`,
     config
   )
 }

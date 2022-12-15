@@ -3,6 +3,7 @@ import {
   ENDPOINTRegistroRendimientos,
   ENDPOINTRegistroRendimientos2,
   ENDPOINTListarRendimientos,
+  ENDPOINTListarRendimiento,
   ENDPOINTNumeroRendimientos,
   ENDPOINTTotalxTipoRendimientos,
   ENDPOINTListarPaginandoRendimientos,
@@ -116,6 +117,21 @@ export async function listarRendimientos(razonSocial, inicio, fin) {
     API_HOST +
       ENDPOINTListarRendimientos +
       `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+// Listar todas las Rendimientos
+export async function listarRendimiento(razonSocial) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return axios.get(
+    API_HOST + ENDPOINTListarRendimiento + `/?tipo=${razonSocial}`,
     config
   )
 }

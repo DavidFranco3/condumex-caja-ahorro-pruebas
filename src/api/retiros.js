@@ -2,6 +2,7 @@ import { API_HOST } from '../utils/constants'
 import {
   ENDPOINTRegistroRetiros,
   ENDPOINTListarRetiros,
+  ENDPOINTListarRetiro,
   ENDPOINTTotalRetiros,
   ENDPOINTTotalxTipoRetiros,
   ENDPOINTListarPaginandoRetiros,
@@ -62,6 +63,21 @@ export async function listarRetiros(razonSocial, inicio, fin) {
     API_HOST +
       ENDPOINTListarRetiros +
       `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+// Listar todos los retiros
+export async function listarRetiro(razonSocial) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarRetiro + `/?tipo=${razonSocial}`,
     config
   )
 }

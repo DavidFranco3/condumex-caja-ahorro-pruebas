@@ -37,11 +37,10 @@ function EliminaAbonos(props) {
                 toast.success(data.mensaje)
 
                 // Registra movimientos
-                registroMovimientosSaldosSocios(fichaSocio, "0", "0", "0", "0", "0", "0", abono, "Eliminación abono");
+                registroMovimientosSaldosSocios(parseInt(fichaSocio), "0", "0", "0", "0", "0", "0", parseFloat(abono), "Eliminación abono");
                 
-                actualizacionDeudaSocio(fichaSocio, abono, "0", "Eliminación abono", fechaCreacion);
-                
-
+                actualizacionDeudaSocio(parseInt(fichaSocio), parseFloat(abono), "0", "Eliminación abono", fechaCreacion);
+            
                 setTimeout(() => {
                     setLoading(false)
                     history.push({

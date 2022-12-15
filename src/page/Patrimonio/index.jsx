@@ -9,7 +9,8 @@ import {
     listarPaginacionPatrimonio,
     listarPaginacionPatrimonioxTipo,
     totalPatrimonio,
-    totalxTipoPatrimonio
+    totalxTipoPatrimonio,
+    listarPatrimonios
 } from "../../api/patrimonio";
 import ListPatrimonios from "../../components/Patrimonio/Listar";
 import RegistroPatrimonio from "../../components/Patrimonio/Registrar";
@@ -25,11 +26,6 @@ function Patrimonio(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [noTotalPatrimonios, setNoTotalPatrimonios] = useState(0);
 
     const enrutamiento = useHistory();
 
@@ -71,49 +67,23 @@ function Patrimonio(props) {
 
     useEffect(() => {
         try {
-            totalxTipoPatrimonio(getRazonSocial()).then(response => {
+            // Inicia listado de detalles de los articulos vendidos
+            listarPatrimonios(getRazonSocial()).then(response => {
                 const { data } = response;
-                setNoTotalPatrimonios(data)
-            }).catch(e => {
-                // console.log(e)
-                if(e.message === 'Network Error') {
-                    toast.error("Conexión al servidor no disponible");
+                // console.log(data)
+                if (!listPatrimonios && data) {
+                    setListPatrimonios(formatModelPatrimonio(data));
+                } else {
+                    const datosPatrimonio = formatModelPatrimonio(data);
+                    setListPatrimonios(datosPatrimonio)
                 }
+            }).catch(e => {
+                console.log(e)
             })
-
-            if(page === 0) {
-                setPage(1)
-                listarPaginacionPatrimoniosxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    //console.log(data)
-                    if(!listPatrimonios && data){
-                        setListPatrimonios(formatModelPatrimonio(data));
-                    } else {
-                        const datosPatrimonios = formatModelPatrimonio(data);
-                        setListPatrimonios(datosPatrimonios)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            } else {
-                listarPaginacionPatrimonioxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    //console.log(data)
-                    if(!listPatrimonios && data){
-                        setListPatrimonios(formatModelPatrimonio(data));
-                    } else {
-                        const datosPatrimonios = formatModelPatrimonio(data);
-                        setListPatrimonios(datosPatrimonios)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            }
         } catch (e) {
             console.log(e)
         }
-    }, [location, page, rowsPerPage]);
-
+    }, [location]);
 
     return (
         <>
@@ -186,11 +156,6 @@ function Patrimonio(props) {
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
-                                    rowsPerPage={rowsPerPage}
-                                    setRowsPerPage={setRowsPerPage}
-                                    page={page}
-                                    setPage={setPage}
-                                    noTotalPatrimonios={noTotalPatrimonios}
                                 />
                             </Suspense>
                         </>

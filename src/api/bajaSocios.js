@@ -2,6 +2,7 @@ import { API_HOST } from '../utils/constants'
 import {
   ENDPOINTRegistroBajaSocios,
   ENDPOINTListarBajaSocios,
+  ENDPOINTListarBajasSocios,
   ENDPOINTTotalBajaSocios,
   ENDPOINTTotalxTipoBajaSocios,
   ENDPOINTListarPaginandoBajaSocios,
@@ -50,7 +51,26 @@ export async function listarBajaSocios(razonSocial, inicio, fin) {
       Authorization: `Bearer ${getTokenApi()}`,
     },
   }
-  return await axios.get(API_HOST + ENDPOINTListarBajaSocios + `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`, config)
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarBajaSocios +
+      `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+export async function listarBajaSocio(razonSocial) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarBajasSocios + `/?tipo=${razonSocial}`,
+    config
+  )
 }
 
 // Obtener el total de baja de socios

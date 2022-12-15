@@ -10,7 +10,7 @@ import {estilos} from "../../../utils/tableStyled";
 import EliminaDeudaSocio from "../EliminaDeudaSocio";
 
 function ListDeudaSocio(props) {
-    const { listDeudaSocio, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, noTotalDeudaSocio } = props;
+    const { listDeudaSocio, history, location, setRefreshCheckLogin } = props;
 
     // Configura el idioma a español
     moment.locale("es");
@@ -117,18 +117,6 @@ function ListDeudaSocio(props) {
             reorder: false
         },
     ];
-
-    const handleChangePage = (page) => {
-        // console.log("Nueva pagina "+ newPage)
-        setPage(page);
-    };
-
-    const handleChangeRowsPerPage = (newPerPage) => {
-        // console.log("Registros por pagina "+ parseInt(event.target.value, 10))
-        setRowsPerPage(newPerPage)
-        //setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(1);
-    };
     
     // Elimina prestamos
         const eliminacionDeudaSocio = (content) => {
@@ -171,10 +159,6 @@ function ListDeudaSocio(props) {
                     customStyles={estilos}
                     sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
                     pagination
-                    paginationServer
-                    paginationTotalRows={noTotalDeudaSocio}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                    onChangePage={handleChangePage}
                 />
             </Container>
 

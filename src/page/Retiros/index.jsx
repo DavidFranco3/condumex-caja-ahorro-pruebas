@@ -1,15 +1,16 @@
 import { useState, useEffect, Suspense } from 'react';
-import {useHistory, withRouter } from "react-router-dom";
-import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {toast} from "react-toastify";
-import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCirclePlus, faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import { useHistory, withRouter } from "react-router-dom";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
+import { toast } from "react-toastify";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import {
     listarPaginacionRetiros,
     listarPaginacionRetirosxTipo,
     totalRetiros,
-    totalxTipoRetiros
+    totalxTipoRetiros,
+    listarRetiro
 } from "../../api/retiros";
 import ListRetiros from "../../components/Retiros/ListRetiros";
 import BasicModal from "../../components/Modal/BasicModal";
@@ -29,15 +30,10 @@ function Retiros(props) {
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
 
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [noTotalRetiros, setNoTotalRetiros] = useState(0);
-
     // Cerrado de sesión automatico
     useEffect(() => {
-        if(getTokenApi()) {
-            if(isExpiredToken(getTokenApi())) {
+        if (getTokenApi()) {
+            if (isExpiredToken(getTokenApi())) {
                 toast.warning("Sesión expirada");
                 toast.success("Sesión cerrada por seguridad");
                 logoutApi();
@@ -52,49 +48,23 @@ function Retiros(props) {
 
     useEffect(() => {
         try {
-            totalxTipoRetiros(getRazonSocial()).then(response => {
+            // Inicia listado de detalles de los articulos vendidos
+            listarRetiro(getRazonSocial()).then(response => {
                 const { data } = response;
-                setNoTotalRetiros(data)
-            }).catch(e => {
-                // console.log(e)
-                if(e.message === 'Network Error') {
-                    toast.error("Conexión al servidor no disponible");
+                // console.log(data)
+                if (!listRetiros && data) {
+                    setListRetiros(formatModelRetiros(data));
+                } else {
+                    const datosRetiros = formatModelRetiros(data);
+                    setListRetiros(datosRetiros)
                 }
+            }).catch(e => {
+                console.log(e)
             })
-
-            // listarPaginacionPrestamos(page, rowsPerPage)
-            if(page === 0) {
-                setPage(1)
-                listarPaginacionRetirosxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    // console.log(data)
-                    if(!listRetiros && data){
-                        setListRetiros(formatModelRetiros(data));
-                    } else {
-                        const datosRetiros = formatModelRetiros(data);
-                        setListRetiros(datosRetiros)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            } else {
-                listarPaginacionRetirosxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    // console.log(data)
-                    if(!listRetiros && data){
-                        setListRetiros(formatModelRetiros(data));
-                    } else {
-                        const datosRetiros = formatModelRetiros(data);
-                        setListRetiros(datosRetiros)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            }
         } catch (e) {
             console.log(e)
         }
-    }, [location, page, rowsPerPage]);
+    }, [location]);
 
     // Para el registro manual de retiros
     const registroRetiros = (content) => {
@@ -102,19 +72,19 @@ function Retiros(props) {
         setContentModal(content);
         setShowModal(true);
     }
-    
+
     //Para el registro de Rendimientos
     const eliminaRetiroMasivo = (content) => {
-    setTitulosModal('Eliminar elementos')
-    setContentModal(content)
-    setShowModal(true)
-  }
-  
+        setTitulosModal('Eliminar elementos')
+        setContentModal(content)
+        setShowModal(true)
+    }
+
     const registroRetirosCargaMasiva = (content) => {
-    setTitulosModal('Carga masiva')
-    setContentModal(content)
-    setShowModal(true)
-  }
+        setTitulosModal('Carga masiva')
+        setContentModal(content)
+        setShowModal(true)
+    }
 
     return (
         <>
@@ -126,53 +96,53 @@ function Retiros(props) {
                         </h1>
                     </Col>
                     <Col xs={6} md={8}>
-                    <div style={{ float: 'right' }}>           
-             <Button
-                className="btnMasivo"
-                style={{ marginRight: '10px' }}
-                onClick={() => {
-                  eliminaRetiroMasivo(
-                    <EliminaRetiroMasivo
-                      setShowModal={setShowModal}
-                      location={location}
-                      history={history}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
-              </Button>
-              
-              <Button
-                                    className="btnRegistro"
-                                    style={{ marginRight: '10px' }}
-                                    onClick={() => {
+                        <div style={{ float: 'right' }}>
+                            <Button
+                                className="btnMasivo"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    eliminaRetiroMasivo(
+                                        <EliminaRetiroMasivo
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
+                            </Button>
+
+                            <Button
+                                className="btnRegistro"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
                                     registroRetirosCargaMasiva(
-                                    <CargaMasivaRetiros
-                                    setShowModal={setShowModal}
-                                    location={location}
-                                    history={history}
-                                />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faCirclePlus} /> Registro masivo
-              </Button>
-                           
-                                <Button
-                                    className="btnRegistro"
-                                    onClick={() => {
-                                        registroRetiros(
-                                            <RegistroRetiros
-                                                setShowModal={setShowModal}
-                                                location={location}
-                                                history={history}
-                                            />
-                                        )
-                                    }}
-                                >
-                                    <FontAwesomeIcon icon={faCirclePlus} /> Registrar retiro
-                                </Button>
+                                        <CargaMasivaRetiros
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faCirclePlus} /> Registro masivo
+                            </Button>
+
+                            <Button
+                                className="btnRegistro"
+                                onClick={() => {
+                                    registroRetiros(
+                                        <RegistroRetiros
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faCirclePlus} /> Registrar retiro
+                            </Button>
                         </div>
                     </Col>
                 </Row>
@@ -188,11 +158,6 @@ function Retiros(props) {
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
-                                    rowsPerPage={rowsPerPage}
-                                    setRowsPerPage={setRowsPerPage}
-                                    page={page}
-                                    setPage={setPage}
-                                    noTotalRetiros={noTotalRetiros}
                                 />
                             </Suspense>
                         </>
@@ -200,7 +165,7 @@ function Retiros(props) {
                     :
                     (
                         <>
-                        <Lottie loop={true} play={true} animationData={AnimacionLoading} />
+                            <Lottie loop={true} play={true} animationData={AnimacionLoading} />
                         </>
                     )
             }

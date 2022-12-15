@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaAbonosMasivo} from "../../../api/abonos";
-import {toast} from "react-toastify";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaAbonosMasivo } from "../../../api/abonos";
+import { toast } from "react-toastify";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
+import { actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 
 function EliminaAbonosMasivo(props) {
-    
+
     const [formData, setFormData] = useState(initialFormData());
-    
+
     const { listaFichas, listaAbonos2, listaFechas, location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
     const cancelarEliminacion = () => {
@@ -31,25 +31,25 @@ function EliminaAbonosMasivo(props) {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        
-        if(!formData.fecha){
+
+        if (!formData.fecha) {
             toast.error("Por favor selecciona una fecha");
             return;
         }
-        
+
         setLoading(true)
 
         try {
             eliminaAbonosMasivo(formData.fecha, razonSocialElegida).then(response => {
-                
-                
+
+
                 for (let i = 0; i < listaFechas.length; i++) {
-            
-            if (formData.fecha == listaFechas[i]) { 
-                    actualizacionDeudaSocio(parseInt(listaFichas[i]), parseFloat(listaAbonos2[i]), "0", "Eliminación abono", formData.fecha);
-        }
-    }
-                
+
+                    if (formData.fecha == listaFechas[i]) {
+                        actualizacionDeudaSocio(parseInt(listaFichas[i]), parseFloat(listaAbonos2[i]), "0", "Eliminación abono", formData.fecha);
+                    }
+                }
+
                 const { data } = response;
                 toast.success(data.mensaje)
 
@@ -68,7 +68,7 @@ function EliminaAbonosMasivo(props) {
             console.log(e)
         }
     }
-    
+
     const onChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -85,22 +85,22 @@ function EliminaAbonosMasivo(props) {
                 </Alert>
 
                 <Form onChange={onChange} onSubmit={onSubmit}>
-                    
+
                     <Form.Group as={Row} controlId="formGridAbonos">
-                            <Col sm={4}>
+                        <Col sm={4}>
                             <Form.Label>Selecciona una fecha:</Form.Label>
-                            </Col>
-                            <Col sm={8}>
+                        </Col>
+                        <Col sm={8}>
                             <Form.Control
                                 className="mb-3"
                                 type="date"
                                 defaultValue={formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
-                                />
-                                </Col>
-                        </Form.Group>
-                    
+                            />
+                        </Col>
+                    </Form.Group>
+
 
                     <Form.Group as={Row} className="botones">
                         <Col>

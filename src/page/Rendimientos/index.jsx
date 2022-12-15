@@ -18,6 +18,7 @@ import {
   registraRendimientosSocios,
   totalxTipoRendimientos,
   totalGeneralBySocios,
+  listarRendimiento
 } from '../../api/rendimientos'
 import { registraMovimientoSaldosSocios2 } from '../../components/GestionAutomatica/Saldos/Movimientos'
 import AnimacionLoading from '../../assets/json/loading.json'
@@ -65,7 +66,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         }
       })
 
-    listarPaginacionRendimientosxTipo(page, rowsPerPage, razon)
+      listarRendimiento(razon)
       .then((response) => {
         const { data } = response
         if (listRendimientos && data) {
@@ -100,7 +101,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
 
   useEffect(() => {
     getRendimientos()
-  }, [location, page, rowsPerPage])
+  }, [location])
 
   const closeModal = () => {
     setIsOpen(false)
@@ -355,11 +356,6 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
             listRendimientos={listRendimientos}
             history={history}
             location={location}
-            rowsPerPage={rowsPerPage}
-            setRowsPerPage={setRowsPerPage}
-            page={page}
-            setPage={setPage}
-            totalRendimientos={totalRendimientos}
           />
         </Suspense>
       ) : (

@@ -13,7 +13,7 @@ import NombreSocioEmpleado from "../../utils/NombresSocios/NombreSocioEmpleado";
 import NombreSocioSindicalizado from "../../utils/NombresSocios/NombreSocioSindicalizado";
 
 function ListMovimientos(props) {
-    const { listMovimientos, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, noTotalMovimientos } = props;
+    const { listMovimientos, history, location, setRefreshCheckLogin } = props;
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
@@ -141,19 +141,6 @@ function ListMovimientos(props) {
         },
     ];
 
-    const handleChangePage = (page) => {
-        // console.log("Nueva pagina "+ newPage)
-        setPage(page);
-    };
-
-    const handleChangeRowsPerPage = (newPerPage) => {
-        // console.log("Registros por pagina "+ parseInt(event.target.value, 10))
-        setRowsPerPage(newPerPage)
-        //setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(1);
-    };
-
-
     // Definiendo estilos para data table
     // Configurando animacion de carga
     const [pending, setPending] = useState(true);
@@ -187,10 +174,6 @@ function ListMovimientos(props) {
                     customStyles={estilos}
                     sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
                     pagination
-                    paginationServer
-                    paginationTotalRows={noTotalMovimientos}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                    onChangePage={handleChangePage}
                 />
             </Container>
 

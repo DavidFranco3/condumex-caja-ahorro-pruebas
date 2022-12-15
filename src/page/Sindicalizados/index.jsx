@@ -87,61 +87,28 @@ function Sindicalizados(props) {
         setShowModal(true);
     }
 
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [totalSociosSindicalizados, setTotalSociosSindicalizados] = useState(0);
-
     // Para almacenar el listado de socios
     const [listSociosSindicalizados, setListSociosSindicalizados] = useState(null);
 
     useEffect(() => {
         try {
-            totalRegistrosSocioSindicalizado().then(response => {
-                const { data } = response
-                //console.log(data)
-                setTotalSociosSindicalizados(data)
-            }).catch(e => {
-                // console.log(e)
-                if(e.message === 'Network Error') {
-                    //console.log("No hay internet")
-                    toast.error("Conexión al servidor no disponible");
+            // Inicia listado de detalles de los articulos vendidos
+            listarSocioSindicalizado().then(response => {
+                const { data } = response;
+                // console.log(data)
+                if (!listSociosSindicalizados && data) {
+                    setListSociosSindicalizados(formatModelSocios(data));
+                } else {
+                    const datosSociosSindicalizados = formatModelSocios(data);
+                    setListSociosSindicalizados(datosSociosSindicalizados)
                 }
+            }).catch(e => {
+                console.log(e)
             })
-
-            if(page === 0){
-                setPage(1)
-                listarPaginacionSocioSindizalizado(page, rowsPerPage).then(response => {
-                    const { data } = response;
-                    // console.log(data)
-                    if(!listSociosSindicalizados && data){
-                        setListSociosSindicalizados(formatModelSocios(data));
-                    } else {
-                        const datosSocios = formatModelSocios(data);
-                        setListSociosSindicalizados(datosSocios)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            } else {
-                listarPaginacionSocioSindizalizado(page, rowsPerPage).then(response => {
-                    const { data } = response;
-                    // console.log(data)
-                    if(!listSociosSindicalizados && data){
-                        setListSociosSindicalizados(formatModelSocios(data));
-                    } else {
-                        const datosSocios = formatModelSocios(data);
-                        setListSociosSindicalizados(datosSocios)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            }
-            
         } catch (e) {
             console.log(e)
         }
-    }, [location, page, rowsPerPage]);
+    }, [location]);
 
 
     return (
@@ -224,11 +191,6 @@ function Sindicalizados(props) {
                                         history={history}
                                         location={location}
                                         setRefreshCheckLogin={setRefreshCheckLogin}
-                                        rowsPerPage={rowsPerPage}
-                                        setRowsPerPage={setRowsPerPage}
-                                        page={page}
-                                        setPage={setPage}
-                                        totalSocios={totalSociosSindicalizados}
                                     />
                                 </Suspense>
                             </>

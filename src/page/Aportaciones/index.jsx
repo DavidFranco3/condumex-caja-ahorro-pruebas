@@ -16,6 +16,7 @@ import {
   listarPaginacionAportacionesxTipo,
   totalAportaciones,
   totalxTipoAportaciones,
+  listarAportacion
 } from '../../api/aportaciones';
 import ListAportaciones from '../../components/Aportaciones/ListAportaciones';
 import RegistroAportaciones from '../../components/Aportaciones/RegistroAportaciones';
@@ -32,11 +33,6 @@ function Aportaciones(props) {
   const [showModal, setShowModal] = useState(false)
   const [contentModal, setContentModal] = useState(null)
   const [titulosModal, setTitulosModal] = useState(null)
-
-  // Para controlar la paginación
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [page, setPage] = useState(1)
-  const [totalAportacion, setTotalAportacion] = useState(0)
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -56,39 +52,26 @@ function Aportaciones(props) {
 
   useEffect(() => {
     try {
-      totalxTipoAportaciones(getRazonSocial())
-        .then((response) => {
-          const { data } = response
-          setTotalAportacion(data)
-        })
-        .catch((e) => {
-          // console.log(e)
-          if (e.message === 'Network Error') {
-            toast.error('Conexión al servidor no disponible')
-          }
-        })
-
-      listarPaginacionAportacionesxTipo(page, rowsPerPage, getRazonSocial())
-        .then((response) => {
-          const { data } = response
-          // console.log(data)
-          if (!listAportaciones && data) {
-            setListAportaciones(formatModelAportaciones(data))
-          } else {
-            const datosAportaciones = formatModelAportaciones(data)
-            setListAportaciones(datosAportaciones)
-          }
-        })
-        .catch((e) => {
-          console.log(e)
+        // Inicia listado de detalles de los articulos vendidos
+        listarAportacion(getRazonSocial()).then(response => {
+            const { data } = response;
+            // console.log(data)
+            if (!listAportaciones && data) {
+                setListAportaciones(formatModelAportaciones(data));
+            } else {
+                const datosAportaciones = formatModelAportaciones(data);
+                setListAportaciones(datosAportaciones)
+            }
+        }).catch(e => {
+            console.log(e)
         })
     } catch (e) {
-      console.log(e)
+        console.log(e)
     }
-  }, [location, page, rowsPerPage])
-  
-     //Para el registro de Rendimientos
-    const eliminaAportacionMasivo = (content) => {
+}, [location]);
+
+  //Para el registro de Rendimientos
+  const eliminaAportacionMasivo = (content) => {
     setTitulosModal('Eliminar elementos')
     setContentModal(content)
     setShowModal(true)
@@ -116,8 +99,8 @@ function Aportaciones(props) {
           </Col>
           <Col xs={6} md={8}>
             <div style={{ float: 'right' }}>
-            
-            <Button
+
+              <Button
                 className="btnRegistro"
                 style={{ marginRight: '10px' }}
                 onClick={() => {
@@ -148,7 +131,7 @@ function Aportaciones(props) {
               >
                 <FontAwesomeIcon icon={faSackDollar} /> Registro masivo
               </Button>
-                    
+
               <Button
                 className="btnRegistro"
                 style={{ marginRight: '10px' }}
@@ -177,11 +160,6 @@ function Aportaciones(props) {
               listAportaciones={listAportaciones}
               history={history}
               location={location}
-              rowsPerPage={rowsPerPage}
-              setRowsPerPage={setRowsPerPage}
-              page={page}
-              setPage={setPage}
-              totalAportacion={totalAportacion}
             />
           </Suspense>
         </>
@@ -199,19 +177,19 @@ function Aportaciones(props) {
 }
 
 function formatModelAportaciones(data) {
-    const dataTemp = []
-    data.forEach(data => {
-        dataTemp.push({
-            id: data._id,
-            folio: data.folio,
-            fichaSocio: parseInt(data.fichaSocio),
-            tipo: data.tipo,
-            aportacion: data.aportacion,
-            fechaCreacion: data.createdAt,
-            fechaActualizacion: data.updatedAt
-        });
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      fichaSocio: parseInt(data.fichaSocio),
+      tipo: data.tipo,
+      aportacion: data.aportacion,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
     });
-    return dataTemp;
+  });
+  return dataTemp;
 }
 
 export default withRouter(Aportaciones);

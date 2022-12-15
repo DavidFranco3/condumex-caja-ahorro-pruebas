@@ -3,7 +3,7 @@ import {
   ENDPOINTPrestamos,
   ENDPOINTRegistroPrestamos,
   ENDPOINTListarPrestamos,
-  ENDPOINTListarPrestamos2,
+  ENDPOINTListarPrestamo,
   ENDPOINTTotalPrestamos,
   ENDPOINTTotalxTipoPrestamos,
   ENDPOINTListarPaginandoPrestamos,
@@ -68,7 +68,7 @@ export async function listarPrestamos(razonSocial, inicio, fin) {
 }
 
 // Listar todos los abonos
-export async function listarPrestamos2(razonSocial) {
+export async function listarPrestamo(razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -77,7 +77,7 @@ export async function listarPrestamos2(razonSocial) {
     },
   }
   return await axios.get(
-    API_HOST + ENDPOINTListarPrestamos2 + `/?tipo=${razonSocial}`,
+    API_HOST + ENDPOINTListarPrestamo + `/?tipo=${razonSocial}`,
     config
   )
 }

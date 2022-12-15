@@ -3,19 +3,18 @@ import { useHistory } from "react-router-dom";
 import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowDownLong} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
 import { Badge, Container } from "react-bootstrap";
-import TableRow from '@mui/material/TableRow';
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import DataTable from "react-data-table-component";
 import ModificaEstadoSocioSindicalizado from "../ModificaEstadoSocioSindicalizado";
 import ModificaSociosSindicalizados from "../ModificaSociosSindicalizados";
 import EliminaSocioSindicalizado from "../EliminaSocioSindicalizado";
-import {estilos} from "../../../utils/tableStyled";
+import { estilos } from "../../../utils/tableStyled";
 
 function ListSociosSindicalizados(props) {
-    const { CSV, listSocios, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, totalSocios } = props;
+    const { CSV, listSocios, history, location, setRefreshCheckLogin } = props;
 
     //console.log(listSocios)
 
@@ -29,20 +28,6 @@ function ListSociosSindicalizados(props) {
 
     // Para definir el enrutamiento
     const enrutamiento = useHistory()
-
-    // Campos de las columnas
-    function Row(props) {
-        const { row } = props;
-        const [open, setOpen] = useState(false);
-
-        return (
-            <>
-                <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                </TableRow>
-            </>
-        );
-    }
-    //
 
     const columns = [
         {
@@ -111,7 +96,7 @@ function ListSociosSindicalizados(props) {
                                     >
                                         Deshabilitado
                                     </Badge>
-                                    
+
                                 </>
                             )
                     }
@@ -139,42 +124,42 @@ function ListSociosSindicalizados(props) {
             name: "Acciones",
             selector: row => (
                 <>
-                   <div className="flex justify-end items-center space-x-4">
-                    <Badge
-                bg="success"
-                className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                onClick={() => {
-                  modificacionSocio(
-                    <ModificaSociosSindicalizados
-                      datos={row}
-                      location={location}
-                      history={history}
-                      setShowModal={setShowModal}
-                      setRefreshCheckLogin={setRefreshCheckLogin}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faPenToSquare} className="text-lg" />
-              </Badge>
-                    <Badge
-                bg="danger"
-                className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                onClick={() => {
-                  eliminacionSocio(
-                    <EliminaSocioSindicalizado
-                      datos={row}
-                      location={location}
-                      history={history}
-                      setShowModal={setShowModal}
-                      setRefreshCheckLogin={setRefreshCheckLogin}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-              </Badge>
-              </div>
+                    <div className="flex justify-end items-center space-x-4">
+                        <Badge
+                            bg="success"
+                            className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                            onClick={() => {
+                                modificacionSocio(
+                                    <ModificaSociosSindicalizados
+                                        datos={row}
+                                        location={location}
+                                        history={history}
+                                        setShowModal={setShowModal}
+                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faPenToSquare} className="text-lg" />
+                        </Badge>
+                        <Badge
+                            bg="danger"
+                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                            onClick={() => {
+                                eliminacionSocio(
+                                    <EliminaSocioSindicalizado
+                                        datos={row}
+                                        location={location}
+                                        history={history}
+                                        setShowModal={setShowModal}
+                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
+                        </Badge>
+                    </div>
                 </>
             ),
             sortable: false,
@@ -182,19 +167,6 @@ function ListSociosSindicalizados(props) {
             reorder: false
         },
     ];
-
-    const handleChangePage = (page) => {
-        // console.log("Nueva pagina "+ newPage)
-        setPage(page);
-    };
-
-    const handleChangeRowsPerPage = (newPerPage) => {
-        // console.log("Registros por pagina "+ parseInt(event.target.value, 10))
-        setRowsPerPage(newPerPage)
-        //setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(1);
-    };
-
 
     // Eliminar socios
     const eliminacionSocio = (content) => {
@@ -249,10 +221,6 @@ function ListSociosSindicalizados(props) {
                     customStyles={estilos}
                     sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
                     pagination
-                    paginationServer
-                    paginationTotalRows={totalSocios}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                    onChangePage={handleChangePage}
                 />
             </Container>
 

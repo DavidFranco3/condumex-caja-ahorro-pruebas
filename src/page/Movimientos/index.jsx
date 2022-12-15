@@ -6,7 +6,7 @@ import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
 import BasicModal from "../../components/Modal/BasicModal";
-import {totalxTipoMovimientosSaldos, listarPaginacionMovimientosSaldosxTipo} from "../../api/movimientosSaldos";
+import {totalxTipoMovimientosSaldos, listarPaginacionMovimientosSaldosxTipo, listarMovimientoSaldos} from "../../api/movimientosSaldos";
 import ListMovimientos from "../../components/Movimientos/ListMovimientos";
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
@@ -20,11 +20,6 @@ function Movimientos(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [noTotalMovimientos, setNoTotalMovimientos] = useState(0);
 
     // Cerrado de sesión automatico
     useEffect(() => {
@@ -44,49 +39,23 @@ function Movimientos(props) {
 
     useEffect(() => {
         try {
-            totalxTipoMovimientosSaldos(getRazonSocial()).then(response => {
+            // Inicia listado de detalles de los articulos vendidos
+            listarMovimientoSaldos(getRazonSocial()).then(response => {
                 const { data } = response;
-                setNoTotalMovimientos(data)
-            }).catch(e => {
-                // console.log(e)
-                if(e.message === 'Network Error') {
-                    toast.error("Conexión al servidor no disponible");
+                // console.log(data)
+                if (!listMovimientos && data) {
+                    setListMovimientos(formatModelMovimientosSocio(data));
+                } else {
+                    const datosMovimientos = formatModelMovimientosSocio(data);
+                    setListMovimientos(datosMovimientos)
                 }
+            }).catch(e => {
+                console.log(e)
             })
-
-            if(page === 0) {
-                setPage(1)
-                listarPaginacionMovimientosSaldosxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    //console.log(data)
-                    if(!listMovimientos && data){
-                        setListMovimientos(formatModelMovimientosSocio(data));
-                    } else {
-                        const datosMovimientos = formatModelMovimientosSocio(data);
-                        setListMovimientos(datosMovimientos)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            } else {
-                listarPaginacionMovimientosSaldosxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    //console.log(data)
-                    if(!listMovimientos && data){
-                        setListMovimientos(formatModelMovimientosSocio(data));
-                    } else {
-                        const datosMovimientos = formatModelMovimientosSocio(data);
-                        setListMovimientos(datosMovimientos)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            }
         } catch (e) {
             console.log(e)
         }
-    }, [location, page, rowsPerPage]);
-
+    }, [location]);
 
     return (
         <>
@@ -112,11 +81,6 @@ function Movimientos(props) {
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
-                                    rowsPerPage={rowsPerPage}
-                                    setRowsPerPage={setRowsPerPage}
-                                    page={page}
-                                    setPage={setPage}
-                                    noTotalMovimientos={noTotalMovimientos}
                                 />
                             </Suspense>
                         </>

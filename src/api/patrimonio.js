@@ -4,6 +4,7 @@ import {
   ENDPOINTRegistroPatrimonio,
   ENDPOINTTotalPatrimonio,
   ENDPOINTListarPatrimonio,
+  ENDPOINTListarPatrimonios,
   ENDPOINTTotalxTipoPatrimonio,
   // ENDPOINTTotalxTipoSocioPatrimonio,
   ENDPOINTListarPaginandoPatrimonio,
@@ -61,6 +62,20 @@ export async function listarPatrimonio(razonSocial, inicio, fin) {
     API_HOST +
       ENDPOINTListarPatrimonio +
       `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+export async function listarPatrimonios(razonSocial) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarPatrimonios + `/?tipo=${razonSocial}`,
     config
   )
 }

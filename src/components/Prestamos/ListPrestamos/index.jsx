@@ -12,7 +12,7 @@ import ModificaPrestamos from "../ModificaPrestamos";
 import {estilos} from "../../../utils/tableStyled";
 
 function ListPrestamos(props) {
-    const { listPrestamos, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, noTotalPrestamos } = props;
+    const { listPrestamos, history, location, setRefreshCheckLogin } = props;
 
     // Configura el idioma a español
     moment.locale("es");
@@ -197,10 +197,6 @@ function ListPrestamos(props) {
                     customStyles={estilos}
                     sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
                     pagination
-                    paginationServer
-                    paginationTotalRows={noTotalPrestamos}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                    onChangePage={handleChangePage}
                 />
             </Container>
 

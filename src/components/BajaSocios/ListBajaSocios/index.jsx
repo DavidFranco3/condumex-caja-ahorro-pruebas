@@ -10,7 +10,7 @@ import {estilos} from "../../../utils/tableStyled";
 import EliminaBajaSocios from "../EliminarBajaSocios";
 
 function ListBajaSocios(props) {
-    const { listBajasSocios, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, noTotalBajaSocios } = props;
+    const { listBajasSocios, history, location, setRefreshCheckLogin } = props;
 
     // Configura el idioma a español
     moment.locale("es");
@@ -95,18 +95,6 @@ function ListBajaSocios(props) {
         },
     ];
 
-    const handleChangePage = (page) => {
-        // console.log("Nueva pagina "+ newPage)
-        setPage(page);
-    };
-
-    const handleChangeRowsPerPage = (newPerPage) => {
-        // console.log("Registros por pagina "+ parseInt(event.target.value, 10))
-        setRowsPerPage(newPerPage)
-        //setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(1);
-    };
-
     // Definiendo estilos para data table
     // Configurando animacion de carga
     const [pending, setPending] = useState(true);
@@ -140,10 +128,6 @@ function ListBajaSocios(props) {
                     customStyles={estilos}
                     sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
                     pagination
-                    paginationServer
-                    paginationTotalRows={noTotalBajaSocios}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                    onChangePage={handleChangePage}
                 />
             </Container>
 

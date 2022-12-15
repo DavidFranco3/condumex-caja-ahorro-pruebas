@@ -3,18 +3,18 @@ import { useHistory } from "react-router-dom";
 import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowDownLong, faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDownLong, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Badge, Container } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import EliminaAbonos from "../EliminaAbonos";
-import {estilos} from "../../../utils/tableStyled";
+import { estilos } from "../../../utils/tableStyled";
 import NombreSocioEmpleado from "../../utils/NombresSocios/NombreSocioEmpleado";
 import NombreSocioSindicalizado from "../../utils/NombresSocios/NombreSocioSindicalizado";
 
 function ListAbonos(props) {
-    const { listAbonos, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, noTotalAbonos } = props;
-    
+    const { listAbonos, history, location, setRefreshCheckLogin } = props;
+
     // Configura el idioma a español
     moment.locale("es");
 
@@ -41,14 +41,14 @@ function ListAbonos(props) {
         {
             name: "Abono",
             selector: row => (
-                    <>
-                ${''}
-                        {new Intl.NumberFormat('es-MX', {
+                <>
+                    ${''}
+                    {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                        }).format(row.abono)} MXN    
+                    }).format(row.abono)} MXN
                 </>
-        ),
+            ),
             sortable: false,
             center: true,
             reorder: false
@@ -64,25 +64,25 @@ function ListAbonos(props) {
             name: "Acciones",
             selector: row => (
                 <>
-                   <div className="flex justify-end items-center space-x-4">
-                    <Badge
-                bg="danger"
-                className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                onClick={() => {
-                  eliminacionAbonos(
-                    <EliminaAbonos
-                      datos={row}
-                      location={location}
-                      history={history}
-                      setShowModal={setShowModal}
-                      setRefreshCheckLogin={setRefreshCheckLogin}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-              </Badge>
-              </div>
+                    <div className="flex justify-end items-center space-x-4">
+                        <Badge
+                            bg="danger"
+                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                            onClick={() => {
+                                eliminacionAbonos(
+                                    <EliminaAbonos
+                                        datos={row}
+                                        location={location}
+                                        history={history}
+                                        setShowModal={setShowModal}
+                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
+                        </Badge>
+                    </div>
                 </>
             ),
             sortable: false,
@@ -91,25 +91,12 @@ function ListAbonos(props) {
         },
     ];
 
-    const handleChangePage = (page) => {
-        // console.log("Nueva pagina "+ newPage)
-        setPage(page);
-    };
-
-    const handleChangeRowsPerPage = (newPerPage) => {
-        // console.log("Registros por pagina "+ parseInt(event.target.value, 10))
-        setRowsPerPage(newPerPage)
-        //setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(1);
-    };
-
-
-      // Elimina prestamos
-        const eliminacionAbonos = (content) => {
+    // Elimina prestamos
+    const eliminacionAbonos = (content) => {
         setTitulosModal("Eliminando abonos");
         setContentModal(content);
         setShowModal(true);
-        }
+    }
 
     // Configurando animacion de carga
     const [pending, setPending] = useState(true);
@@ -138,15 +125,11 @@ function ListAbonos(props) {
                     columns={columns}
                     data={listAbonos}
                     progressPending={pending}
+                    pagination
                     paginationComponentOptions={paginationComponentOptions}
                     paginationResetDefaultPage={resetPaginationToogle}
                     customStyles={estilos}
                     sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
-                    pagination
-                    paginationServer
-                    paginationTotalRows={noTotalAbonos}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                    onChangePage={handleChangePage}
                 />
             </Container>
 

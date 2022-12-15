@@ -9,7 +9,8 @@ import {
     listarPaginacionDeudaSocio,
     listarPaginacionDeudaSocioxTipo,
     totalDeudaSocio,
-    totalxTipoDeudaSocio
+    totalxTipoDeudaSocio,
+    listarDeudasSocios
 } from "../../api/deudaSocio";
 import ListDeudaSocio from "../../components/DeudaSocio/ListDeudaSocio";
 import BasicModal from "../../components/Modal/BasicModal";
@@ -24,11 +25,6 @@ function DeudaSocio(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [noTotalDeudaSocio, setNoTotalDeudaSocio] = useState(0);
 
     //Para el registro de Rendimientos
     const eliminaDeudaSocioMasivo = (content) => {
@@ -56,48 +52,23 @@ function DeudaSocio(props) {
 
     useEffect(() => {
         try {
-            totalxTipoDeudaSocio(getRazonSocial()).then(response => {
+            // Inicia listado de detalles de los articulos vendidos
+            listarDeudasSocios(getRazonSocial()).then(response => {
                 const { data } = response;
-                setNoTotalDeudaSocio(data)
-            }).catch(e => {
-                // console.log(e)
-                if(e.message === 'Network Error') {
-                    toast.error("Conexión al servidor no disponible");
+                // console.log(data)
+                if (!listDeudaSocio && data) {
+                    setListDeudaSocio(formatModelDeudaSocio(data));
+                } else {
+                    const datosDeudaSocio = formatModelDeudaSocio(data);
+                    setListDeudaSocio(datosDeudaSocio)
                 }
+            }).catch(e => {
+                console.log(e)
             })
-
-            if(page == 0) {
-                setPage(1)
-                listarPaginacionDeudaSocioxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    //console.log(data)
-                    if(!listDeudaSocio && data){
-                        setListDeudaSocio(formatModelDeudaSocio(data));
-                    } else {
-                        const datosDeudaSocio = formatModelDeudaSocio(data);
-                        setListDeudaSocio(datosDeudaSocio)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            } else {
-                listarPaginacionDeudaSocioxTipo(page, rowsPerPage, getRazonSocial()).then(response => {
-                    const { data } = response;
-                    //console.log(data)
-                    if(!listDeudaSocio && data){
-                        setListDeudaSocio(formatModelDeudaSocio(data));
-                    } else {
-                        const datosDeudaSocio = formatModelDeudaSocio(data);
-                        setListDeudaSocio(datosDeudaSocio)
-                    }
-                }).catch(e => {
-                    console.log(e)
-                })
-            }
         } catch (e) {
             console.log(e)
         }
-    }, [location, page, rowsPerPage]);
+    }, [location]);
     
     //console.log(listAbonos);
     
@@ -141,11 +112,6 @@ function DeudaSocio(props) {
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
-                                    rowsPerPage={rowsPerPage}
-                                    setRowsPerPage={setRowsPerPage}
-                                    page={page}
-                                    setPage={setPage}
-                                    noTotalDeudaSocio={noTotalDeudaSocio}
                                 />
                             </Suspense>
                         </>
