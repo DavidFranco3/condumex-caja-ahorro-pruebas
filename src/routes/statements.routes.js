@@ -360,17 +360,17 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
     });
 
     const transporter = nodeMailer.createTransport({
-      host: "smtp.gmail.com",
+      host: "server.cucc.com.mx",
       port: 465,
       secure: true,
       auth: {
-        user: "ccahocondutel@gmail.com",
+        user: "z0$01,@6Z!8j",
         pass: "bgmwguaqcmrocahs",
       },
     });
 
     const mailOptions = {
-      from: "CAJA DE AHORRO CONDUMEX <ccahocondutel@gmail.com>",
+      from: "CAJA DE AHORRO CONDUMEX <no_reply@isotech.mx>",
       to: associate.correo,
       subject: "Estado de cuenta",
       text: "Estado de cuenta",
