@@ -56,7 +56,7 @@ function ModificaAbonos ({ datos, setShowModal, history }) {
         setLoading(false);
 
         if (status === 200) {
-            toast.success('Actualizado correctamente');
+            toast.success(mensaje);
             history.push({
                 search: queryString.stringify(''),
             });

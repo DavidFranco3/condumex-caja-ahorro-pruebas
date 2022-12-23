@@ -52,14 +52,14 @@ function ModificaRetiros ({ datos, setShowModal, history }) {
         
         const { status, data: { mensaje } } = response
 
-        setLoading(false);
-
         if (status === 200) {
             toast.success(mensaje);
+            setTimeout(() => {
             history.push({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
+        }, 2000)
         } else {
             toast.error(mensaje);
         }

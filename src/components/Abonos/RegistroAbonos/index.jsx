@@ -62,8 +62,8 @@ function RegistroAbonos(props) {
     const [formData, setFormData] = useState(initialFormData());
 
     const hoy = new Date();
-    // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getDate() + '-' + hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '/' + hoy.getDate();
+
+    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
@@ -104,7 +104,7 @@ function RegistroAbonos(props) {
                 
                         actualizacionDeudaSocio(fichaSocioElegido, formData.abono, "0", "Abono", formData.fecha);
                         
-                        toast.success('Abono registrado')
+                        toast.success(data.mensaje);
                         setTimeout(() => {
                             setLoading(false)
                             history.push({

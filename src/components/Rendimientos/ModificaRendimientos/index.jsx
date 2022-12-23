@@ -57,14 +57,14 @@ function ModificaRendimientos ({ datos, setShowModal, history }) {
         
         actualizacionSaldosSocios(formData.fichaSocio, "0", "0", formData.rendimiento, formData.folio, "Modificación interés")
 
-        setLoading(false);
-
         if (status === 200) {
-            toast.success('Actualizado correctamente')
+            toast.success(mensaje)
+            setTimeout(() => {
             history.push({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
+        }, 2000);
         } else {
             toast.error(mensaje);
         }

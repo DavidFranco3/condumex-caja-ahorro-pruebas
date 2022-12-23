@@ -26,15 +26,18 @@ export const getPrestamosBySocio = async (ficha) => {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${token}`,
   }
-  return axios.get(`${API_HOST}${ENDPOINTPrestamos}/bySocio?ficha=${ficha}`, {
-    headers,
-  })
+  return await axios.get(
+    `${API_HOST}${ENDPOINTPrestamos}/bySocio?ficha=${ficha}`,
+    {
+      headers,
+    }
+  )
 }
 
 export const getPrestamosAcumuladosByRazon = async (tipo) => {
   const token = getTokenApi()
   const url = `${API_HOST}${ENDPOINTObtenerPrestamosAcumuladosByRazon}/?tipo=${tipo}`
-  return axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
+  return await axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
 }
 
 // Registro de prestamos

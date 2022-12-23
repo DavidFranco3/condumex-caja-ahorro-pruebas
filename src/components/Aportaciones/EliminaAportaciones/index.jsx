@@ -51,7 +51,7 @@ function EliminaAportaciones(props) {
                         search: queryString.stringify(""),
                     });
                     setShowModal(false)
-                }, 3000)
+                }, 2000)
 
             }).catch(e => {
                 console.log(e)

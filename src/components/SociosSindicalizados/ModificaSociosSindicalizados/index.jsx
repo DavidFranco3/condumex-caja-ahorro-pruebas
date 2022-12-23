@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { size, values } from "lodash";
 import { toast } from "react-toastify";
 import { isEmailValid } from "../../../utils/validations";
 import queryString from "query-string";
@@ -39,14 +38,8 @@ function ModificaSociosSindicalizados(props) {
 
     const onSubmit = (e) => {
         e.preventDefault()
-
-        let validCount = 0
-        values(formData).some(value => {
-            value && validCount++;
-            return null;
-        });
-
-        if (formData.nombre || !formData.ficha || !formData.createdAt) {
+console.log(formData)
+        if (!formData.nombre || !formData.ficha || !formData.createdAt) {
             toast.warning("Completa el formulario")
         } else {
             if (!isEmailValid(formData.correo)) {
@@ -71,6 +64,17 @@ function ModificaSociosSindicalizados(props) {
                         setShowModal(false)
                     }).catch(e => {
                         console.log(e)
+                        if (e.message === 'Network Error') {
+                            //console.log("No hay internet")
+                            toast.error("Conexión al servidor no disponible");
+                            setLoading(false);
+                        } else {
+                            if (e.response && e.response.status === 401) {
+                                const { mensaje } = e.response.data;
+                                toast.error(mensaje);
+                                setLoading(false);
+                            }
+                        }
                     })
                 } catch (e) {
                     console.log(e)
@@ -153,7 +157,7 @@ function ModificaSociosSindicalizados(props) {
                                 type="datetime-local"
                                 defaultValue={formData.createdAt}
                                 placeholder="Fecha"
-                                name="fecha"
+                                name="createdAt"
                             />
                         </Form.Group>
                     </Row>

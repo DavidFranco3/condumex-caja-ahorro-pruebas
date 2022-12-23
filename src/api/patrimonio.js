@@ -26,15 +26,18 @@ export const getPatrimonioBySocio = async (ficha) => {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${token}`,
   }
-  return axios.get(`${API_HOST}${ENDPOINTPatrimonio}/bySocio?ficha=${ficha}`, {
-    headers,
-  })
+  return await axios.get(
+    `${API_HOST}${ENDPOINTPatrimonio}/bySocio?ficha=${ficha}`,
+    {
+      headers,
+    }
+  )
 }
 
 export const getPatrimonioAcumuladosByRazon = async (tipo) => {
   const token = getTokenApi()
   const url = `${API_HOST}${ENDPOINTObtenerPatrimoniosAcumuladosByRazon}/?tipo=${tipo}`
-  return axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
+  return await axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
 }
 
 // Registro de patrimonios

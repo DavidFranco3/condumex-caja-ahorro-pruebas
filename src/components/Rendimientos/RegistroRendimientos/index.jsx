@@ -61,7 +61,7 @@ function RegistroRendimientos({ setShowModal, history }) {
 
     const hoy = new Date();
     // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getDate() + '-' + hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '/' + hoy.getDate();
+    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
@@ -92,7 +92,6 @@ function RegistroRendimientos({ setShowModal, history }) {
                         createdAt: formData.fecha == "" ? fechaActual : formData.fecha
                         
                     }
-                    console.log(dataTemp);
 
                     registraRendimientosSocios(dataTemp).then(() => {
                         // Registra movimientos
@@ -103,9 +102,8 @@ function RegistroRendimientos({ setShowModal, history }) {
                         
                         actualizacionSaldosSocios(fichaSocioElegido, "0", "0", formData.rendimiento, folio, "Interés")
                         
-                        toast.success('Interes registrado')
+                        toast.success(data.mensaje)
                         setTimeout(() => {
-                            setLoading(false)
                             history.push({
                                 search: queryString.stringify(""),
                             });

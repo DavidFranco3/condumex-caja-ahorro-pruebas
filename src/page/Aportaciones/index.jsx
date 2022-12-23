@@ -11,13 +11,7 @@ import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus, faSackDollar, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import BasicModal from '../../components/Modal/BasicModal';
-import {
-  listarPaginacionAportaciones,
-  listarPaginacionAportacionesxTipo,
-  totalAportaciones,
-  totalxTipoAportaciones,
-  listarAportacion
-} from '../../api/aportaciones';
+import { listarAportacion } from '../../api/aportaciones';
 import ListAportaciones from '../../components/Aportaciones/ListAportaciones';
 import RegistroAportaciones from '../../components/Aportaciones/RegistroAportaciones';
 import CargaMasivaAportaciones from '../../components/Aportaciones/CargaMasivaAportaciones';
@@ -52,23 +46,23 @@ function Aportaciones(props) {
 
   useEffect(() => {
     try {
-        // Inicia listado de detalles de los articulos vendidos
-        listarAportacion(getRazonSocial()).then(response => {
-            const { data } = response;
-            // console.log(data)
-            if (!listAportaciones && data) {
-                setListAportaciones(formatModelAportaciones(data));
-            } else {
-                const datosAportaciones = formatModelAportaciones(data);
-                setListAportaciones(datosAportaciones)
-            }
-        }).catch(e => {
-            console.log(e)
-        })
-    } catch (e) {
+      // Inicia listado de detalles de los articulos vendidos
+      listarAportacion(getRazonSocial()).then(response => {
+        const { data } = response;
+        // console.log(data)
+        if (!listAportaciones && data) {
+          setListAportaciones(formatModelAportaciones(data));
+        } else {
+          const datosAportaciones = formatModelAportaciones(data);
+          setListAportaciones(datosAportaciones)
+        }
+      }).catch(e => {
         console.log(e)
+      })
+    } catch (e) {
+      console.log(e)
     }
-}, [location]);
+  }, [location]);
 
   //Para el registro de Rendimientos
   const eliminaAportacionMasivo = (content) => {

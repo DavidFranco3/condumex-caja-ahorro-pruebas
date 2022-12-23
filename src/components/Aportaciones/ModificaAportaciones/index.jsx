@@ -54,15 +54,16 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
         registroSaldoInicial(parseInt(formData.fichaSocio), formData.aportacion, "0", "0", formData.folio, "Modificacion aportación")
         
         const { status, data: { mensaje } } = response
-
-        setLoading(false);
-
+        console.log(status)
+        console.log(mensaje)
         if (status === 200) {
-            toast.success('Actualizado correctamente')
+            toast.success("Actualizado correctamente")
+            setTimeout(() => {
             history.push({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
+        }, 2000)
         } else {
             toast.error(mensaje);
         }

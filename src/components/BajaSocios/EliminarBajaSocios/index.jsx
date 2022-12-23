@@ -39,7 +39,6 @@ function EliminaBajaSocios(props) {
             eliminaBajaSocios(id).then(response => {
                 const { data } = response;
                 toast.success(data.mensaje)
-
                 setTimeout(() => {
                     setLoading(false)
                     history.push({

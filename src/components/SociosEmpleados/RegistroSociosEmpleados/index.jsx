@@ -36,7 +36,7 @@ function RegistroSociosEmpleados (props) {
 
     const hoy = new Date();
     // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getDate() + '-' + hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '/' + hoy.getDate();
+    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
@@ -70,6 +70,19 @@ function RegistroSociosEmpleados (props) {
                             search: queryString.stringify(""),
                         });
                         setShowModal(false)
+                    }).catch(e => {
+                        console.log(e)
+                        if (e.message === 'Network Error') {
+                            //console.log("No hay internet")
+                            toast.error("Conexión al servidor no disponible");
+                            setLoading(false);
+                        } else {
+                            if (e.response && e.response.status === 401) {
+                                const { mensaje } = e.response.data;
+                                toast.error(mensaje);
+                                setLoading(false);
+                            }
+                        }
                     })
                 } catch (e) {
                     console.log(e)
@@ -81,8 +94,6 @@ function RegistroSociosEmpleados (props) {
     const onChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
-
-    console.log(formData.fecha)
 
     return (
         <>

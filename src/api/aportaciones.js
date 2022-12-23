@@ -235,7 +235,7 @@ export async function actualizaAportaciones(id, data) {
     },
   }
 
-  return axios.put(
+  return await axios.put(
     API_HOST + ENDPOINTActualizarAportaciones + `/${id}`,
     data,
     config

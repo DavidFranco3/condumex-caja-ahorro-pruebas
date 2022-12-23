@@ -5,19 +5,26 @@ import queryString from "query-string";
 import { obtenerFolioActualAportaciones, registraAportacionesSocios } from '../../../api/aportaciones';
 import { getRazonSocial } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
-import {actualizacionSaldosSocios} from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
+import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 
 const CargaMasivaAportaciones = ({ setShowModal, history }) => {
 
     const [formData, setFormData] = useState(initialFormData());
+
+    const hoy = new Date();
+
+    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
+
+    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
+
+    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
 
     const [loading, setLoading] = useState(false);
     const [dataFile, setDataFile] = useState([]);
     const [count, setCount] = useState(0)
 
     const handleCancel = () => setShowModal(false)
-    
 
     const handleSubmit = async (evt) => {
         evt.preventDefault();
@@ -26,40 +33,35 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
             toast.error('No hay datos para cargar');
             return;
         }
-        
-        if (!formData.fecha) {
-        toast.warning('Por favor selecciona una fecha');
-        return;
-        }
 
         const razonSocial = getRazonSocial();
 
         setLoading(true);
 
-        for (const {fichaSocio, aportacion} of dataFile) {
+        for (const { fichaSocio, aportacion } of dataFile) {
             const responseFolio = await obtenerFolioActualAportaciones();
-            const {data: {folio}} = responseFolio;
+            const { data: { folio } } = responseFolio;
             const dataAportacion = {
                 folio,
                 fichaSocio,
                 aportacion,
                 tipo: razonSocial,
-                createdAt: formData.fecha
+                createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
             }
 
             await registraAportacionesSocios(dataAportacion);
-            
+
             await actualizacionSaldosSocios(fichaSocio, aportacion, "0", "0", folio, "Aportación");
-            
+
             await registroMovimientosSaldosSocios(fichaSocio, aportacion, '0', '0', '0', '0', '0', '0', 'Aportación');
-            
+
             // Registra Saldos
             await registroSaldoInicial(fichaSocio, aportacion, "0", "0", folio, "Aportación");
 
             // increment count for render value in progress bar
             setCount(oldCount => oldCount + 1);
         }
-
+        toast.success("Abonos registrados con exito");
         setDataFile([]);
         setLoading(false);
 
@@ -73,10 +75,10 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
 
 
     const handleChange = (e) => {
-        
+
         setFormData({ ...formData, [e.target.name]: e.target.value })
-        
-        const {files} = e.target;
+
+        const { files } = e.target;
 
         if (files.length > 0) {
             const [file] = files;
@@ -85,12 +87,12 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
             reader.readAsText(file, 'UTF-8');
 
             reader.onload = (evt) => {
-                const {result} = evt.target;
+                const { result } = evt.target;
                 const lines = result.split('\r\n');
                 const data = lines.map(line => {
                     const [fichaSocio, aportacion] = line.split('\t');
 
-                    return {fichaSocio, aportacion}
+                    return { fichaSocio, aportacion }
 
                 });
 
@@ -103,101 +105,101 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
     }
 
     const Loading = () => (
-            !loading ? 'Cargar' : <Spinner animation='border' />
-            )
+        !loading ? 'Cargar' : <Spinner animation='border' />
+    )
 
-            return (
-                    <>
-<div className='contenidoFormularioPrincipal'>
-    <Form>
-                    
+    return (
+        <>
+            <div className='contenidoFormularioPrincipal'>
+                <Form>
+
                     <Form.Group as={Row} className='botones pt-3'>
-                    <Col sm={5}>
-                    <Form.Label>Seleccione el fichero:</Form.Label>
-                    </Col>
-                    <Col sm={7}>
-                    <Form.Control
-                    onChange={handleChange}
-                    className='form-control block w-full px-3 py-1.5 text-base font-normaltext-gray-700bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
-                    accept='.txt, text/plain'
-                    type='file'
-                    id='formFile' />
-                    </Col>
-        </Form.Group>
-        <Form.Group as={Row} className='botones pt-3'>
-                    <Col sm={5}>
-                    <Form.Label>Fecha de registro:</Form.Label>
-                    </Col>
-                    <Col sm={7}>
-                            
-                                <Form.Control
-                                onChange={handleChange} 
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={formData.fecha}
-                                placeholder="Fecha"
-                                name="fecha"
-                                />
-                            
+                        <Col sm={5}>
+                            <Form.Label>Seleccione el fichero:</Form.Label>
                         </Col>
-                        </Form.Group>
-        {
-                dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
-            <Col sm={12}>
-            <div className='flex flex-col justify-center'>
-                <div className='mb-3 w-100'>
-                    <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
-                </div>
-                {
-                        count > 0 && (<div className='mb-3 w-100'>
-                    <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
-                    <Form.Group as={Row}>
-                        <Col sm={12}>
-                        <ProgressBar animated now={count} max={dataFile.length} variant='info' />
+                        <Col sm={7}>
+                            <Form.Control
+                                onChange={handleChange}
+                                className='form-control block w-full px-3 py-1.5 text-base font-normaltext-gray-700bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
+                                accept='.txt, text/plain'
+                                type='file'
+                                id='formFile' />
                         </Col>
                     </Form.Group>
-                </div>)
-                }
+                    <Form.Group as={Row} className='botones pt-3'>
+                        <Col sm={5}>
+                            <Form.Label>Fecha de registro:</Form.Label>
+                        </Col>
+                        <Col sm={7}>
+
+                            <Form.Control
+                                onChange={handleChange}
+                                className="mb-3"
+                                type="datetime-local"
+                                defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                placeholder="Fecha"
+                                name="fecha"
+                            />
+
+                        </Col>
+                    </Form.Group>
+                    {
+                        dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
+                            <Col sm={12}>
+                                <div className='flex flex-col justify-center'>
+                                    <div className='mb-3 w-100'>
+                                        <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
+                                    </div>
+                                    {
+                                        count > 0 && (<div className='mb-3 w-100'>
+                                            <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
+                                            <Form.Group as={Row}>
+                                                <Col sm={12}>
+                                                    <ProgressBar animated now={count} max={dataFile.length} variant='info' />
+                                                </Col>
+                                            </Form.Group>
+                                        </div>)
+                                    }
+                                </div>
+                            </Col>
+                        </Form.Group>)
+                    }
+
+                    <Form.Group as={Row} className='botones pt-5'>
+                        <Col>
+                            <Button
+                                type='submit'
+                                variant='success'
+                                className='registrar'
+                                onClick={handleSubmit}
+                                disabled={loading}
+                            >
+                                <Loading />
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                variant='danger'
+                                className='cancelar'
+                                onClick={handleCancel}
+                                disabled={loading}
+                            >
+                                Cancelar
+                            </Button>
+                        </Col>
+                    </Form.Group>
+
+                </Form>
             </div>
-            </Col>
-        </Form.Group>)
-        }
-
-        <Form.Group as={Row} className='botones pt-5'>
-            <Col>
-            <Button
-                type='submit'
-                variant='success'
-                className='registrar'
-                onClick={handleSubmit}
-                disabled={loading}
-                >
-                <Loading />
-            </Button>
-            </Col>
-            <Col>
-            <Button
-                variant='danger'
-                className='cancelar'
-                onClick={handleCancel}
-                disabled={loading}
-                >
-                Cancelar
-            </Button>
-            </Col>
-        </Form.Group>
-
-    </Form>
-</div>
-</>
-);
+        </>
+    );
 }
 
 function initialFormData() {
     return {
         fichaSocio: "",
         aportacion: "",
-        createdAt: ""
+        fecha: ""
     }
 
 }
