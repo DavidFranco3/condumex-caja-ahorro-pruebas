@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 // Credenciales para conexion a Mongo Atlas
 const URI = "mongodb+srv://caja-de-ahorro:pVgzXxPMG2RU15Is@cluster0.dsbmu.mongodb.net/caja-de-ahorro";
 
+mongoose.set('strictQuery', true);
+
 mongoose.Promise = global.Promise;
 
 mongoose

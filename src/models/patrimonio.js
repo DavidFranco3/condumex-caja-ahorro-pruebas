@@ -16,6 +16,7 @@ const patrimonio = new Schema(
 
 patrimonio.set("toJSON", {
   transform: (_document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
     returnedObject.patrimonio = Number(returnedObject.patrimonio);
     returnedObject.fechaCreacion =
       returnedObject.createDate || returnedObject.createdAt;

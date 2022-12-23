@@ -11,7 +11,7 @@ router.post("/registro", verifyToken, async (req, res) => {
   // Inicia validacion para no registrar socios sindicalizados con el mismo numero de ficha
   const busqueda = await sindicalizados.findOne({ ficha });
 
-  if (busqueda && busqueda.ficha === ficha) {
+  if (busqueda && busqueda.ficha === parseInt(ficha)) {
     return res
       .status(401)
       .json({ mensaje: "Ya existe un socio con este numero de ficha" });
@@ -156,12 +156,23 @@ router.put("/deshabilitar/:id", verifyToken, async (req, res) => {
 router.put("/actualizar/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
   const { nombre, tipoSocio, correo, ficha } = req.body;
+
+  // Inicia validacion para no registrar empleados con el mismo numero de ficha
+  const busqueda = await sindicalizados.findOne({ ficha });
+
+  if (busqueda && busqueda.ficha === parseInt(ficha) && busqueda._id != id) {
+    return res
+      .status(401)
+      .json({ mensaje: "Ya existe un socio con este numero de ficha" });
+  } else {
+
   await sindicalizados
     .updateOne({ _id: id }, { $set: { nombre, tipoSocio, correo, ficha } })
     .then((data) =>
       res.status(200).json({ mensaje: "Datos del socio actualizados" })
     )
     .catch((error) => res.json({ message: error }));
+  }
 });
 
 // Borrar muchos rendimientos

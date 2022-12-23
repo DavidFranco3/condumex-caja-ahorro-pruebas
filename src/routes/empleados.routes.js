@@ -11,7 +11,7 @@ router.post("/registro", verifyToken, async (req, res) => {
   // Inicia validacion para no registrar empleados con el mismo numero de ficha
   const busqueda = await empleados.findOne({ ficha });
 
-  if (busqueda && busqueda.ficha === ficha) {
+  if (busqueda && busqueda.ficha === parseInt(ficha)) {
     return res
       .status(401)
       .json({ mensaje: "Ya existe un socio con este numero de ficha" });
@@ -105,13 +105,13 @@ router.get("/obtenerNombrexFicha/:ficha", verifyToken, async (req, res) => {
 
 // Buscar coincidencias en nombre
 router.get("/obtenerxCoincidenciasNombre/:coincidencia", verifyToken, async (req, res) => {
-    const { coincidencia } = req.params;
-    console.log(coincidencia);
-    await empleados
-      .find({ $or: [{ nombre: /sinecio/i }] })
-      .then((data) => res.json(data))
-      .catch((error) => res.json({ message: error }));
-  }
+  const { coincidencia } = req.params;
+  console.log(coincidencia);
+  await empleados
+    .find({ $or: [{ nombre: /sinecio/i }] })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+}
 );
 
 // route to get the empleado by tipo and nombre
@@ -153,12 +153,23 @@ router.put("/deshabilitar/:id", verifyToken, async (req, res) => {
 router.put("/actualizar/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
   const { nombre, tipoSocio, correo, ficha } = req.body;
-  await empleados
-    .updateOne({ _id: id }, { $set: { nombre, tipoSocio, correo, ficha } })
-    .then((data) =>
-      res.status(200).json({ mensaje: "Datos del socio actualizados" })
-    )
-    .catch((error) => res.json({ message: error }));
+
+  // Inicia validacion para no registrar empleados con el mismo numero de ficha
+  const busqueda = await empleados.findOne({ ficha });
+
+  if (busqueda && busqueda.ficha === parseInt(ficha) && busqueda._id != id) {
+    return res
+      .status(401)
+      .json({ mensaje: "Ya existe un socio con este numero de ficha" });
+  } else {
+
+    await empleados
+      .updateOne({ _id: id }, { $set: { nombre, tipoSocio, correo, ficha } })
+      .then((data) =>
+        res.status(200).json({ mensaje: "Datos del socio actualizados" })
+      )
+      .catch((error) => res.json({ message: error }));
+  }
 });
 
 // Borrar muchos rendimientos

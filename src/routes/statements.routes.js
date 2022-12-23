@@ -100,7 +100,7 @@ router.get("/razon", verifyToken, async (req, res) => {
         },
       },
     ]);
-    
+
     const rAbonos = await abonos.aggregate([
       {
         $match: { tipo: { $eq: tipo } },
@@ -158,9 +158,9 @@ router.get("/razon", verifyToken, async (req, res) => {
       const { bajaSocios: totalBajaSocios } = item;
       statement.layoffs = Number(totalBajaSocios);
     }
-    
+
     if (rAbonos.length > 0) {
-        const [item] = rAbonos;
+      const [item] = rAbonos;
       const { abonos: totalAbonos } = item;
       statement.payment = Number(totalAbonos);
     }
@@ -387,9 +387,8 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
       <p>`,
       attachments: [
         {
-          filename: `${fichaSocio}_${associate.nombre}_${
-            associate.tipo
-          }-${Date.now()}.pdf`,
+          filename: `${fichaSocio}_${associate.nombre}_${associate.tipo
+            }-${Date.now()}.pdf`,
           content: resultPdf,
           contentType: "application/pdf",
         },

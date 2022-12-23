@@ -302,24 +302,16 @@ router.delete("/eliminar/:id", async (req, res) => {
 // Actualizar datos de la aportacion
 router.put("/actualizar/:id", async (req, res) => {
   const { id } = req.params;
-  const { aportacion: cash, createdAt } = req.body;
-
-  // find patrimonio by id
-  const result = await aportaciones.findById(id);
-
-  if (!result) {
-    res.status(404).json({ message: "aportacion no encontrada" });
-  }
-
-  // update result
+  const { aportacion, movimiento, createdAt } =
+    req.body;
   await aportaciones
-    .findByIdAndUpdate(id, {
-      $set: {
-        aportacion: cash,
-        createDate: createdAt,
-      },
-    })
-    .then((data) => res.json({ data, message: "Aportacion actualizada" }))
+    .updateOne(
+      { _id: id },
+      { $set: { aportacion, movimiento, createdAt } }
+    )
+    .then((data) =>
+      res.status(200).json({ mensaje: "Aportacion actualizada" })
+    )
     .catch((error) => res.json({ message: error }));
 });
 

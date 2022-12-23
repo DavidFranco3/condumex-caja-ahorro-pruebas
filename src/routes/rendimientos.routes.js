@@ -459,24 +459,17 @@ router.delete("/eliminarMasivo", async (req, res) => {
 // Actualizar datos de la rendimiento
 router.put("/actualizar/:id", async (req, res) => {
   const { id } = req.params;
-  const { rendimiento: cash, createdAt } = req.body;
-
-  // find patrimonio by id
-  const result = await rendimientos.findById(id);
-
-  if (!result) {
-    res.status(404).json({ message: "Interes no encontrado" });
-  }
-
-  // update result
+  console.log(id)
+  const { rendimiento, createdAt } =
+    req.body;
   await rendimientos
-    .findByIdAndUpdate(id, {
-      $set: {
-        rendimiento: cash,
-        createDate: createdAt,
-      },
-    })
-    .then((_data) => res.status(200).json({ message: "Interes actualizado" }))
+    .updateOne(
+      { _id: id },
+      { $set: { rendimiento, createdAt } }
+    )
+    .then((data) =>
+      res.status(200).json({ mensaje: "Rendimiento actualizado" })
+    )
     .catch((error) => res.json({ message: error }));
 });
 

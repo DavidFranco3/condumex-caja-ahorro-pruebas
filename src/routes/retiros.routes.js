@@ -243,7 +243,7 @@ router.put("/actualizar/:id", async (req, res) => {
   await retiros
     .updateOne({ _id: id }, { $set: { retiro } })
     .then((_data) =>
-      res.status(200).json({ mensaje: "Datos del retiro actualizados" })
+      res.status(200).json({ mensaje: "Retiro actualizado" })
     )
     .catch((error) => res.json({ message: error }));
 });

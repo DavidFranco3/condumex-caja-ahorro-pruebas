@@ -185,6 +185,7 @@ router.get("/listarPaginandoxTipo", async (req, res) => {
 // Obtener el numero de folio actual
 router.get("/obtenerFolio", async (req, res) => {
   const registroprestamos = await prestamos.find().count();
+  console.log(registroprestamos)
   if (registroprestamos === 0) {
     res.status(200).json({ folio: 1 });
   } else {
@@ -238,27 +239,18 @@ router.delete("/eliminar/:id", async (req, res) => {
 
 // Actualizar datos del usuario
 router.put("/actualizar/:id", async (req, res) => {
- const { id } = req.params;
-  const { prestamo, prestamoTotal, tasaInteres, createdAt } = req.body;
-
-  // find patrimonio by id
-  const result = await prestamos.findById(id);
-
-  if (!result) {
-    res.status(404).json({ message: "Prestamo no encontrado" });
-  }
-
-  // update result
+  const { id } = req.params;
+  console.log(id)
+  const { prestamo, prestamoTotal, tasaInteres, createdAt } =
+    req.body;
   await prestamos
-    .findByIdAndUpdate(id, {
-      $set: {
-        prestamo: prestamo,
-        prestamoTotal: prestamoTotal,
-        tasaInteres: tasaInteres,
-        createDate: createdAt,
-      },
-    })
-    .then((_data) => res.status(200).json({message: "Prestamo actualizado" }))
+    .updateOne(
+      { _id: id },
+      { $set: { prestamo, prestamoTotal, tasaInteres, createdAt } }
+    )
+    .then((data) =>
+      res.status(200).json({ mensaje: "Prestamo actualizado" })
+    )
     .catch((error) => res.json({ message: error }));
 });
 

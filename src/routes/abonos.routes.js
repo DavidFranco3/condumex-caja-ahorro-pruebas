@@ -174,6 +174,7 @@ router.get("/listarPaginandoxTipo", async (req, res) => {
 // Obtener el numero de folio actual
 router.get("/obtenerFolio", async (req, res) => {
   const registroabonos = await abonos.find().count();
+  console.log(registroabonos)
   if (registroabonos === 0) {
     res.status(200).json({ folio: 1 });
   } else {
@@ -226,7 +227,7 @@ router.put("/actualizar/:id", async (req, res) => {
       { $set: { abono, movimiento, createdAt } }
     )
     .then((data) =>
-      res.status(200).json({ mensaje: "Abono actualizados" })
+      res.status(200).json({ mensaje: "Abono actualizado" })
     )
     .catch((error) => res.json({ message: error }));
 });
