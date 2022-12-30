@@ -14,20 +14,10 @@ import { listarDeudaSocio } from "../../api/deudaSocio";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
 import { toast } from "react-toastify";
 import { exportCSVFile } from "../../utils/exportCSV";
-
-const fechaToCurrentTimezone = (fecha) => {
-    const date = new Date(fecha);
-
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-
-
-    return date.toISOString().slice(0, 16);
-}
+import moment from "moment";
 
 function RespaldosAutomaticos(props) {
-    const { datos, setRefreshCheckLogin, location, history } = props;
-
-    const enrutamiento = useHistory();
+    const { setRefreshCheckLogin, location, history } = props;
 
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
@@ -232,7 +222,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVAbonos = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listAbonos, "LISTA_ABONOS")
+            const timer = setTimeout(() => {
+                exportCSVFile(listAbonos, "LISTA_ABONOS_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -241,7 +234,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVAportaciones = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listAportaciones, "LISTA_APORTACIONES")
+            const timer = setTimeout(() => {
+                exportCSVFile(listAportaciones, "LISTA_APORTACIONES_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -250,7 +246,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVPatrimonios = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listPatrimonio, "LISTA_PATRIMONIOS")
+            const timer = setTimeout(() => {
+                exportCSVFile(listPatrimonio, "LISTA_PATRIMONIOS_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -259,7 +258,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVPrestamos = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listPrestamos, "LISTA_PRESTAMOS")
+            const timer = setTimeout(() => {
+                exportCSVFile(listPrestamos, "LISTA_PRESTAMOS_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -268,7 +270,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVRendimientos = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listRendimientos, "LISTA_INTERESES")
+            const timer = setTimeout(() => {
+                exportCSVFile(listRendimientos, "LISTA_INTERESES_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -277,7 +282,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVRetiros = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listRetiros, "LISTA_RETIROS")
+            const timer = setTimeout(() => {
+                exportCSVFile(listRetiros, "LISTA_RETIROS_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -286,7 +294,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVBajaSocios = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listBajaSocios, "LISTA_BAJA_SOCIOS")
+            const timer = setTimeout(() => {
+                exportCSVFile(listBajaSocios, "LISTA_BAJA_SOCIOS_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -295,7 +306,10 @@ function RespaldosAutomaticos(props) {
     const generacionCSVDeudaSocios = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listDeudaSocios, "LISTA_DEUDA_SOCIOS")
+            const timer = setTimeout(() => {
+                exportCSVFile(listDeudaSocios, "LISTA_DEUDA_SOCIOS_" + formData.inicio + "_" + formData.fin);
+            }, 5600);
+            return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
@@ -360,7 +374,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVAbonos()
                                 }}
@@ -384,7 +398,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVAportaciones()
                                 }}
@@ -408,7 +422,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVPatrimonios()
                                 }}
@@ -432,7 +446,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVPrestamos()
                                 }}
@@ -456,7 +470,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVRendimientos()
                                 }}
@@ -480,7 +494,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVRetiros()
                                 }}
@@ -504,7 +518,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVBajaSocios()
                                 }}
@@ -528,7 +542,7 @@ function RespaldosAutomaticos(props) {
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == undefined || formData.fin == undefined}
+                                disabled={formData.inicio == "" || formData.fin == ""}
                                 onClick={() => {
                                     generacionCSVDeudaSocios()
                                 }}
@@ -549,7 +563,7 @@ function formatModelAbonos(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             abono: data.abono.toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -561,7 +575,7 @@ function formatModelAportaciones(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             aportacion: data.aportacion.toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -573,7 +587,7 @@ function formatModelPatrimonio(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             patrimonio: data.patrimonio.toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -585,7 +599,7 @@ function formatModelPrestamos(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             prestamoTotal: data.prestamoTotal.toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -597,7 +611,7 @@ function formatModelRendimientos(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             rendimiento: data.rendimiento.toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -609,7 +623,7 @@ function formatModelRetiros(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             retiro: data.retiro.toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -621,7 +635,7 @@ function formatModelBajaSocios(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             total: data.total.toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -633,7 +647,7 @@ function formatModelDeudaSocio(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             saldoActual: parseFloat(data.prestamoTotal - data.abonoTotal).toFixed(2),
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
@@ -641,7 +655,8 @@ function formatModelDeudaSocio(data) {
 
 function initialFormData(data) {
     return {
-        createdAt: ""
+        inicio: "",
+        fin: ""
     }
 
 }

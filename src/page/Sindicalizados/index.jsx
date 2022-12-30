@@ -3,12 +3,7 @@ import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan, faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import {
-    listarPaginacionSocioSindizalizado,
-    totalRegistrosSocioSindicalizado,
-    listarSocioSindicalizado
-}
-    from "../../api/sociosSindicalizados";
+import { listarSocioSindicalizado } from "../../api/sociosSindicalizados";
 import ListSociosSindicalizados from "../../components/SociosSindicalizados/ListSociosSindicalizados";
 import { toast } from "react-toastify";
 import RegistroSociosSindicalizados from "../../components/SociosSindicalizados/RegistroSociosSindicalizados";
@@ -18,15 +13,7 @@ import BasicModal from "../../components/Modal/BasicModal";
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
 import { exportCSVFile } from "../../utils/exportCSV";
-
-const fechaToCurrentTimezone = (fecha) => {
-    const date = new Date(fecha);
-
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-
-
-    return date.toISOString().slice(0, 16);
-}
+import moment from "moment";
 
 function Sindicalizados(props) {
     const { setRefreshCheckLogin, location, history } = props;
@@ -237,7 +224,7 @@ function formatModelSocios2(data) {
             ficha: parseInt(data.ficha),
             nombre: data.nombre,
             correo: data.correo ? data.correo : "No especificado",
-            fechaCreacion: fechaToCurrentTimezone(data.createdAt)
+            fechaCreacion: moment(data.createdAt).format('LL')
         });
     });
     return dataTemp;
