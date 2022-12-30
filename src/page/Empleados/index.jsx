@@ -45,7 +45,10 @@ function Empleados(props) {
     const generacionCSV = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listSociosCSV, "LISTA_SOCIOS_EMPLEADOS")
+            const timer = setTimeout(() => {
+            exportCSVFile(listSociosCSV, "LISTA_SOCIOS_EMPLEADOS");
+        }, 5600);
+        return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }

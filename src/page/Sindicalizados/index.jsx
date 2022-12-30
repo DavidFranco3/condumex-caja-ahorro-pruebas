@@ -44,7 +44,10 @@ function Sindicalizados(props) {
     const generacionCSV = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            exportCSVFile(listSociosCSV, "LISTA_SOCIOS_SINDICALIZADOS")
+            const timer = setTimeout(() => {
+            exportCSVFile(listSociosCSV, "LISTA_SOCIOS_SINDICALIZADOS");
+        }, 5600);
+        return () => clearTimeout(timer);
         } catch (e) {
             console.log(e)
         }
