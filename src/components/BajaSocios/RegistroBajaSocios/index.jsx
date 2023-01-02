@@ -14,6 +14,9 @@ import { registroPatrimonioInicial } from "../../Patrimonio/RegistroBajaSocioPat
 import { registroRendimientoInicial } from "../../Rendimientos/RegistroBajaSocioRendimiento";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
+import { getPatrimonioBySocio } from '../../../api/patrimonio';
+import { getRendimientosBySocio } from '../../../api/rendimientos';
+import { getAportacionesBySocio } from '../../../api/aportaciones';
 
 function RegistroBajaSocios (props) {
     const { setShowModal, location, history } = props;
@@ -89,7 +92,7 @@ function RegistroBajaSocios (props) {
                     const { data } = response;
                     const { folio } = data;
                     
-                    const total = (aportacionSocioElegido + patrimonioSocioElegido + rendimientoSocioElegido);
+                    const total = parseFloat(aportacionSocioElegido) + parseFloat(patrimonioSocioElegido) + parseFloat(rendimientoSocioElegido);
                     // console.log(data)
 
                     const dataTemp = {
@@ -149,13 +152,39 @@ function RegistroBajaSocios (props) {
             // Busqueda de saldos del socio
             try {
                 // Búsqueda de los saldos del socio
-                obtenerInfoxFichaSaldoSocios(parseInt(fichaSocioElegido)).then(response => {
+                getPatrimonioBySocio(parseInt(fichaSocioElegido)).then(response => {
                     const { data } = response;
                     //console.log(data)
-                    const { rendimiento, patrimonio, aportacion } = data;
-                    setRendimientoSocioElegido(rendimiento);
-                    setPatrimonioSocioElegido(patrimonio);
-                    setAportacionSocioElegido(aportacion);
+                    const { total } = data;
+                    setPatrimonioSocioElegido(total);
+                }).catch(e => {
+                    console.log(e)
+                })
+            } catch (e) {
+                console.log(e)
+            }
+
+            try {
+                // Búsqueda de los saldos del socio
+                getRendimientosBySocio(parseInt(fichaSocioElegido)).then(response => {
+                    const { data } = response;
+                    //console.log(data)
+                    const { total } = data;
+                    setRendimientoSocioElegido(total);
+                }).catch(e => {
+                    console.log(e)
+                })
+            } catch (e) {
+                console.log(e)
+            }
+
+            try {
+                // Búsqueda de los saldos del socio
+                getAportacionesBySocio(parseInt(fichaSocioElegido)).then(response => {
+                    const { data } = response;
+                    //console.log(data)
+                    const { total } = data;
+                    setAportacionSocioElegido(total);
                 }).catch(e => {
                     console.log(e)
                 })
