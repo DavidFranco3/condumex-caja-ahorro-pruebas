@@ -22,6 +22,15 @@ function RespaldosAutomaticos(props) {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
+
     // Cerrado de sesión automatico
     useEffect(() => {
         if (getTokenApi()) {
@@ -410,29 +419,36 @@ function RespaldosAutomaticos(props) {
                 </Row>
             </Alert>
 
-            <Alert className="fondoPrincipalAlert">
-                <Row>
-                    <Col xs={12} md={4} className="titulo">
-                        <h1 className="font-bold">
-                            Patrimonio
-                        </h1>
-                    </Col>
-                    <Col xs={6} md={8}>
-                        <div style={{ float: 'right' }}>
-                            <Button
-                                className="btnMasivo"
-                                style={{ marginRight: '10px' }}
-                                disabled={formData.inicio == "" || formData.fin == ""}
-                                onClick={() => {
-                                    generacionCSVPatrimonios()
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
-                            </Button>
-                        </div>
-                    </Col>
-                </Row>
-            </Alert>
+            {
+                razonSocialElegida === "Asociación de Empleados Sector Cables A.C." &&
+                (
+                    <>
+                        <Alert className="fondoPrincipalAlert">
+                            <Row>
+                                <Col xs={12} md={4} className="titulo">
+                                    <h1 className="font-bold">
+                                        Patrimonio
+                                    </h1>
+                                </Col>
+                                <Col xs={6} md={8}>
+                                    <div style={{ float: 'right' }}>
+                                        <Button
+                                            className="btnMasivo"
+                                            style={{ marginRight: '10px' }}
+                                            disabled={formData.inicio == "" || formData.fin == ""}
+                                            onClick={() => {
+                                                generacionCSVPatrimonios()
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
+                                        </Button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Alert>
+                    </>
+                )
+            }
 
             <Alert className="fondoPrincipalAlert">
                 <Row>

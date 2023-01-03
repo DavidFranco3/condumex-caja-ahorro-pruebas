@@ -1,28 +1,38 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaBajaSocios} from "../../../api/bajaSocios";
-import {toast} from "react-toastify";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaBajaSocios } from "../../../api/bajaSocios";
+import { toast } from "react-toastify";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import { registroPatrimonioInicial } from "../../Patrimonio/RegistroBajaSocioPatrimonio";
 import { registroRendimientoInicial } from "../../Rendimientos/RegistroBajaSocioRendimiento";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
+import { getRazonSocial } from '../../../api/auth';
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 function EliminaBajaSocios(props) {
     const { datos, location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
-    const { id, folio, fichaSocio, aportacion, patrimonio, rendimiento, total, fechaCreacion, fechaActualizacion  } = datos;
+    const { id, folio, fichaSocio, aportacion, patrimonio, rendimiento, total, fechaCreacion, fechaActualizacion } = datos;
+
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
 
     const cancelarEliminacion = () => {
         setShowModal(false)
@@ -93,7 +103,7 @@ function EliminaBajaSocios(props) {
                                 disabled
                             />
                         </Form.Group>
-                        
+
                         <Form.Group as={Col} controlId="formGridAportacion">
                             <Form.Label>
                                 Aportación
@@ -106,21 +116,29 @@ function EliminaBajaSocios(props) {
                             />
                         </Form.Group>
                     </Row>
-                    
-    
+
+
                     <Row>
-                        <Form.Group as={Col} controlId="formGridPatrimonio">
-                            <Form.Label>
-                                Patrimonio
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="patrimonio"
-                                defaultValue={patrimonio}
-                                disabled
-                            />
-                        </Form.Group>
-                        
+                        {
+                            razonSocialElegida === "Asociación de Empleados Sector Cables A.C." &&
+                            (
+                                <>
+                                    <Form.Group as={Col} controlId="formGridPatrimonio">
+                                        <Form.Label>
+                                            Patrimonio
+                                        </Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="patrimonio"
+                                            defaultValue={patrimonio}
+                                            disabled
+                                        />
+                                    </Form.Group>
+                                </>
+                            )
+                        }
+
+
                         <Form.Group as={Col} controlId="formGridRendimiento">
                             <Form.Label>
                                 Interés
@@ -132,7 +150,7 @@ function EliminaBajaSocios(props) {
                                 disabled
                             />
                         </Form.Group>
-                        
+
                         <Form.Group as={Col} controlId="formGridFecha">
                             <Form.Label>
                                 Fecha de registro
@@ -144,11 +162,11 @@ function EliminaBajaSocios(props) {
                                 placeholder="Fecha"
                                 name="createdAt"
                                 disabled
-                                />
+                            />
                         </Form.Group>
                     </Row>
-                    
-                    <br/>
+
+                    <br />
 
                     <Form.Group as={Row} className="botones">
                         <Col>

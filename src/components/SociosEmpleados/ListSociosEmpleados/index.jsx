@@ -47,7 +47,7 @@ function ListSociosEmpleados(props) {
             center: true,
             reorder: false
         },
-        {
+        /*{
             name: "Tipo de socio",
             selector: row => row.tipo,
             sortable: false,
@@ -108,7 +108,7 @@ function ListSociosEmpleados(props) {
             sortable: false,
             center: true,
             reorder: false
-        },
+        },*/
         {
             name: "Correo",
             selector: row => row.correo,

@@ -8,8 +8,8 @@ import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
 import { obtenerInfoxFichaSaldoSocios } from "../../../api/saldosSocios";
 import { obtenerDatosxFolio, obtenerFolioActualSaldosGlobales } from "../../../api/saldosGlobales";
-import {getRazonSocial} from "../../../api/auth";
-import {toast} from "react-toastify";
+import { getRazonSocial } from "../../../api/auth";
+import { toast } from "react-toastify";
 import { registroPatrimonioInicial } from "../../Patrimonio/RegistroBajaSocioPatrimonio";
 import { registroRendimientoInicial } from "../../Rendimientos/RegistroBajaSocioRendimiento";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
@@ -18,11 +18,21 @@ import { getPatrimonioBySocio } from '../../../api/patrimonio';
 import { getRendimientosBySocio } from '../../../api/rendimientos';
 import { getAportacionesBySocio } from '../../../api/aportaciones';
 
-function RegistroBajaSocios (props) {
+function RegistroBajaSocios(props) {
     const { setShowModal, location, history } = props;
 
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
+
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
+
     // Para controlar el modal de busqueda de socios
     const [showModalBusqueda, setShowModalBusqueda] = useState(false);
     const [contentModalBusqueda, setContentModalBusqueda] = useState(null);
@@ -78,67 +88,67 @@ function RegistroBajaSocios (props) {
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
-    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
+    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
 
     const onSubmit = (e) => {
         e.preventDefault()
 
-        if(!fichaSocioElegido) {
+        if (!fichaSocioElegido) {
             toast.warning("Debe elegir un socio")
-        }  else {
-                setLoading(true)
-                // Realiza registro de la aportación
-                obtenerFolioActualBajaSocios().then(response => {
+        } else {
+            setLoading(true)
+            // Realiza registro de la aportación
+            obtenerFolioActualBajaSocios().then(response => {
+                const { data } = response;
+                const { folio } = data;
+
+                const total = parseFloat(aportacionSocioElegido) + parseFloat(patrimonioSocioElegido) + parseFloat(rendimientoSocioElegido);
+                // console.log(data)
+
+                const dataTemp = {
+                    folio: folio,
+                    fichaSocio: fichaSocioElegido,
+                    tipo: getRazonSocial(),
+                    aportacion: aportacionSocioElegido,
+                    patrimonio: patrimonioSocioElegido,
+                    rendimiento: rendimientoSocioElegido,
+                    total: total,
+                    createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
+                }
+
+                registraBajaSocios(dataTemp).then(response => {
                     const { data } = response;
-                    const { folio } = data;
-                    
-                    const total = parseFloat(aportacionSocioElegido) + parseFloat(patrimonioSocioElegido) + parseFloat(rendimientoSocioElegido);
-                    // console.log(data)
+                    const aportacion2 = (aportacionSocioElegido * parseInt("-1"));
+                    const patrimonio2 = (patrimonioSocioElegido * parseInt("-1"));
+                    const rendimiento2 = (rendimientoSocioElegido * parseInt("-1"));
 
-                    const dataTemp = {
-                        folio: folio,
-                        fichaSocio: fichaSocioElegido,
-                        tipo: getRazonSocial(),
-                        aportacion: aportacionSocioElegido,
-                        patrimonio: patrimonioSocioElegido,
-                        rendimiento: rendimientoSocioElegido,
-                        total: total,
-                        createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
-                    }
+                    registroAportacionInicial(fichaSocioElegido, aportacion2, formData.fecha);
 
-                    registraBajaSocios(dataTemp).then(response => {
-                        const { data } = response;
-                        const aportacion2 = (aportacionSocioElegido * parseInt("-1"));
-                        const patrimonio2 = (patrimonioSocioElegido * parseInt("-1"));
-                        const rendimiento2 = (rendimientoSocioElegido * parseInt("-1"));
-                        
-                        registroAportacionInicial(fichaSocioElegido, aportacion2, formData.fecha);
-                        
-                        registroPatrimonioInicial(fichaSocioElegido, patrimonio2, formData.fecha);
-                        
-                        registroRendimientoInicial(fichaSocioElegido, rendimiento2, formData.fecha);
-                        
-                        actualizacionSaldosSocios(fichaSocioElegido, aportacionSocioElegido, patrimonioSocioElegido , rendimientoSocioElegido, folio, "Baja Socio")
-                        
-                        toast.success(data.mensaje)
-                        setTimeout(() => {
-                            setLoading(false)
-                            history.push({
-                                search: queryString.stringify(""),
-                            });
-                            setShowModal(false)
-                        }, 2000)
+                    registroPatrimonioInicial(fichaSocioElegido, patrimonio2, formData.fecha);
 
-                    }).catch(e => {
-                        console.log(e)
-                    })
+                    registroRendimientoInicial(fichaSocioElegido, rendimiento2, formData.fecha);
+
+                    actualizacionSaldosSocios(fichaSocioElegido, aportacionSocioElegido, patrimonioSocioElegido, rendimientoSocioElegido, folio, "Baja Socio")
+
+                    toast.success(data.mensaje)
+                    setTimeout(() => {
+                        setLoading(false)
+                        history.push({
+                            search: queryString.stringify(""),
+                        });
+                        setShowModal(false)
+                    }, 2000)
 
                 }).catch(e => {
                     console.log(e)
                 })
+
+            }).catch(e => {
+                console.log(e)
+            })
         }
     }
-    
+
 
     const eliminaBusqueda = () => {
         setFichaSocioElegido("")
@@ -194,7 +204,7 @@ function RegistroBajaSocios (props) {
 
         }
     }, [fichaSocioElegido]);
-    
+
     const onChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -235,20 +245,20 @@ function RegistroBajaSocios (props) {
                                                 disabled
                                             />
                                         </Form.Group>
-                                        
+
                                         <Row className="mb-3">
-                                        <Form.Group as={Col} controlId="formGridNombre">
-                                            <Form.Label>
-                                                Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
-                                            </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Nombre del socio"
-                                                name="nombre"
-                                                defaultValue={nombreSocioElegido}
-                                                disabled
-                                            />
-                                        </Form.Group>
+                                            <Form.Group as={Col} controlId="formGridNombre">
+                                                <Form.Label>
+                                                    Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
+                                                </Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Nombre del socio"
+                                                    name="nombre"
+                                                    defaultValue={nombreSocioElegido}
+                                                    disabled
+                                                />
+                                            </Form.Group>
                                         </Row>
 
                                         {/* Saldos y total a entregar */}
@@ -271,7 +281,7 @@ function RegistroBajaSocios (props) {
                                                     <InputGroup.Text>.00 MXN</InputGroup.Text>
                                                 </InputGroup>
                                             </Form.Group>
-                                            
+
                                             {/* rendimiento */}
                                             <Form.Group as={Col} controlId="formGridRendimiento">
                                                 <Form.Label>
@@ -289,29 +299,36 @@ function RegistroBajaSocios (props) {
                                                     <InputGroup.Text>.00 MXN</InputGroup.Text>
                                                 </InputGroup>
                                             </Form.Group>
-                                            
-                                            
-                                            </Row>
-                                            
-                                            <Row className="mb-3">
-                                            {/* Patrimonio*/}
-                                            <Form.Group as={Col} controlId="formGridPatrimonio">
-                                                <Form.Label>
-                                                    Patrimonio
-                                                </Form.Label>
-                                                <InputGroup className="mb-3">
-                                                    <InputGroup.Text>$</InputGroup.Text>
-                                                    <Form.Control
-                                                        type="number"
-                                                        placeholder="Patriminio"
-                                                        name="patrimonio"
-                                                        value={patrimonioSocioElegido}
-                                                        disabled
-                                                    />
-                                                    <InputGroup.Text>.00 MXN</InputGroup.Text>
-                                                </InputGroup>
-                                            </Form.Group>
-                                            
+
+
+                                        </Row>
+
+                                        <Row className="mb-3">
+                                            {
+                                                razonSocialElegida === "Asociación de Empleados Sector Cables A.C." &&
+                                                (
+                                                    <>
+                                                        {/* Patrimonio*/}
+                                                        <Form.Group as={Col} controlId="formGridPatrimonio">
+                                                            <Form.Label>
+                                                                Patrimonio
+                                                            </Form.Label>
+                                                            <InputGroup className="mb-3">
+                                                                <InputGroup.Text>$</InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="number"
+                                                                    placeholder="Patriminio"
+                                                                    name="patrimonio"
+                                                                    value={patrimonioSocioElegido}
+                                                                    disabled
+                                                                />
+                                                                <InputGroup.Text>.00 MXN</InputGroup.Text>
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </>
+                                                )
+                                            }
+
                                             <Form.Group as={Col} controlId="formGridPatrimonio">
                                                 <Form.Label>
                                                     Total a entregar
@@ -328,7 +345,7 @@ function RegistroBajaSocios (props) {
                                                     <InputGroup.Text>.00 MXN</InputGroup.Text>
                                                 </InputGroup>
                                             </Form.Group>
-                                            </Row>
+                                        </Row>
                                     </>
                                 )
                                 :
@@ -372,21 +389,21 @@ function RegistroBajaSocios (props) {
                                 )
                         }
                     </Row>
-                    
+
                     <Row>
-                    <Form.Group as={Col} controlId="formGridFechaRegistro">
-                    <Form.Label>
-                        Fecha de registro
-                        </Form.Label>
-                        <InputGroup className="mb-3">
-                        <Form.Control
-                        className="mb-3"
-                        type="datetime-local"
-                        defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
-                        placeholder="Fecha"
-                        name="fecha"
-                        />
-                        </InputGroup>
+                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                            <Form.Label>
+                                Fecha de registro
+                            </Form.Label>
+                            <InputGroup className="mb-3">
+                                <Form.Control
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                    placeholder="Fecha"
+                                    name="fecha"
+                                />
+                            </InputGroup>
                         </Form.Group>
                     </Row>
 
@@ -421,14 +438,14 @@ function RegistroBajaSocios (props) {
             </BasicModal>
         </>
     );
-    }
-    
-    
-    function initialFormData () {
+}
+
+
+function initialFormData() {
     return {
         fecha: ""
     }
-    
+
 }
 
 export default RegistroBajaSocios;
