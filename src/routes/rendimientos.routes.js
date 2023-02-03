@@ -2,15 +2,6 @@ const express = require("express");
 const router = express.Router();
 const rendimientos = require("../models/rendimientos");
 
-const endPeriodoAportacion = (date) => {
-  const tmp = new Date(date);
-
-  tmp.setHours(0, 0, 0, 0);
-  tmp.setDate(28);
-
-  return tmp;
-};
-
 // Obtener los datos del saldo del socio por ficha del socio
 router.get("/obtenerRendimientoxFicha/:fichaSocio", async (req, res) => {
   const { fichaSocio } = req.params;
@@ -32,16 +23,11 @@ router.get("/totalGeneralByRazon", async (req, res) => {
     });
   }
 
-  const endAportacion = new Date(endPeriodoAportacion(fecha));
-
   try {
     const result = await rendimientos.aggregate([
       {
         $match: {
           tipo: razonSocial,
-          createdAt: {
-            $lte: endAportacion,
-          },
         },
       },
       {
@@ -57,9 +43,6 @@ router.get("/totalGeneralByRazon", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
-                createdAt: {
-                  $lte: endAportacion,
-                },
               },
             },
             {
@@ -78,9 +61,6 @@ router.get("/totalGeneralByRazon", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
-                createdAt: {
-                  $lte: endAportacion,
-                },
               },
             },
             {
@@ -119,16 +99,11 @@ router.get("/totalGeneralBySocios", async (req, res) => {
     });
   }
 
-  const endAportacion = new Date(endPeriodoAportacion(fecha));
-
   try {
     const result = await rendimientos.aggregate([
       {
         $match: {
           tipo: razonSocial,
-          createdAt: {
-            $lte: endAportacion,
-          },
         },
       },
       {
@@ -144,9 +119,6 @@ router.get("/totalGeneralBySocios", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
-                createdAt: {
-                  $lte: endAportacion,
-                },
               },
             },
             {
@@ -165,9 +137,6 @@ router.get("/totalGeneralBySocios", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
-                createdAt: {
-                  $lte: endAportacion,
-                },
               },
             },
             {
