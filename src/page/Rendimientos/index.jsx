@@ -145,11 +145,11 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
     const earningsLocalNumber = parseFloat(earningsLocal) || 0
     const totalGeneralLocalNumber = parseFloat(localStorage.getItem('totalGeneral')) || 0
 
-    const earningsDate = localStorage.getItem('earningsDate')
+    const earningsDate = localStorage.getItem('earningsDate');
 
-    const rendimientoMes = earningsLocalNumber / totalGeneralLocalNumber
+    const rendimientoMes = earningsLocalNumber / totalGeneralLocalNumber;
 
-    const response = await totalGeneralBySocios(earningsDate, razon)
+    const response = await totalGeneralBySocios(earningsDate, razon);
 
     const {
       data: { data },

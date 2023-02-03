@@ -22,10 +22,10 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
   }
 
   useEffect(() => {
-    if(totalGeneral && earningsDate.value) {
+    if (totalGeneral && earningsDate.value) {
       setRendimiento(Number(earnings.value) / totalGeneral);
     }
-   }, [totalGeneral, earnings.value])
+  }, [totalGeneral, earnings.value])
 
   useEffect(() => {
     if (earningsDate.value) {
@@ -49,8 +49,8 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
   return (
     <div className="contenidoFormularioPrincipal">
       <Form>
-      <Row className="mb-3">
-        <Form.Group as={Col} controlId="formGridRazonSocial">
+        <Row className="mb-3">
+          <Form.Group as={Col} controlId="formGridRazonSocial">
             <Form.Label>Razon social</Form.Label>
             <Form.Control
               type="text"
@@ -59,27 +59,27 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
               value={razon}
               disabled
             />
-        </Form.Group>
+          </Form.Group>
         </Row>
         <Row className="mb-3">
-        <Form.Group as={Col} controlId="formGridUtilidad">
+          <Form.Group as={Col} controlId="formGridUtilidad">
             <Form.Label>Utilidad</Form.Label>
-            <Form.Control placeholder="1000" {...earnings}/>
-        </Form.Group>
-        
-        <Form.Group as={Col} controlId="formGridTotalGeneral">
+            <Form.Control placeholder="1000" {...earnings} />
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridTotalGeneral">
             <Form.Label>Total general</Form.Label>
             <Form.Control
               placeholder="100000"
               type="text"
-              value={totalGeneral}
+              value={totalGeneral.toFixed(2)}
               disabled
             />
-        </Form.Group>
+          </Form.Group>
         </Row>
-        
+
         <Row className="mb-3">
-        <Form.Group as={Col} controlId="formGridInteres">
+          <Form.Group as={Col} controlId="formGridInteres">
             <Form.Label>Interes</Form.Label>
             <Form.Control
               placeholder="100000"
@@ -87,14 +87,14 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
               value={rendimiento}
               disabled
             />
-        </Form.Group>
+          </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridFechaRegistro">
+          <Form.Group as={Col} controlId="formGridFechaRegistro">
             <Form.Label>Fecha de registro:</Form.Label>
             <Form.Control {...earningsDate} placeholder="Fecha" name="fecha" />
-            </Form.Group>
-            </Row>
-            
+          </Form.Group>
+        </Row>
+
         <Form.Group as={Row} className="botones">
           <Col>
             <Button

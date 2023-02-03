@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
-import moment from "moment";
 import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {Alert, Button, Col, Row } from "react-bootstrap";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {toast} from "react-toastify";
 import BasicModal from "../../components/Modal/BasicModal";
