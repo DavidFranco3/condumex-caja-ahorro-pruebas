@@ -47,68 +47,6 @@ function ListSociosEmpleados(props) {
             center: true,
             reorder: false
         },
-        /*{
-            name: "Tipo de socio",
-            selector: row => row.tipo,
-            sortable: false,
-            center: true,
-            reorder: false
-        },
-        {
-            name: "Estado",
-            selector: row => (
-                <>
-                    {
-                        row.estado === "Activo" ?
-                            (
-                                <>
-                                    <Badge
-                                        bg="success"
-                                        className="editaEstado"
-                                        onClick={() => {
-                                            cambiaEstadoSocio(
-                                                <ModificaEstadoSocioEmpleado
-                                                    datos={row}
-                                                    setShowModal={setShowModal}
-                                                    history={history}
-                                                    location={location}
-                                                />
-                                            )
-                                        }}
-                                    >
-                                        Habilitado
-                                    </Badge>
-                                </>
-                            )
-                            :
-                            (
-                                <>
-                                    <Badge
-                                        bg="danger"
-                                        className="editaEstado"
-                                        onClick={() => {
-                                            cambiaEstadoSocio(
-                                                <ModificaEstadoSocioEmpleado
-                                                    datos={row}
-                                                    setShowModal={setShowModal}
-                                                    history={history}
-                                                    location={location}
-                                                />
-                                            )
-                                        }}
-                                    >
-                                        Deshabilitado
-                                    </Badge>
-
-                                </>
-                            )
-                    }
-                </>
-            ),
-            sortable: false,
-            center: true,
-            reorder: false
-        },*/
         {
             name: "Correo",
             selector: row => row.correo,

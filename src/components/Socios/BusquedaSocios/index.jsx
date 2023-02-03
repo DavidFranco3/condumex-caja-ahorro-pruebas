@@ -1,16 +1,10 @@
-import { useState } from 'react'
-import { Row, Col, Form, Button, Spinner } from 'react-bootstrap'
-import TableContainer from '@mui/material/TableContainer'
-import Paper from '@mui/material/Paper'
-import Table from '@mui/material/Table'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
-import TableBody from '@mui/material/TableBody'
-import { TablePagination } from '@mui/material'
-import './BusquedaSocios.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { useState, useEffect } from 'react';
+import { Row, Col, Form, Button, Spinner, Container } from 'react-bootstrap';
+import moment from "moment";
+import 'moment/locale/es';
+import './BusquedaSocios.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck, faArrowDownLong } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify'
 import {
   obtenerDatosSocioEmpleado,
@@ -25,6 +19,8 @@ import {
   obtenerSociosEspecialesByNombre,
 } from '../../../api/sociosEspeciales'
 import { getRazonSocial } from '../../../api/auth'
+import DataTable from "react-data-table-component";
+import { estilos } from "../../../utils/tableStyled";
 
 function BusquedaSocios(props) {
   const {
@@ -269,6 +265,74 @@ function BusquedaSocios(props) {
       }`
   }
 
+  const columns = [
+    {
+      name: "Ficha",
+      selector: row => row.ficha,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
+      name: "Nombre",
+      selector: row => row.nombre,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
+      name: "Correo",
+      selector: row => row.correo,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
+      name: "Fecha de afiliación",
+      sortable: false,
+      center: true,
+      reorder: false,
+      selector: row => moment(row.fechaCreacion).format('LL')
+    },
+    {
+      name: "Seleccionar",
+      selector: row => (
+        <>
+          <FontAwesomeIcon
+            className="eleccionSocio"
+            icon={faCircleCheck}
+            onClick={() => {
+              socioSeleccionado(row)
+            }}
+          />
+        </>
+      ),
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+  ];
+
+  // Configurando animacion de carga
+  const [pending, setPending] = useState(true);
+  const [rows, setRows] = useState([]);
+
+
+  useEffect(() => {
+      const timeout = setTimeout(() => {
+          setRows(listSociosEncontrados);
+          setPending(false);
+      }, 0);
+      return () => clearTimeout(timeout);
+  }, []);
+
+  const paginationComponentOptions = {
+      rowsPerPageText: 'Filas por página',
+      rangeSeparatorText: 'de'
+  };
+
+  const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
+
   return (
     <>
       {listSociosEncontrados ? (
@@ -276,56 +340,19 @@ function BusquedaSocios(props) {
           <div className="listadoSociosEncontrados">
             <Row>
               <h3>Socios encontrados</h3>
-              <TableContainer component={Paper}>
-                <Table stickyHeader aria-label="sticky collapsible table dense">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center">#</TableCell>
-                      <TableCell align="center">Ficha</TableCell>
-                      <TableCell align="center">Nombre</TableCell>
-                      <TableCell align="center">Tipo</TableCell>
-                      <TableCell align="center">Estado</TableCell>
-                      <TableCell align="center">Seleccionar</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {listSociosEncontrados.map((dato, index) => (
-                      <TableRow
-                        sx={{ '& > *': { borderBottom: 'unset' } }}
-                        key={dato.ficha}
-                      >
-                        <TableCell component="th" scope="row">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell align="center">{dato.ficha}</TableCell>
-                        <TableCell align="center">{dato.nombre}</TableCell>
-                        <TableCell align="center">{dato.tipo}</TableCell>
-                        <TableCell align="center">{dato.estado}</TableCell>
-                        <TableCell align="center">
-                          <FontAwesomeIcon
-                            className="eleccionSocio"
-                            icon={faCircleCheck}
-                            onClick={() => {
-                              socioSeleccionado(dato)
-                            }}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={listSociosEncontrados.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                labelRowsPerPage="Filas por página"
-                labelDisplayedRows={labelDisplayRows}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              <Container fluid>
+                <DataTable
+                    columns={columns}
+                    noDataComponent="No hay registros para mostrar"
+                    data={listSociosEncontrados}
+                    progressPending={pending}
+                    paginationComponentOptions={paginationComponentOptions}
+                    paginationResetDefaultPage={resetPaginationToogle}
+                    customStyles={estilos}
+                    sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
+                    pagination
+                />
+            </Container>
             </Row>
             <Row>
               <Button
