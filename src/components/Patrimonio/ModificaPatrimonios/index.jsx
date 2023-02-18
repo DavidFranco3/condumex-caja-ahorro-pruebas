@@ -61,7 +61,7 @@ function ModificaPatrimonios( { datos, setShowModal, history }) {
 
         if (status === 200) {
             toast.success(mensaje);
-            history.push({
+            history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);

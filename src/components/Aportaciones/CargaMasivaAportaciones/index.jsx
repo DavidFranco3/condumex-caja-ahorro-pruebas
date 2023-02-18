@@ -65,7 +65,7 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
         setDataFile([]);
         setLoading(false);
 
-        history.push({
+        history({
             search: queryString.stringify(''),
         });
 

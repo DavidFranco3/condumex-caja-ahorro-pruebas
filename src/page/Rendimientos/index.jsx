@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment, Suspense } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { withRouter } from 'react-router-dom'
+import { withRouter } from "../../utils/withRouter";
 import Lottie from 'react-lottie-player'
 import { toast } from 'react-toastify'
 import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'

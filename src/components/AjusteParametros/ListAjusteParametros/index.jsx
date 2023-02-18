@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
 import moment from "moment";
 // import BasicModal from "../../Modal/BasicModal";
 import { Button, Col, Form, Row, Spinner, Container, Badge, InputGroup } from "react-bootstrap";
@@ -20,37 +19,7 @@ function ListAjusteParametros(props) {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData(listAjusteParametros[0]));
 
-    console.log(formData)
-
-    // Estados para controlar las fecha de inicio y de periodos
-
-    // Inicio de periodos
-    const [inicioPeriodoEmpleadosAlmacenado, setInicioPeriodoEmpleadosAlmacenado] = useState(inicioPeriodoEmpleados);
-    const [finPeriodoEmpleadosAlmacenado, setFinPeriodoEmpleadosAlmacenado] = useState(finPeriodoEmpleados);
-    const [fechaEnvioEstadoCuentaEmpleadosAlmacenado, setFechaEnvioEstadoCuentaEmpleadosAlmacenado] = useState(fechaEnvioEstadosCuentaEmpleados);
-    const [fechaAporteEmpleadosAlmacenado, setFechaAporteEmpleadosAlmacenado] = useState(fechaAporteEmpleados);
-
-    const [inicioPeriodoSindicalizadosAlmacenado, setInicioPeriodoSindicalizadosAlmacenado] = useState(inicioPeriodoSindicalizados);
-    const [finPeriodoSindicalizadosAlmacenado, setFinPeriodoSindicalizadosAlmacenado] = useState(finPeriodoSindicalizados);
-    const [fechaEnvioEstadoCuentaSindicalizadosAlmacenado, setFechaEnvioEstadoCuentaSindicalizadosAlmacenado] = useState(fechaEnvioEstadosCuentaSindicalizados);
-    const [fechaAporteSindicalizadosAlmacenado, setFechaAporteSindicalizadosAlmacenado] = useState(fechaAporteSindicalizados);
-
     moment.locale("es");
-
-    // Date.parse()
-
-    const contenedorFechas = ({ className, children }) => {
-        return (
-            <div style={{ padding: "16px", background: "#216ba5", color: "#fff" }}>
-                <CalendarContainer className={className}>
-                    <div style={{ background: "#f0f0f0" }}>
-                        Seleccione la fecha
-                    </div>
-                    <div style={{ position: "relative" }}>{children}</div>
-                </CalendarContainer>
-            </div>
-        );
-    };
 
     // Para cancelar la modificación
     const cancelarModificacion = () => {

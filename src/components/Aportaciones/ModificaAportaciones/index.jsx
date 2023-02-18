@@ -59,7 +59,7 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
         if (status === 200) {
             toast.success("Actualizado correctamente")
             setTimeout(() => {
-            history.push({
+            history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);

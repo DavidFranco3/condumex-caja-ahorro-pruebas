@@ -104,7 +104,7 @@ function RegistroRendimientos({ setShowModal, history }) {
                         
                         toast.success(data.mensaje)
                         setTimeout(() => {
-                            history.push({
+                            history({
                                 search: queryString.stringify(""),
                             });
                             setShowModal(false)

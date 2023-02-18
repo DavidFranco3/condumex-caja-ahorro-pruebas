@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, Container, CardGroup, Image } from 'react-bootstrap';
 // Importaciones de imagenes del dashboard
 import LogoSocios from '../../assets/png/usuarios.png';
@@ -25,7 +25,7 @@ import './Dashboard.scss';
 function Dashboard(props) {
   const { setRefreshCheckLogin } = props;
 
-  const enrutamiento = useHistory();
+  const enrutamiento = useNavigate();
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -49,7 +49,7 @@ function Dashboard(props) {
         }
     }, []);
 
-  const goTo = (ruta) => enrutamiento.push(ruta);
+  const goTo = (ruta) => enrutamiento(ruta);
 
   const ItemCard = ({ path, logo, title }) => (
     <Card>

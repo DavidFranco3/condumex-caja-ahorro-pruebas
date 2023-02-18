@@ -1,11 +1,11 @@
 import { useState, useEffect, Suspense } from 'react';
-import { withRouter } from "react-router-dom";
-import {Button, Col, Row, Spinner} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
-import {listarPaginacionSocioSindizalizado, totalRegistrosSocioSindicalizado} from "../../api/sociosSindicalizados";
-import {toast} from "react-toastify";
-import {listarPaginacionSocioEspecial, totalRegistroSocioEspecial} from "../../api/sociosEspeciales";
+import { withRouter } from "../../utils/withRouter";
+import { Button, Col, Row, Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { listarPaginacionSocioSindizalizado, totalRegistrosSocioSindicalizado } from "../../api/sociosSindicalizados";
+import { toast } from "react-toastify";
+import { listarPaginacionSocioEspecial, totalRegistroSocioEspecial } from "../../api/sociosEspeciales";
 import ListSociosEspeciales from "../../components/SociosEspeciales/ListSociosEspeciales";
 import RegistroSociosEspeciales from "../../components/SociosEspeciales/RegistroSociosEspeciales";
 //import EliminaSociosEspecialesMasivo from "../../components/SociosEspeciales/EliminaSociosEspecialesMasivo";
@@ -28,14 +28,14 @@ function SociosEspeciales(props) {
         setContentModal(content);
         setShowModal(true);
     }
-    
+
     // Para la carga masiva de socios
     const registroMasivoSociosEspeciales = (content) => {
         setTitulosModal("Registro masivo de socios");
         setContentModal(content);
         setShowModal(true);
     }
-    
+
     // Para la carga masiva de socios
     const eliminaMasivoSociosEspeciales = (content) => {
         setTitulosModal("Elimina elementos");
@@ -59,18 +59,18 @@ function SociosEspeciales(props) {
                 setTotalSociosEspeciales(data)
             }).catch(e => {
                 // console.log(e)
-                if(e.message === 'Network Error') {
+                if (e.message === 'Network Error') {
                     //console.log("No hay internet")
                     toast.error("Conexión al servidor no disponible");
                 }
             })
 
-            if(page === 0){
+            if (page === 0) {
                 setPage(1)
                 listarPaginacionSocioEspecial(page, rowsPerPage).then(response => {
                     const { data } = response;
                     // console.log(data)
-                    if(!listSociosEspeciales && data){
+                    if (!listSociosEspeciales && data) {
                         setListSociosEspeciales(formatModelSocios(data));
                     } else {
                         const datosSocios = formatModelSocios(data);
@@ -83,7 +83,7 @@ function SociosEspeciales(props) {
                 listarPaginacionSocioEspecial(page, rowsPerPage).then(response => {
                     const { data } = response;
                     // console.log(data)
-                    if(!listSociosEspeciales && data){
+                    if (!listSociosEspeciales && data) {
                         setListSociosEspeciales(formatModelSocios(data));
                     } else {
                         const datosSocios = formatModelSocios(data);
@@ -114,59 +114,59 @@ function SociosEspeciales(props) {
     return (
         <>
             <Row>
-          <Col xs={12} md={4} className="titulo">
-          </Col>
-          <Col xs={6} md={8}>
-            <div style={{ float: 'right' }}>
-            
-            <Button
-                className="btnMasivo"
-                style={{ marginRight: '10px' }}
-                onClick={() => {
-                  eliminaMasivoSociosEspeciales(
-                    <EliminaSociosEspecialesMasivo
-                      setShowModal={setShowModal}
-                      location={location}
-                      history={history}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
-              </Button>
-            
-              <Button
-                className="btnRegistro"
-                style={{ marginRight: '10px' }}
-                onClick={() => {
-                  registroMasivoSociosSindicalizados(
-                    <CargaMasivaSociosEspeciales
-                      setShowModal={setShowModal}
-                      location={location}
-                      history={history}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faCirclePlus} /> Registro Masivo
-              </Button>
-              <Button
-                className="btnRegistro"
-                onClick={() => {
-                   registroSocios(
-                      <RegistroSociosEspeciales
-                         setShowModal={setShowModal}
-                         location={location}
-                          history={history}
-                          />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faCirclePlus} /> Registrar socio
-              </Button>
-            </div>
-          </Col>
-        </Row>
+                <Col xs={12} md={4} className="titulo">
+                </Col>
+                <Col xs={6} md={8}>
+                    <div style={{ float: 'right' }}>
+
+                        <Button
+                            className="btnMasivo"
+                            style={{ marginRight: '10px' }}
+                            onClick={() => {
+                                eliminaMasivoSociosEspeciales(
+                                    <EliminaSociosEspecialesMasivo
+                                        setShowModal={setShowModal}
+                                        location={location}
+                                        history={history}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
+                        </Button>
+
+                        <Button
+                            className="btnRegistro"
+                            style={{ marginRight: '10px' }}
+                            onClick={() => {
+                                registroMasivoSociosSindicalizados(
+                                    <CargaMasivaSociosEspeciales
+                                        setShowModal={setShowModal}
+                                        location={location}
+                                        history={history}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faCirclePlus} /> Registro Masivo
+                        </Button>
+                        <Button
+                            className="btnRegistro"
+                            onClick={() => {
+                                registroSocios(
+                                    <RegistroSociosEspeciales
+                                        setShowModal={setShowModal}
+                                        location={location}
+                                        history={history}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faCirclePlus} /> Registrar socio
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
 
             {
                 listSociosEspeciales ?

@@ -1,10 +1,10 @@
 import { useState, useEffect, Suspense } from 'react';
-import {useHistory, withRouter } from "react-router-dom";
-import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {toast} from "react-toastify";
-import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import { withRouter } from "../../utils/withRouter";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
+import { toast } from "react-toastify";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import {
     listarPaginacionBajaSocios,
     listarPaginacionBajaSociosxTipo,
@@ -21,8 +21,6 @@ import AnimacionLoading from '../../assets/json/loading.json';
 function BajaSocios(props) {
     const { setRefreshCheckLogin, location, history } = props;
 
-    const enrutamiento = useHistory();
-
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
@@ -37,8 +35,8 @@ function BajaSocios(props) {
 
     // Cerrado de sesión automatico
     useEffect(() => {
-        if(getTokenApi()) {
-            if(isExpiredToken(getTokenApi())) {
+        if (getTokenApi()) {
+            if (isExpiredToken(getTokenApi())) {
                 toast.warning("Sesión expirada");
                 toast.success("Sesión cerrada por seguridad");
                 logoutApi();
@@ -81,7 +79,7 @@ function BajaSocios(props) {
                             Baja de socios
                         </h1>
                     </Col>
-                    
+
                     <Col xs={6} md={4}>
                         <Col align="right">
                             <Button
@@ -120,7 +118,7 @@ function BajaSocios(props) {
                     :
                     (
                         <>
-                        <Lottie loop={true} play={true} animationData={AnimacionLoading} />
+                            <Lottie loop={true} play={true} animationData={AnimacionLoading} />
                         </>
                     )
             }

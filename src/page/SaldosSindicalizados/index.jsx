@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
-import { withRouter } from "react-router-dom";
+import { withRouter } from "../../utils/withRouter";
 import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
 import {toast} from "react-toastify";
 import { Alert, Row, Col, Spinner } from "react-bootstrap"

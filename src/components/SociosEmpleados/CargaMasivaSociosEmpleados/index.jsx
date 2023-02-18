@@ -44,7 +44,7 @@ await registraSociosEmpleados(dataEmpleados);
 
 setDataFile([]);
         setLoading(false);
-        history.push({
+        history({
         search: queryString.stringify(''),
         });
         setShowModal(false);

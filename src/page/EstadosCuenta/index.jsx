@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense, useId } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "../../utils/withRouter";
 import {
     getRazonSocial,
     getTokenApi,

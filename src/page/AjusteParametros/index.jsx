@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
-import { useHistory, withRouter } from "react-router-dom";
+import { withRouter } from "../../utils/withRouter";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
 import { toast } from "react-toastify";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
@@ -15,8 +15,6 @@ import AnimacionLoading from "../../assets/json/loading.json";
 
 function AjusteParametros(props) {
     const { setRefreshCheckLogin, location, history } = props;
-
-    const enrutamiento = useHistory();
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);

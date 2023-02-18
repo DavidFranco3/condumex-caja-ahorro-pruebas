@@ -109,7 +109,7 @@ function RegistroRetiros(props) {
                         
                         toast.success(data.mensaje)
                         setTimeout(() => {
-                            history.push({
+                            history({
                                 search: queryString.stringify(""),
                             });
                             setShowModal(false)

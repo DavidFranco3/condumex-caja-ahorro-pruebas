@@ -65,7 +65,7 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                 toast.success("Retiros registrados con exito");
                 setDataFile([]);
                 setLoading(false);
-                history.push({
+                history({
                         search: queryString.stringify(''),
                 });
                 setShowModal(false);

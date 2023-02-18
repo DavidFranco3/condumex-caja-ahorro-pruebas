@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
-import { withRouter } from "react-router-dom";
+import { withRouter } from "../../utils/withRouter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { listarSociosEmpleados } from "../../api/sociosEmpleados";

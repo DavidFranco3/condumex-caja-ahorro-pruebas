@@ -79,7 +79,7 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
         if (status === 200) {
             toast.success(mensaje);
             setTimeout(() => {
-            history.push({
+            history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
-import { withRouter } from "react-router-dom";
+import { withRouter } from "../../utils/withRouter";
 import { getRazonSocial } from "../../api/auth";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";

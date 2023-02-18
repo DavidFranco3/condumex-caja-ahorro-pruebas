@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
-import { useHistory, withRouter } from "react-router-dom";
+import { withRouter } from "../../utils/withRouter";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
 import { toast } from "react-toastify";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
@@ -27,13 +27,6 @@ function Prestamos(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [noTotalPrestamos, setNoTotalPrestamos] = useState(0);
-
-    const enrutamiento = useHistory();
 
     // Cerrado de sesión automatico
     useEffect(() => {

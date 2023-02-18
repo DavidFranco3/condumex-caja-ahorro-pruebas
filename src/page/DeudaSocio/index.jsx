@@ -1,10 +1,10 @@
 import { useState, useEffect, Suspense } from 'react';
-import {useHistory, withRouter } from "react-router-dom";
-import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {toast} from "react-toastify";
-import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCirclePlus, faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import { withRouter } from "../../utils/withRouter";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
+import { toast } from "react-toastify";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import {
     listarPaginacionDeudaSocio,
     listarPaginacionDeudaSocioxTipo,
@@ -20,7 +20,7 @@ import EliminaDeudaSocioMasivo from '../../components/DeudaSocio/EliminaDeudaSoc
 
 function DeudaSocio(props) {
     const { setRefreshCheckLogin, location, history } = props;
-    
+
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
@@ -28,15 +28,15 @@ function DeudaSocio(props) {
 
     //Para el registro de Rendimientos
     const eliminaDeudaSocioMasivo = (content) => {
-    setTitulosModal('Eliminar elementos')
-    setContentModal(content)
-    setShowModal(true)
+        setTitulosModal('Eliminar elementos')
+        setContentModal(content)
+        setShowModal(true)
     }
 
     // Cerrado de sesión automatico
     useEffect(() => {
-        if(getTokenApi()) {
-            if(isExpiredToken(getTokenApi())) {
+        if (getTokenApi()) {
+            if (isExpiredToken(getTokenApi())) {
                 toast.warning("Sesión expirada");
                 toast.success("Sesión cerrada por seguridad");
                 logoutApi();
@@ -69,38 +69,38 @@ function DeudaSocio(props) {
             console.log(e)
         }
     }, [location]);
-    
+
     //console.log(listAbonos);
-    
+
     return (
         <>
-<Alert className="fondoPrincipalAlert">
-        <Row>
-          <Col xs={12} md={4} className="titulo">
-            <h1 className="font-bold">Deudas de socios</h1>
-          </Col>
-          <Col xs={6} md={8}>
-            <div style={{ float: 'right' }}>
-            <Button
-                className="btnMasivo"
-                style={{ marginRight: '10px' }}
-                onClick={() => {
-                  eliminaDeudaSocioMasivo(
-                    <EliminaDeudaSocioMasivo
-                      setShowModal={setShowModal}
-                      location={location}
-                      history={history}
-                    />
-                  )
-                }}
-              >
-                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
-              </Button>
-            
-            </div>
-          </Col>
-        </Row>
-      </Alert>
+            <Alert className="fondoPrincipalAlert">
+                <Row>
+                    <Col xs={12} md={4} className="titulo">
+                        <h1 className="font-bold">Deudas de socios</h1>
+                    </Col>
+                    <Col xs={6} md={8}>
+                        <div style={{ float: 'right' }}>
+                            <Button
+                                className="btnMasivo"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    eliminaDeudaSocioMasivo(
+                                        <EliminaDeudaSocioMasivo
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
+                            </Button>
+
+                        </div>
+                    </Col>
+                </Row>
+            </Alert>
 
             {
                 listDeudaSocio ?
@@ -119,7 +119,7 @@ function DeudaSocio(props) {
                     :
                     (
                         <>
-                        <Lottie loop={true} play={true} animationData={AnimacionLoading} />
+                            <Lottie loop={true} play={true} animationData={AnimacionLoading} />
                         </>
                     )
             }

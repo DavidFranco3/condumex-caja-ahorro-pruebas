@@ -60,7 +60,7 @@ const CargaMasivaRendimientos = ({ setShowModal, history }) => {
                 toast.success("Intereses registrados con exito");
                 setDataFile([]);
                 setLoading(false);
-                history.push({
+                history({
                         search: queryString.stringify(''),
                 });
                 setShowModal(false);

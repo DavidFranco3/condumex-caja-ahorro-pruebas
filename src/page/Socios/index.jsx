@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useHistory, withRouter } from "react-router-dom";
-import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
+import { withRouter } from "../../utils/withRouter";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
 import 'react-tabs/style/react-tabs.css';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import BasicModal from "../../components/Modal/BasicModal";
 import Empleados from "../Empleados";
 import Sindicalizados from "../Sindicalizados";
@@ -19,12 +19,10 @@ function Socios(props) {
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
 
-    const enrutamiento = useHistory();
-
     // Cerrado de sesión automatico
     useEffect(() => {
-        if(getTokenApi()) {
-            if(isExpiredToken(getTokenApi())) {
+        if (getTokenApi()) {
+            if (isExpiredToken(getTokenApi())) {
                 toast.warning("Sesión expirada");
                 toast.success("Sesión cerrada por seguridad");
                 logoutApi();
@@ -38,7 +36,7 @@ function Socios(props) {
     const [razonSocialElegida, setRazonSocialElegida] = useState("Sin Selección");
 
     useEffect(() => {
-        if(getRazonSocial()) {
+        if (getRazonSocial()) {
             setRazonSocialElegida(getRazonSocial)
         } else {
             setRazonSocialElegida("Sin Selección")

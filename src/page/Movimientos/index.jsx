@@ -1,20 +1,18 @@
 import { useState, useEffect, Suspense } from 'react';
-import {useHistory, withRouter} from "react-router-dom";
-import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {toast} from "react-toastify";
-import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import { withRouter } from "../../utils/withRouter";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
+import { toast } from "react-toastify";
+import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import BasicModal from "../../components/Modal/BasicModal";
-import {totalxTipoMovimientosSaldos, listarPaginacionMovimientosSaldosxTipo, listarMovimientoSaldos} from "../../api/movimientosSaldos";
+import { totalxTipoMovimientosSaldos, listarPaginacionMovimientosSaldosxTipo, listarMovimientoSaldos } from "../../api/movimientosSaldos";
 import ListMovimientos from "../../components/Movimientos/ListMovimientos";
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
 
 function Movimientos(props) {
-    const { datos, setRefreshCheckLogin, location, history } = props;
-
-    const enrutamiento = useHistory();
+    const { setRefreshCheckLogin, location, history } = props;
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
@@ -23,8 +21,8 @@ function Movimientos(props) {
 
     // Cerrado de sesión automatico
     useEffect(() => {
-        if(getTokenApi()) {
-            if(isExpiredToken(getTokenApi())) {
+        if (getTokenApi()) {
+            if (isExpiredToken(getTokenApi())) {
                 toast.warning("Sesión expirada");
                 toast.success("Sesión cerrada por seguridad");
                 logoutApi();
@@ -88,7 +86,7 @@ function Movimientos(props) {
                     :
                     (
                         <>
-                        <Lottie loop={true} play={true} animationData={AnimacionLoading} />
+                            <Lottie loop={true} play={true} animationData={AnimacionLoading} />
                         </>
                     )
             }

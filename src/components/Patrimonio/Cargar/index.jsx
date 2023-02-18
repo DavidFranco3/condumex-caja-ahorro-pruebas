@@ -58,7 +58,7 @@ const Cargar = ({ setShowModal, history }) => {
         toast.success("Patrimonios registrados con exito");
         setDataFile([]);
         setLoading(false);
-        history.push({
+        history({
             search: queryString.stringify(''),
         });
         setShowModal(false);

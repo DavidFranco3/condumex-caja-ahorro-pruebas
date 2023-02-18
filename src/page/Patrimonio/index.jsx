@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
-import {useHistory, withRouter } from "react-router-dom";
+import { withRouter } from "../../utils/withRouter";
 import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
 import {toast} from "react-toastify";
 import {Alert, Button, Col, Row, Spinner} from "react-bootstrap";
@@ -21,13 +21,12 @@ import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
 
 function Patrimonio(props) {
-    const { datos, setRefreshCheckLogin, location, history } = props;
+    const { setRefreshCheckLogin, location, history } = props;
+
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    const enrutamiento = useHistory();
 
     // Cerrado de sesión automatico
     useEffect(() => {

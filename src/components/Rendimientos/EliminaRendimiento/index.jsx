@@ -47,7 +47,7 @@ function EliminaRendimiento(props) {
 
                 setTimeout(() => {
                     setLoading(false)
-                    history.push({
+                    history({
                         search: queryString.stringify(""),
                     });
                     setShowModal(false)

@@ -35,7 +35,7 @@ function EliminaSocioSindicalizado(props) {
                 const { data } = response;
                 toast.success(data.mensaje)
                 setLoading(false)
-                history.push({
+                history({
                     search: queryString.stringify(""),
                 });
                 setShowModal(false)

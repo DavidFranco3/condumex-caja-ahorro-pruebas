@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useHistory } from "react-router-dom";
 import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
@@ -26,9 +25,6 @@ function ListSociosSindicalizados(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Para definir el enrutamiento
-    const enrutamiento = useHistory()
 
     const columns = [
         {

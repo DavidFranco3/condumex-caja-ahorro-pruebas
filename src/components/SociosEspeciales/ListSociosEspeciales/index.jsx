@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useHistory } from "react-router-dom";
 import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
@@ -7,22 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
 import { Badge, Button, Container } from "react-bootstrap";
 // Inician importaciones para la tabla
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { TablePagination } from "@mui/material";
-
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 // Terminan importaciones para la tabla
 
@@ -44,23 +27,6 @@ function ListSociosEspeciales (props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Para definir el enrutamiento
-    const enrutamiento = useHistory()
-
-    // Campos de las columnas
-    function Row (props) {
-        const { row } = props;
-        const [open, setOpen] = useState(false);
-
-        return (
-            <>
-                <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                </TableRow>
-            </>
-        );
-    }
-    //
 
     const columns = [
         {

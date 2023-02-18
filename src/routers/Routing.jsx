@@ -1,19 +1,19 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { map } from "lodash"
 import LayoutPrincipal from "../layout/LayoutPrincipal";
 import configRouting from './configRouting';
 
 const Routing = ({ setRefreshCheckLogin }) => (
     <Router>
-        <Switch>
+        <Routes>
             {map(configRouting, (route, index) => (
-                <Route key={index} path={route.path} exact={route.exact} >
+                <Route key={index} path={route.path} element={
                     <LayoutPrincipal setRefreshCheckLogin={setRefreshCheckLogin}>
                         <route.page setRefreshCheckLogin={setRefreshCheckLogin} />
-                    </LayoutPrincipal>
+                    </LayoutPrincipal>} >
                 </Route>
             ))}
-        </Switch>
+        </Routes>
     </Router>
 )
 
