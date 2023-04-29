@@ -23,9 +23,14 @@ import { useLocale } from '../../hooks/useLocale';
 import { listarSociosEmpleados } from "../../api/sociosEmpleados";
 import { listarSocioSindicalizado } from "../../api/sociosSindicalizados";
 import { map } from "lodash";
+import moment from "moment";
+import 'moment/locale/es';
 
 function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const [tab, setTab] = useState('general')
+
+    // Configura el idioma a español
+    moment.locale("es");
 
     // Almacena los datos de los abonos
     const [listSociosSindicalizados, setListSociosSindicalizados] = useState(null);
@@ -351,7 +356,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                     <tr>
                         <th
                             colSpan={subTitles.length}
-                            className="text-center p-3 border-b border-gray-200"
+                            className="text-center p-3 border-b border-gray-200 text-center"
                         >
                             {title}
                         </th>
@@ -361,7 +366,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                             <th
                                 key={subTitle}
                                 scope="col"
-                                className="text-sm font-semibold text-gray-900 px-3 py-2 text-left uppercase"
+                                className="text-sm font-semibold text-gray-900 px-3 py-2 text-left uppercase text-center"
                             >
                                 {subTitle}
                             </th>
@@ -376,13 +381,13 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
         const { id } = useId()
         return (
             <tr key={id} className="border-b">
-                <td className="px-3 py-2 whitespace-nowrap text-sm font-medium font-mono text-gray-900">
+                <td className="text-sm text-gray-900 font-medium font-mono px-3 py-2 whitespace-nowrap text-center">
                     {index + 1}
                 </td>
-                <td className="text-sm text-gray-900 font-medium font-mono px-3 py-2 whitespace-nowrap">
-                    {formatDate(createdAt)}
+                <td className="text-sm text-gray-900 font-medium font-mono px-3 py-2 whitespace-nowrap text-center">
+                    {moment(createdAt).format('LL')}
                 </td>
-                <td className="text-sm text-gray-900 font-medium font-mono px-3 py-2 whitespace-nowrap">
+                <td className="text-sm text-gray-900 font-medium font-mono px-3 py-2 whitespace-nowrap text-center">
                     {formatDigit(monto)}
                 </td>
             </tr>
@@ -392,11 +397,11 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const TrTotal = ({ total, title = 'Total' }) => {
         return (
             <tr className="bg-gray-50">
-                <td colSpan={2} className="text-right font-bold text-md">
-                    {title}
+                <td colSpan={2} className="text- font-bold text-md">
+
                 </td>
-                <td className=" font-bold font-mono text-md px-3 py-2 whitespace-nowrap">
-                    {formatDigit(total)}
+                <td className=" font-bold font-mono text-md px-3 py-2 whitespace-nowrap text-center">
+                    {title} {formatDigit(total)}
                 </td>
             </tr>
         )
@@ -622,7 +627,9 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                                                                     />
                                                                 )
                                                             )}
-                                                            <TrTotal total={statementsBySocio.yields.total} />
+                                                            <TrTotal
+                                                                total={statementsBySocio.yields.total}
+                                                            />
                                                         </tbody>
                                                     </Table>
                                                     <Table title="Retiros">

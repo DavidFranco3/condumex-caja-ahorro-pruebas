@@ -31,10 +31,6 @@ function BusquedaSocios(props) {
     setCorreoSocioElegido,
   } = props
 
-  // Para controlar la paginación
-  const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [page, setPage] = useState(1)
-
   // Para controlar la animación
   const [loading, setLoading] = useState(false)
 
@@ -47,16 +43,6 @@ function BusquedaSocios(props) {
   // Para cancelar la búsqueda
   const cancelarBusqueda = () => {
     setShowModal(false)
-  }
-
-  // Para la manipulación de la paginación si es necesario
-  const handleChangePage = (_event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(1)
   }
 
   // Para eliminar los datos del socio encontrado
@@ -258,11 +244,6 @@ function BusquedaSocios(props) {
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  function labelDisplayRows({ _from, to, count }) {
-    return `Visualizando ${to} de ${count !== -1 ? count + ' Registros' : `more than ${to}`
-      }`
   }
 
   const columns = [

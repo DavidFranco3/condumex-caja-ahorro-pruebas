@@ -47,6 +47,7 @@ const CargaMasivaRendimientos = ({ setShowModal, history }) => {
                         }
 
                         await registraRendimientosSocios(dataRendimiento);
+                        
                         await actualizacionSaldosSocios(fichaSocio, "0", "0", rendimiento, folio, "Interés")
 
                         await registroMovimientosSaldosSocios(fichaSocio, "0", "0", "0", "0", rendimiento, "0", "0", "Interés");

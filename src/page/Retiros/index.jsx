@@ -4,7 +4,7 @@ import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../ap
 import { toast } from "react-toastify";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
 import {
     listarPaginacionRetiros,
     listarPaginacionRetirosxTipo,
@@ -16,6 +16,7 @@ import ListRetiros from "../../components/Retiros/ListRetiros";
 import BasicModal from "../../components/Modal/BasicModal";
 import CargaMasivaRetiros from '../../components/Retiros/CargaMasivaRetiros';
 import RegistroRetiros from "../../components/Retiros/RegistroRetiros";
+import RestaurarRetiros from '../../components/Retiros/RestaurarRetiros';
 import EliminaRetiroMasivo from '../../components/Retiros/EliminaRetiroMasivo';
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
@@ -84,6 +85,12 @@ function Retiros(props) {
         setShowModal(true)
     }
 
+    const registroRetirosRestaurar = (content) => {
+        setTitulosModal('Restaurar')
+        setContentModal(content)
+        setShowModal(true)
+    }
+
     return (
         <>
             <Alert className="fondoPrincipalAlert">
@@ -115,8 +122,8 @@ function Retiros(props) {
                                 className="btnRegistro"
                                 style={{ marginRight: '10px' }}
                                 onClick={() => {
-                                    registroRetirosCargaMasiva(
-                                        <CargaMasivaRetiros
+                                    registroRetirosRestaurar(
+                                        <RestaurarRetiros
                                             setShowModal={setShowModal}
                                             location={location}
                                             history={history}
@@ -124,7 +131,7 @@ function Retiros(props) {
                                     )
                                 }}
                             >
-                                <FontAwesomeIcon icon={faCirclePlus} /> Registro masivo
+                                <FontAwesomeIcon icon={faWindowRestore} /> Restaurar
                             </Button>
 
                             <Button

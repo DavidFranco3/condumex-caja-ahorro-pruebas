@@ -9,12 +9,13 @@ import {
 import { toast } from 'react-toastify';
 import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus, faSackDollar, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlus, faSackDollar, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import BasicModal from '../../components/Modal/BasicModal';
 import { listarAportacion } from '../../api/aportaciones';
 import ListAportaciones from '../../components/Aportaciones/ListAportaciones';
 import RegistroAportaciones from '../../components/Aportaciones/RegistroAportaciones';
 import CargaMasivaAportaciones from '../../components/Aportaciones/CargaMasivaAportaciones';
+import RestaurarAportaciones from '../../components/Aportaciones/RestaurarAportaciones';
 import Lottie from 'react-lottie-player';
 import AnimacionLoading from '../../assets/json/loading.json';
 import { obtenerFolioActualSaldosGlobales } from '../../api/saldosGlobales';
@@ -84,6 +85,12 @@ function Aportaciones(props) {
     setShowModal(true)
   }
 
+  const registroAportacionesRestaurar = (content) => {
+    setTitulosModal('Restaurar')
+    setContentModal(content)
+    setShowModal(true)
+  }
+
   return (
     <>
       <Alert className="fondoPrincipalAlert">
@@ -124,6 +131,22 @@ function Aportaciones(props) {
                 }}
               >
                 <FontAwesomeIcon icon={faSackDollar} /> Registro masivo
+              </Button>
+
+              <Button
+                className="btnRegistro"
+                style={{ marginRight: '10px' }}
+                onClick={() => {
+                  registroAportacionesRestaurar(
+                    <RestaurarAportaciones
+                      setShowModal={setShowModal}
+                      location={location}
+                      history={history}
+                    />
+                  )
+                }}
+              >
+                <FontAwesomeIcon icon={faWindowRestore} /> Restaurar
               </Button>
 
               <Button

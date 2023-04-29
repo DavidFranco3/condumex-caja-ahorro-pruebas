@@ -579,7 +579,7 @@ function formatModelAbonos(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             abono: data.abono.toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;
@@ -591,7 +591,7 @@ function formatModelAportaciones(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             aportacion: data.aportacion.toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;
@@ -603,7 +603,7 @@ function formatModelPatrimonio(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             patrimonio: data.patrimonio.toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;
@@ -615,7 +615,7 @@ function formatModelPrestamos(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             prestamoTotal: data.prestamoTotal.toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;
@@ -627,7 +627,7 @@ function formatModelRendimientos(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             rendimiento: data.rendimiento.toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;
@@ -639,7 +639,7 @@ function formatModelRetiros(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             retiro: data.retiro.toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;
@@ -651,7 +651,7 @@ function formatModelBajaSocios(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             total: data.total.toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;
@@ -663,7 +663,7 @@ function formatModelDeudaSocio(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             saldoActual: parseFloat(data.prestamoTotal - data.abonoTotal).toFixed(2),
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: data.createdAt
         });
     });
     return dataTemp;

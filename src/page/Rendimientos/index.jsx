@@ -5,7 +5,7 @@ import Lottie from 'react-lottie-player'
 import { toast } from 'react-toastify'
 import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCirclePlus, faSackDollar, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faCirclePlus, faSackDollar, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons'
 import {
   getRazonSocial,
   getTokenApi,
@@ -27,6 +27,7 @@ import ListRendimientos from '../../components/Rendimientos/ListRendimientos'
 import RegistroRendimientos from '../../components/Rendimientos/RegistroRendimientos'
 import CargaMasivaRendimientos from '../../components/Rendimientos/CargaMasivaRendimientos'
 import RegistroMonto from '../../components/Rendimientos/RegistroMonto'
+import RestaurarRendimientos from '../../components/Rendimientos/RestaurarRendimientos';
 import EliminaRendimientosMasivo from '../../components/Rendimientos/EliminaRendimientosMasivo'
 import { actualizacionSaldosSocios } from '../../components/GestionAutomatica/Saldos/ActualizacionSaldos';
 import {registroSaldoInicial} from "../../components/GestionAutomatica/Saldos/Saldos";
@@ -125,6 +126,12 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
 
   const registroRendimientosCargaMasiva = (content) => {
     setTitulosModal('Carga masiva')
+    setContentModal(content)
+    setShowModal(true)
+  }
+
+  const registroRendimientosRestaurar = (content) => {
+    setTitulosModal('Restaurar')
     setContentModal(content)
     setShowModal(true)
   }
@@ -330,6 +337,23 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
               >
                 <FontAwesomeIcon icon={faCirclePlus} /> Registro masivo
               </Button>
+
+              <Button
+                className="btnRegistro"
+                style={{ marginRight: '10px' }}
+                onClick={() => {
+                  registroRendimientosRestaurar(
+                    <RestaurarRendimientos
+                      setShowModal={setShowModal}
+                      location={location}
+                      history={history}
+                    />
+                  )
+                }}
+              >
+                <FontAwesomeIcon icon={faWindowRestore} /> Restaurar
+              </Button>
+
               <Button
                 className="btnRegistro"
                 style={{ marginRight: '10px' }}

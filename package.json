@@ -7,8 +7,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "vite test",
-    "lint": "eslint . --fix",
-    "prepare": "husky install"
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@emotion/react": "11.10.6",
@@ -33,11 +32,13 @@
     "query-string": "8.1.0",
     "react": "18.2.0",
     "react-bootstrap": "2.7.2",
+    "react-csv-reader": "^4.0.0",
     "react-data-table-component": "7.5.3",
     "react-datepicker": "4.10.0",
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.3",
     "react-lottie-player": "1.5.4",
+    "react-papaparse": "^4.1.0",
     "react-router-dom": "6.8.1",
     "react-table": "7.8.0",
     "react-tabs": "6.0.0",
@@ -60,7 +61,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-react": "7.32.2",
-    "husky": "^8.0.3",
+    "husky": "=8",
     "lint-staged": ">=13.1.2",
     "prettier": "2.8.4",
     "standard": "17.0.0",
@@ -78,6 +79,12 @@
       "last 1 safari version"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+
   "lint-staged": {
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"

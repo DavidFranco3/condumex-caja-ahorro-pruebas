@@ -4,7 +4,7 @@ import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../ap
 import { toast } from "react-toastify";
 import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
 import {
     listarPaginacionAbonos,
     listarPaginacionAbonosxTipo,
@@ -17,6 +17,7 @@ import BasicModal from "../../components/Modal/BasicModal";
 import EliminaAbonosMasivo from '../../components/Abonos/EliminaAbonosMasivo';
 import CargaMasivaAbonos from '../../components/Abonos/CargaMasivaAbonos'
 import RegistroAbonos from "../../components/Abonos/RegistroAbonos";
+import RestaurarAbonos from '../../components/Abonos/RestaurarAbonos';
 import Lottie from 'react-lottie-player';
 import AnimacionLoading from '../../assets/json/loading.json';
 import { map } from "lodash";
@@ -38,6 +39,12 @@ function Abonos(props) {
 
     const registroAbonosCargaMasiva = (content) => {
         setTitulosModal('Carga masiva')
+        setContentModal(content)
+        setShowModal(true)
+    }
+
+    const registroAbonosRestaurar = (content) => {
+        setTitulosModal('Restaurar')
         setContentModal(content)
         setShowModal(true)
     }
@@ -166,6 +173,22 @@ function Abonos(props) {
                                 }}
                             >
                                 <FontAwesomeIcon icon={faCirclePlus} /> Registro masivo
+                            </Button>
+
+                            <Button
+                                className="btnRegistro"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    registroAbonosRestaurar(
+                                        <RestaurarAbonos
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faWindowRestore} /> Restaurar
                             </Button>
 
                             <Button
