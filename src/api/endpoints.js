@@ -126,6 +126,18 @@ export const ENDPOINTObtenerAbonosAcumuladosByRazon =
   '/abonos/acumuladoByRazonSocial'
 export const ENDPOINTEliminarAbonosMasivo = '/abonos/eliminarMasivo'
 
+// Periodos
+export const ENDPOINTRegistroPeriodos = '/periodos/registro'
+export const ENDPOINTListarPeriodo = '/periodos/listarPeriodos'
+export const ENDPOINTTotalPeriodos = '/periodos/numeroPeriodos'
+export const ENDPOINTTotalxTipoPeriodos = '/periodos/totalxTipo'
+export const ENDPOINTListarPaginandoPeriodos = '/periodos/listarPaginando'
+export const ENDPOINTListarPaginandoPeriodosxTipo = '/periodos/listarPaginandoxTipo'
+export const ENDPOINTObtenerFolioPeriodos = '/periodos/obtenerFolio'
+export const ENDPOINTObtenerPeriodos = '/periodos/obtener'
+export const ENDPOINTEliminarPeriodos = '/periodos/eliminar'
+export const ENDPOINTActualizarPeriodos = '/periodos/actualizar'
+
 // Deudas de los socios
 export const ENDPOINTDeudaSocio = '/deudaSocio'
 export const ENDPOINTRegistroDeudaSocio = '/deudaSocio/registro'

@@ -128,7 +128,7 @@ function Dashboard(props) {
           title={'Estados de cuenta'}
         />
         <ItemCard
-          path={'/ajuste-de-parametros'}
+          path={'/periodos'}
           logo={LogoAjustes}
           title={'Ajustes'}
         />

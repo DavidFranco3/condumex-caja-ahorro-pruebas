@@ -15,6 +15,7 @@ import Saldos from '../page/Saldos'
 import Patrimonio from '../page/Patrimonio'
 import Abonos from '../page/Abonos'
 import DeudaSocio from '../page/DeudaSocio'
+import Periodos from '../page/Periodos'
 
 const configRouting = [
   {
@@ -24,6 +25,10 @@ const configRouting = [
   {
     path: '/intereses',
     page: Rendimientos,
+  },
+  {
+    path: '/periodos',
+    page: Periodos,
   },
   {
     path: '/respaldo-informacion',
