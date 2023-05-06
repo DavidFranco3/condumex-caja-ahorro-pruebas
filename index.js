@@ -99,6 +99,7 @@ app.use("/abonos/", verifyToken, require("./src/routes/abonos.routes"));
 app.use("/deudaSocio/", verifyToken, require("./src/routes/deudaSocio.routes"));
 app.use("/parametros/", verifyToken, require("./src/routes/parametros.routes"));
 app.use("/retiros/", verifyToken, require("./src/routes/retiros.routes"));
+app.use("/periodos/", verifyToken, require("./src/routes/periodos.routes"));
 app.use(
   "/movimientosSaldos/",
   verifyToken,

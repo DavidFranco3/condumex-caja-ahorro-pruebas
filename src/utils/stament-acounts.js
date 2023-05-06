@@ -1,3 +1,9 @@
+const moment =  require("moment");
+require('moment/locale/es');
+
+// Configura el idioma a español
+moment.locale("es");
+
 const FRACTION_DIGITS = 2;
 const LOCALE = "es-MX";
 
@@ -20,7 +26,7 @@ const formatDate = (date) =>
 
 const generateHeader = (doc, { name }) => {
   doc
-    // .image("./src/assets/logo.png", 50, 50, { width: 90 })
+    .image("./src/assets/logo.png", 30, 50, { width: 90 })
     .fillColor("#000000")
     .font("Courier-Bold")
     .fontSize(16)
@@ -153,7 +159,7 @@ const generateTable = (doc, title, data, y) => {
       doc,
       positionY,
       descripcion || index + 1,
-      descripcion ? "" : formatDate(fechaCreacion),
+      descripcion ? "" : moment(fechaCreacion).format('LL'),
       formatCurrency(monto)
     );
 
