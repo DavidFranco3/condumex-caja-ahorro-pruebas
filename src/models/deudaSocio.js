@@ -6,6 +6,7 @@ const deudaSocio = new Schema(
     folio: { type: Number, required: true },
     fichaSocio: { type: Number, required: true },
     tipo: { type: String, required: true },
+    periodo: {type: Number, required: true},
     abonoTotal: { type: mongoose.Decimal128, required: true },
     prestamoTotal: { type: mongoose.Decimal128, required: true },
     movimiento: { type: String },

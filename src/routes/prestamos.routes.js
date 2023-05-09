@@ -118,6 +118,16 @@ router.get("/listarPrestamos", async (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+// Obtener todos los abonos
+router.get("/listarPeriodo", async (req, res) => {
+  const { tipo, periodo } = req.query;
+    await prestamos
+    .find({ tipo, periodo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
 // Obtener el numero total de registros de prestamos
 router.get("/numeroPrestamos", async (req, res) => {
   await prestamos

@@ -142,6 +142,16 @@ router.get("/listarRetiros", async (_req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+// Obtener todos los retiros
+router.get("/listarPeriodo", async (_req, res) => {
+  const { tipo, periodo } = _req.query;
+  await retiros
+    .find({ tipo, periodo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
 // Obtener el numero total de registros de retiros
 router.get("/numeroRetiros", async (_req, res) => {
   await retiros

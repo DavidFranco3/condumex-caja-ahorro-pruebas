@@ -202,6 +202,16 @@ router.get("/listarAportaciones", async (_req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+// Obtener todos los aportaciones
+router.get("/listarPeriodo", async (_req, res) => {
+  const { tipo, periodo } = _req.query;
+  await aportaciones
+    .find({ tipo, periodo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
 // Obtener el numero total de registros de aportaciones
 router.get("/numeroAportaciones", async (_req, res) => {
   await aportaciones

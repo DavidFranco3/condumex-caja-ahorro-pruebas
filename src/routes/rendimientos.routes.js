@@ -14,10 +14,12 @@ router.get("/obtenerRendimientoxFicha/:fichaSocio", async (req, res) => {
 
 router.get("/totalGeneralByRazon", async (req, res) => {
   // get fecha and razon social by req.query
-  const { fecha, razonSocial } = req.query;
+  const { fecha, razonSocial, periodo } = req.query;
+
+  console.log(periodo)
 
   // validate fecha and razon social
-  if (!fecha || !razonSocial) {
+  if (!fecha || !razonSocial || !periodo) {
     return res.status(400).json({
       message: "Falta fecha o razon social",
     });
@@ -28,6 +30,7 @@ router.get("/totalGeneralByRazon", async (req, res) => {
       {
         $match: {
           tipo: razonSocial,
+          periodo: parseInt(periodo)
         },
       },
       {
@@ -43,6 +46,7 @@ router.get("/totalGeneralByRazon", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
+                periodo: parseInt(periodo)
               },
             },
             {
@@ -61,6 +65,7 @@ router.get("/totalGeneralByRazon", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
+                periodo: parseInt(periodo)
               },
             },
             {
@@ -90,10 +95,12 @@ router.get("/totalGeneralByRazon", async (req, res) => {
 
 router.get("/totalGeneralBySocios", async (req, res) => {
   // get fecha and razon social by req.query
-  const { fecha, razonSocial } = req.query;
+  const { fecha, razonSocial, periodo } = req.query;
+
+  console.log(periodo)
 
   // validate fecha and razon social
-  if (!fecha || !razonSocial) {
+  if (!fecha || !razonSocial || !periodo) {
     return res.status(400).json({
       message: "Falta fecha o razon social",
     });
@@ -104,6 +111,7 @@ router.get("/totalGeneralBySocios", async (req, res) => {
       {
         $match: {
           tipo: razonSocial,
+          periodo: parseInt(periodo)
         },
       },
       {
@@ -119,6 +127,7 @@ router.get("/totalGeneralBySocios", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
+                periodo: parseInt(periodo)
               },
             },
             {
@@ -137,6 +146,7 @@ router.get("/totalGeneralBySocios", async (req, res) => {
             {
               $match: {
                 tipo: razonSocial,
+                periodo: parseInt(periodo)
               },
             },
             {
@@ -308,6 +318,16 @@ router.get("/listarRendimientos", async (_req, res) => {
   const { tipo } = _req.query;
   await rendimientos
     .find({ tipo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
+// Obtener todos los rendimientos
+router.get("/listarPeriodo", async (_req, res) => {
+  const { tipo, periodo } = _req.query;
+  await rendimientos
+    .find({ tipo, periodo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));

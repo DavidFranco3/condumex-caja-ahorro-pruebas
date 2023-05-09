@@ -6,6 +6,7 @@ const movimientosSaldos = new Schema(
     folio: { type: Number, required: true },
     fichaSocio: { type: Number, required: true },
     tipo: { type: String, required: true },
+    periodo: {type: Number, required: true},
     aportacion: { type: mongoose.Decimal128, required: true },
     prestamo: { type: mongoose.Decimal128, required: true },
     patrimonio: { type: mongoose.Decimal128, required: true },

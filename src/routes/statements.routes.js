@@ -20,7 +20,9 @@ const { createStament } = require("../utils/stament-acounts");
 const { verifyToken, isExpired } = require("../middleware/verifyToken");
 
 router.get("/razon", verifyToken, async (req, res) => {
-  const { tipo } = req.query;
+  const { tipo, periodo } = req.query;
+
+  console.log(periodo)
 
   if (!tipo) {
     return res.status(400).json({
@@ -31,7 +33,10 @@ router.get("/razon", verifyToken, async (req, res) => {
   try {
     const rAportaciones = await aportaciones.aggregate([
       {
-        $match: { tipo: { $eq: tipo } },
+        $match: { 
+          tipo: { $eq: tipo },
+          periodo: { $eq: parseInt(periodo)}, 
+        },
       },
       {
         $group: {
@@ -43,7 +48,10 @@ router.get("/razon", verifyToken, async (req, res) => {
 
     const rRendimientos = await rendimientos.aggregate([
       {
-        $match: { tipo: { $eq: tipo } },
+        $match: { 
+          tipo: { $eq: tipo },
+          periodo: { $eq: parseInt(periodo)}, 
+         },
       },
       {
         $group: {
@@ -55,7 +63,10 @@ router.get("/razon", verifyToken, async (req, res) => {
 
     const rPatrimonio = await patrimonio.aggregate([
       {
-        $match: { tipo: { $eq: tipo } },
+        $match: { 
+          tipo: { $eq: tipo },
+          periodo: { $eq: parseInt(periodo)}, 
+         },
       },
       {
         $group: {
@@ -67,7 +78,10 @@ router.get("/razon", verifyToken, async (req, res) => {
 
     const rPrestamos = await prestamos.aggregate([
       {
-        $match: { tipo: { $eq: tipo } },
+        $match: {
+           tipo: { $eq: tipo },
+           periodo: { $eq: parseInt(periodo)}, 
+          },
       },
       {
         $group: {
@@ -79,7 +93,10 @@ router.get("/razon", verifyToken, async (req, res) => {
 
     const rRetiros = await retiros.aggregate([
       {
-        $match: { tipo: { $eq: tipo } },
+        $match: { 
+          tipo: { $eq: tipo },
+          periodo: { $eq: parseInt(periodo)}, 
+        },
       },
       {
         $group: {
@@ -91,7 +108,10 @@ router.get("/razon", verifyToken, async (req, res) => {
 
     const rBajaSocios = await bajaSocios.aggregate([
       {
-        $match: { tipo: { $eq: tipo } },
+        $match: { 
+          tipo: { $eq: tipo },
+          periodo: { $eq: parseInt(periodo)}, 
+        },
       },
       {
         $group: {
@@ -103,7 +123,10 @@ router.get("/razon", verifyToken, async (req, res) => {
 
     const rAbonos = await abonos.aggregate([
       {
-        $match: { tipo: { $eq: tipo } },
+        $match: { 
+          tipo: { $eq: tipo },
+          periodo: { $eq: parseInt(periodo)}, 
+         },
       },
       {
         $group: {
@@ -173,8 +196,8 @@ router.get("/razon", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/socio/:fichaSocio", verifyToken, async (req, res) => {
-  const { fichaSocio } = req.params;
+router.get("/socio", verifyToken, async (req, res) => {
+  const { fichaSocio, periodo } = req.query;
   const paramFindSocio = [
     { ficha: { $eq: fichaSocio } },
     { estatus: { $eq: "true" } },
@@ -202,7 +225,7 @@ router.get("/socio/:fichaSocio", verifyToken, async (req, res) => {
 
     const associate = empleado || socio;
 
-    const statement = await getStatementAccount(associate);
+    const statement = await getStatementAccount(associate, periodo);
 
     return res.status(200).json(statement);
   } catch (err) {
@@ -215,7 +238,7 @@ router.get("/socio/:fichaSocio", verifyToken, async (req, res) => {
 
 router.get("/pdf/:fichaSocio", async (req, res) => {
   const { fichaSocio } = req.params;
-  const { q } = req.query;
+  const { periodo, q } = req.query;
 
   if (!q) {
     return res.status(404).end();
@@ -259,7 +282,7 @@ router.get("/pdf/:fichaSocio", async (req, res) => {
 
     const associate = empleado || socio;
 
-    const statement = await getStatementAccount(associate);
+    const statement = await getStatementAccount(associate, periodo);
 
     const filename = encodeURIComponent(
       `${fichaSocio}_${associate.nombre}_${associate.tipo}-${Date.now()}.pdf`
@@ -291,6 +314,7 @@ router.get("/pdf/:fichaSocio", async (req, res) => {
 // create route send statement to email
 router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
   const { fichaSocio } = req.params;
+  const { periodo } = req.query;
 
   const paramFindSocio = [
     { ficha: { $eq: fichaSocio } },
@@ -325,7 +349,7 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
       });
     }
 
-    const statement = await getStatementAccount(associate);
+    const statement = await getStatementAccount(associate, periodo);
 
     const doc = new PDFDocument({
       font: "Courier",

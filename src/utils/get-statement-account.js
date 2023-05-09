@@ -6,9 +6,12 @@ const prestamos = require("../models/prestamos");
 const retiros = require("../models/retiros");
 const abonos = require("../models/abonos");
 
-async function getStatementAccount(associate) {
+async function getStatementAccount(associate, periodo) {
   try {
-    const paramFind = { fichaSocio: { $eq: associate.ficha } };
+    const paramFind = {
+      fichaSocio: { $eq: associate.ficha },
+      periodo: { $eq: parseInt(periodo) }
+    };
     const paramSort = { createdAt: -1 };
 
     const rAportaciones = await aportaciones.find(paramFind).sort(paramSort);
@@ -23,7 +26,7 @@ async function getStatementAccount(associate) {
     for (const { abono: val } of rAbonos) {
       abonosTotal += Number(val);
     }
-        
+
     let aportacionesTotal = 0;
     for (const { aportacion: val } of rAportaciones) {
       aportacionesTotal += Number(val);

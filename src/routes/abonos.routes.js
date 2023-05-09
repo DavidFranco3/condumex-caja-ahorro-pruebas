@@ -118,6 +118,16 @@ router.get("/listarAbonos", async (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+// Obtener todos los abonos
+router.get("/listarPeriodo", async (req, res) => {
+  const { periodo, tipo } = req.query;
+  await abonos
+    .find({ tipo, periodo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
 // Obtener el numero total de registros de abonos
 router.get("/numeroAbonos", async (req, res) => {
   await abonos

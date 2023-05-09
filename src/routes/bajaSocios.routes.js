@@ -78,6 +78,16 @@ router.get("/listarBajas", async (req, res) => {
     .catch((error) => res.json({ message: error }));
 });
 
+// Obtener todos los registros de baja de socios
+router.get("/listarPeriodo", async (req, res) => {
+  const { tipo, periodo } = req.query;
+  await bajaSocios
+    .find({ tipo, periodo })
+    .sort({ _id: -1 })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+});
+
 // Obtener el numero total de registros de baja de socios
 router.get("/numeroBajas", async (req, res) => {
   await bajaSocios
