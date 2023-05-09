@@ -1,4 +1,4 @@
-import { getRazonSocial, getTokenApi, obtenidusuarioLogueado } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registraPatrimonio, 
     obtenerFolioActualPatrimonio, 
 } from "../../../api/patrimonio";
@@ -19,6 +19,7 @@ export function registroPatrimonioInicial (
                 folio: folio,
                 fichaSocio: fichaSocio,
                 tipo: getRazonSocial(),
+                periodo: getPeriodo(),
                 patrimonio: patrimonio,
                 createdAt: fecha,
             }

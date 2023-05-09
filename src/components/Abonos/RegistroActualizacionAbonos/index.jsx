@@ -1,4 +1,4 @@
-import { getRazonSocial, getTokenApi, obtenidusuarioLogueado } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registraAbonos, 
     actualizaAbonos, 
     obtenerFolioActualAbono, 
@@ -22,6 +22,7 @@ export function registroAbonoInicial (
                 folio: folio,
                 fichaSocio: fichaSocio,
                 tipo: getRazonSocial(),
+                periodo: getPeriodo(),
                 abono: abono,
                 movimiento: movimiento,
                 createdAt: fecha,

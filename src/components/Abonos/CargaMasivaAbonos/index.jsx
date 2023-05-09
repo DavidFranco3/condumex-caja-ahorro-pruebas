@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import queryString from "query-string";
-import { getRazonSocial } from '../../../api/auth';
+import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
 import { obtenerFolioActualAbono, registraAbonos } from "../../../api/abonos";
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
@@ -32,6 +32,7 @@ const CargaMasivaAbonos = ({ setShowModal, history }) => {
         }
 
         const razonSocial = getRazonSocial();
+        const periodo = getPeriodo();
         setLoading(true);
         for (const { fichaSocio, abono } of dataFile) {
             const responseFolio = await obtenerFolioActualAbono();
@@ -41,6 +42,7 @@ const CargaMasivaAbonos = ({ setShowModal, history }) => {
                 fichaSocio,
                 abono,
                 tipo: razonSocial,
+                periodo: periodo,
                 createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
             }
             await registraAbonos(dataAbonos);

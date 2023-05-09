@@ -8,7 +8,7 @@ import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
 import { obtenerInfoxFichaSaldoSocios } from "../../../api/saldosSocios";
 import { obtenerDatosxFolio, obtenerFolioActualSaldosGlobales } from "../../../api/saldosGlobales";
-import { getRazonSocial } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { toast } from "react-toastify";
 import { registroPatrimonioInicial } from "../../Patrimonio/RegistroBajaSocioPatrimonio";
 import { registroRendimientoInicial } from "../../Rendimientos/RegistroBajaSocioRendimiento";
@@ -109,6 +109,7 @@ function RegistroBajaSocios(props) {
                     folio: folio,
                     fichaSocio: fichaSocioElegido,
                     tipo: getRazonSocial(),
+                    periodo: getPeriodo(),
                     aportacion: aportacionSocioElegido,
                     patrimonio: patrimonioSocioElegido,
                     rendimiento: rendimientoSocioElegido,

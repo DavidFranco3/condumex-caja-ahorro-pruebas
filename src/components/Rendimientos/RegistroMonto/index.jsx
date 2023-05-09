@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import useField from '../../../hooks/useField'
-import { getRazonSocial } from '../../../api/auth'
+import { getRazonSocial, getPeriodo } from '../../../api/auth'
 import { getTotalGeneralByRazon } from '../../../api/rendimientos'
 
 const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
@@ -10,8 +10,8 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
   const [totalGeneral, setTotalGeneral] = useState(0)
   const [rendimiento, setRendimiento] = useState(0)
 
-  const getGeneral = async (fecha, razonSocial) => {
-    const response = await getTotalGeneralByRazon(fecha, razonSocial);
+  const getGeneral = async (fecha, razonSocial, periodo) => {
+    const response = await getTotalGeneralByRazon(fecha, razonSocial, periodo);
 
     const [result] = response.data.data;
 
@@ -31,7 +31,7 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
     if (earningsDate.value) {
       // set to local storage
       localStorage.setItem('earningsDate', earningsDate.value)
-      getGeneral(earningsDate.value, getRazonSocial())
+      getGeneral(earningsDate.value, getRazonSocial(), getPeriodo())
     }
   }, [earningsDate.value, getGeneral])
 

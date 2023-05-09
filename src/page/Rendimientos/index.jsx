@@ -3,22 +3,16 @@ import { Dialog, Transition } from '@headlessui/react'
 import { withRouter } from "../../utils/withRouter";
 import Lottie from 'react-lottie-player'
 import { toast } from 'react-toastify'
-import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
+import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus, faSackDollar, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons'
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from '../../api/auth'
 import {
-  getRazonSocial,
-  getTokenApi,
-  isExpiredToken,
-  logoutApi,
-} from '../../api/auth'
-import {
-  listarPaginacionRendimientosxTipo,
   obtenerFolioActualRendimientos,
   registraRendimientosSocios,
   totalxTipoRendimientos,
   totalGeneralBySocios,
-  listarRendimiento
+  listarRendimientoPeriodo
 } from '../../api/rendimientos'
 import { registraMovimientoSaldosSocios2 } from '../../components/GestionAutomatica/Saldos/Movimientos'
 import AnimacionLoading from '../../assets/json/loading.json'
@@ -30,7 +24,9 @@ import RegistroMonto from '../../components/Rendimientos/RegistroMonto'
 import RestaurarRendimientos from '../../components/Rendimientos/RestaurarRendimientos';
 import EliminaRendimientosMasivo from '../../components/Rendimientos/EliminaRendimientosMasivo'
 import { actualizacionSaldosSocios } from '../../components/GestionAutomatica/Saldos/ActualizacionSaldos';
-import {registroSaldoInicial} from "../../components/GestionAutomatica/Saldos/Saldos";
+import { registroSaldoInicial } from "../../components/GestionAutomatica/Saldos/Saldos";
+import { map } from "lodash";
+import { listarPeriodo } from '../../api/periodos';
 
 function Rendimientos({ setRefreshCheckLogin, location, history }) {
   // Dialog headlessui
@@ -51,6 +47,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   const [, setEarnings] = useState(0)
   const [contribuitors, setContribuitors] = useState([])
   const [razon] = useState(getRazonSocial())
+  const [periodo] = useState(getPeriodo())
   const [countSave, setCountSave] = useState(0)
 
   const [reloadRendimientos, setReloadRendimientos] = useState(false)
@@ -67,7 +64,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         }
       })
 
-      listarRendimiento(razon)
+    listarRendimientoPeriodo(razon, getPeriodo())
       .then((response) => {
         const { data } = response
         if (listRendimientos && data) {
@@ -109,14 +106,14 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
     setCountSave(0)
     setReloadRendimientos(true)
   }
-  
-   //Para el registro de Rendimientos
-    const eliminaRendimientosMasivo = (content) => {
+
+  //Para el registro de Rendimientos
+  const eliminaRendimientosMasivo = (content) => {
     setTitulosModal('Eliminar elementos')
     setContentModal(content)
     setShowModal(true)
   }
-  
+
   // Para el registro de Rendimientos
   const registroRendimiento = (content) => {
     setTitulosModal('Registrar un interés')
@@ -156,7 +153,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
 
     const rendimientoMes = earningsLocalNumber / totalGeneralLocalNumber;
 
-    const response = await totalGeneralBySocios(earningsDate, razon);
+    const response = await totalGeneralBySocios(earningsDate, razon, periodo);
 
     const {
       data: { data },
@@ -197,7 +194,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         '0',
         'Interés'
       )
-      
+
       await actualizacionSaldosSocios(
         fichaSocio,
         '0',
@@ -206,7 +203,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         folio,
         'Interés'
       )
-      
+
       await registroSaldoInicial(
         fichaSocio,
         '0',
@@ -219,6 +216,48 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
       setCountSave((oldValue) => oldValue + 1)
     }
   }
+
+  // Para almacenar las sucursales registradas
+  const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
+
+  const cargarListaPeriodos = () => {
+    try {
+      listarPeriodo(getRazonSocial()).then(response => {
+        const { data } = response;
+        //console.log(data)
+        const dataTemp = formatModelPeriodos(data);
+        //console.log(data)
+        setPeriodosRegistrados(dataTemp);
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    cargarListaPeriodos();
+  }, []);
+
+  // Almacena la razón social, si ya fue elegida
+  const [periodoElegido, setPeriodoElegido] = useState("");
+
+  // Para almacenar en localstorage la razon social
+  const almacenaPeriodo = (periodo) => {
+    if (periodo != "Elige una opción") {
+      setPeriodo(periodo)
+    }
+    window.location.reload()
+  }
+
+  const guardarPeriodoElegido = () => {
+    if (getPeriodo()) {
+      setPeriodoElegido(getPeriodo)
+    }
+  }
+
+  useEffect(() => {
+    guardarPeriodoElegido();
+  }, []);
 
   return (
     <>
@@ -287,7 +326,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
             <h1 className="font-bold">Intereses</h1>
           </Col>
           <Col xs={6} md={8}>
-            <div style={{ float: 'right' }}>    
+            <div style={{ float: 'right' }}>
               <Button
                 className="btnRegistro"
                 style={{ marginRight: '10px' }}
@@ -305,8 +344,8 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
               >
                 <FontAwesomeIcon icon={faSackDollar} /> Carga por monto
               </Button>
-            
-            <Button
+
+              <Button
                 className="btnRegistro"
                 style={{ marginRight: '10px' }}
                 onClick={() => {
@@ -374,6 +413,29 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         </Row>
       </Alert>
 
+      <Row>
+        <Col xs={6} md={4}>
+
+        </Col>
+        <Col xs={6} md={4}>
+          <Form.Control
+            as="select"
+            aria-label="indicadorPeriodo"
+            name="periodo"
+            className="periodo"
+            defaultValue={periodoElegido}
+            onChange={(e) => {
+              almacenaPeriodo(e.target.value)
+            }}
+          >
+            <option>Elige una opción</option>
+            {map(periodosRegistrados, (periodo, index) => (
+              <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
+            ))}
+          </Form.Control>
+        </Col>
+      </Row>
+
       {listRendimientos ? (
         <Suspense fallback={<Spinner />}>
           <ListRendimientos
@@ -395,19 +457,37 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
 }
 
 function formatModelRendimientos(data) {
-    const dataTemp = []
-    data.forEach(data => {
-        dataTemp.push({
-            id: data._id,
-            folio: data.folio,
-            fichaSocio: String(data.fichaSocio),
-            tipo: data.tipo,
-            rendimiento: data.rendimiento,
-            fechaCreacion: data.createdAt,
-            fechaActualizacion: data.updatedAt
-        });
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      fichaSocio: String(data.fichaSocio),
+      tipo: data.tipo,
+      rendimiento: data.rendimiento,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
     });
-    return dataTemp;
+  });
+  return dataTemp;
+}
+
+function formatModelPeriodos(data) {
+  //console.log(data)
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      nombre: data.nombre,
+      tipo: data.tipo,
+      fechaInicio: data.fechaInicio,
+      fechaCierre: data.fechaCierre,
+      fechaRegistro: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    });
+  });
+  return dataTemp;
 }
 
 export default withRouter(Rendimientos)

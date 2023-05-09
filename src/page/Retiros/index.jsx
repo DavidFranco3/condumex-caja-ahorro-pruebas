@@ -1,17 +1,11 @@
 import { useState, useEffect, Suspense } from 'react';
 import { withRouter } from "../../utils/withRouter";
-import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from "../../api/auth";
 import { toast } from "react-toastify";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
-import {
-    listarPaginacionRetiros,
-    listarPaginacionRetirosxTipo,
-    totalRetiros,
-    totalxTipoRetiros,
-    listarRetiro
-} from "../../api/retiros";
+import { listarRetiroPeriodo } from "../../api/retiros";
 import ListRetiros from "../../components/Retiros/ListRetiros";
 import BasicModal from "../../components/Modal/BasicModal";
 import CargaMasivaRetiros from '../../components/Retiros/CargaMasivaRetiros';
@@ -20,6 +14,8 @@ import RestaurarRetiros from '../../components/Retiros/RestaurarRetiros';
 import EliminaRetiroMasivo from '../../components/Retiros/EliminaRetiroMasivo';
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
+import { map } from "lodash";
+import { listarPeriodo } from '../../api/periodos';
 
 function Retiros(props) {
     const { setRefreshCheckLogin, location, history } = props;
@@ -48,7 +44,7 @@ function Retiros(props) {
     useEffect(() => {
         try {
             // Inicia listado de detalles de los articulos vendidos
-            listarRetiro(getRazonSocial()).then(response => {
+            listarRetiroPeriodo(getRazonSocial(), getPeriodo()).then(response => {
                 const { data } = response;
                 // console.log(data)
                 if (!listRetiros && data) {
@@ -90,6 +86,49 @@ function Retiros(props) {
         setContentModal(content)
         setShowModal(true)
     }
+
+    // Para almacenar las sucursales registradas
+    const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
+
+    const cargarListaPeriodos = () => {
+        try {
+            listarPeriodo(getRazonSocial()).then(response => {
+                const { data } = response;
+                //console.log(data)
+                const dataTemp = formatModelPeriodos(data);
+                //console.log(data)
+                setPeriodosRegistrados(dataTemp);
+            })
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        cargarListaPeriodos();
+    }, []);
+
+    // Almacena la razón social, si ya fue elegida
+    const [periodoElegido, setPeriodoElegido] = useState("");
+
+    // Para almacenar en localstorage la razon social
+    const almacenaPeriodo = (periodo) => {
+        if (periodo != "Elige una opción") {
+            setPeriodo(periodo)
+        }
+        window.location.reload()
+    }
+
+    const guardarPeriodoElegido = () => {
+        if (getPeriodo()) {
+            setPeriodoElegido(getPeriodo)
+        }
+    }
+
+    useEffect(() => {
+        guardarPeriodoElegido();
+    }, []);
+
 
     return (
         <>
@@ -154,6 +193,29 @@ function Retiros(props) {
                 </Row>
             </Alert>
 
+            <Row>
+                <Col xs={6} md={4}>
+
+                </Col>
+                <Col xs={6} md={4}>
+                    <Form.Control
+                        as="select"
+                        aria-label="indicadorPeriodo"
+                        name="periodo"
+                        className="periodo"
+                        defaultValue={periodoElegido}
+                        onChange={(e) => {
+                            almacenaPeriodo(e.target.value)
+                        }}
+                    >
+                        <option>Elige una opción</option>
+                        {map(periodosRegistrados, (periodo, index) => (
+                            <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
+                        ))}
+                    </Form.Control>
+                </Col>
+            </Row>
+
             {
                 listRetiros ?
                     (
@@ -198,5 +260,23 @@ function formatModelRetiros(data) {
     });
     return dataTemp;
 }
+
+function formatModelPeriodos(data) {
+    //console.log(data)
+    const dataTemp = []
+    data.forEach(data => {
+      dataTemp.push({
+        id: data._id,
+        folio: data.folio,
+        nombre: data.nombre,
+        tipo: data.tipo,
+        fechaInicio: data.fechaInicio,
+        fechaCierre: data.fechaCierre,
+        fechaRegistro: data.createdAt,
+        fechaActualizacion: data.updatedAt
+      });
+    });
+    return dataTemp;
+  }
 
 export default withRouter(Retiros);

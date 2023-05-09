@@ -3,6 +3,7 @@ import {
   ENDPOINTRegistroMovimientosSaldos,
   ENDPOINTListarMovimientosSaldos,
   ENDPOINTTotalMovimientosSaldos,
+  ENDPOINTListarMovimientosSaldosPeriodo,
   ENDPOINTTotalxTipoMovimientosSaldos,
   ENDPOINTListarPaginandoMovimientosSaldos,
   ENDPOINTListarPaginandoMovimientoSaldosxTipo,
@@ -43,6 +44,21 @@ export async function listarMovimientoSaldos(razonSocial) {
   }
   return await axios.get(
     API_HOST + ENDPOINTListarMovimientosSaldos + `/?tipo=${razonSocial}`,
+    config
+  )
+}
+
+// Listar todos los movimientos de saldos
+export async function listarMovimientoSaldosPeriodo(razonSocial, periodo) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarMovimientosSaldosPeriodo + `/?tipo=${razonSocial}&&periodo=${periodo}`,
     config
   )
 }

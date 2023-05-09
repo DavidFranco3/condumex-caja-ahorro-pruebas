@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import queryString from "query-string";
-import { getRazonSocial } from '../../../api/auth';
+import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
 import { obtenerFolioActualPrestamo, registraPrestamos } from "../../../api/prestamos";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
@@ -34,6 +34,7 @@ const RestaurarPrestamos = ({ setShowModal, history }) => {
         }
 
         const razonSocial = getRazonSocial();
+        const periodo = getPeriodo();
         setLoading(true);
         for (const { fichaSocio, prestamo, createdAt } of dataFile) {
             const fecha = createdAt.split("T");
@@ -47,6 +48,7 @@ const RestaurarPrestamos = ({ setShowModal, history }) => {
                 prestamoTotal: prestamo,
                 tasaInteres: 0,
                 tipo: razonSocial,
+                periodo: periodo,
                 createdAt: fecha[0]
             }
             // Registra movimientos

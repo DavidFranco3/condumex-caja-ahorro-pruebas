@@ -3,6 +3,7 @@ import {
   ENDPOINTRegistroRetiros,
   ENDPOINTListarRetiros,
   ENDPOINTListarRetiro,
+  ENDPOINTListarRetirosPeriodo,
   ENDPOINTTotalRetiros,
   ENDPOINTTotalxTipoRetiros,
   ENDPOINTListarPaginandoRetiros,
@@ -78,6 +79,21 @@ export async function listarRetiro(razonSocial) {
   }
   return await axios.get(
     API_HOST + ENDPOINTListarRetiro + `/?tipo=${razonSocial}`,
+    config
+  )
+}
+
+// Listar todos los retiros
+export async function listarRetiroPeriodo(razonSocial, periodo) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarRetirosPeriodo + `/?tipo=${razonSocial}&&periodo=${periodo}`,
     config
   )
 }

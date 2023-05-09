@@ -3,7 +3,7 @@ import {
   obtenerFolioActualMovimientoSaldos,
 } from '../../../api/movimientosSaldos'
 import { actualizacionSaldosSocios } from './ActualizacionSaldos'
-import { getRazonSocial } from '../../../api/auth'
+import { getRazonSocial, getPeriodo } from '../../../api/auth'
 
 export const registraMovimientoSaldosSocios2 = async(
   fichaSocio,
@@ -18,6 +18,7 @@ export const registraMovimientoSaldosSocios2 = async(
 ) => {
   try {
     const razonSocial = getRazonSocial()
+    const periodo = getPeriodo()
     const prestamoTotal = parseFloat(prestamo) + parseFloat(interesGenerado)
 
     const responseFolio = await obtenerFolioActualMovimientoSaldos()
@@ -28,6 +29,7 @@ export const registraMovimientoSaldosSocios2 = async(
       folio,
       fichaSocio,
       tipo: razonSocial,
+      periodo: periodo,
       aportacion,
       prestamo: parseFloat(interesGenerado),
       patrimonio,
@@ -71,6 +73,7 @@ export const registroMovimientosSaldosSocios = async (
           folio: folio,
           fichaSocio: fichaSocio,
           tipo: getRazonSocial(),
+          periodo: getPeriodo(),
           aportacion: aportacion,
           prestamo: parseFloat(interesGenerado),
           patrimonio: patrimonio,

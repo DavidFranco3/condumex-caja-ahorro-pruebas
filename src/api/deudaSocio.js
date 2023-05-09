@@ -3,6 +3,7 @@ import {
   ENDPOINTDeudaSocio,
   ENDPOINTRegistroDeudaSocio,
   ENDPOINTListarDeudaSocio,
+  ENDPOINTListarDeudasSociosPeriodo,
   ENDPOINTTotalDeudaSocio,
   ENDPOINTTotalxTipoDeudaSocio,
   ENDPOINTListarPaginandoDeudaSocio,
@@ -77,6 +78,21 @@ export async function listarDeudasSocios(razonSocial) {
   }
   return await axios.get(
     API_HOST + ENDPOINTListarDeudasSocios + `/?tipo=${razonSocial}`,
+    config
+  )
+}
+
+// Listar todos los deuda socio
+export async function listarDeudasSociosPeriodo(razonSocial, periodo) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarDeudasSociosPeriodo + `/?tipo=${razonSocial}&&periodo=${periodo}`,
     config
   )
 }

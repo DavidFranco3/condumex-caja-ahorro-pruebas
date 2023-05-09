@@ -6,10 +6,10 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { obtenerFolioActualRetiros, registraRetiros } from "../../../api/retiros";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
-import {toast} from "react-toastify";
-import {getRazonSocial} from "../../../api/auth";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
+import { toast } from "react-toastify";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
 
@@ -68,15 +68,15 @@ function RegistroRetiros(props) {
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
-    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
+    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
 
     const onSubmit = (e) => {
         e.preventDefault()
 
-        if(!fichaSocioElegido) {
+        if (!fichaSocioElegido) {
             toast.warning("Debe elegir un socio")
         } else {
-            if(!formData.retiro) {
+            if (!formData.retiro) {
                 toast.warning("Faltan datos")
             } else {
 
@@ -86,13 +86,14 @@ function RegistroRetiros(props) {
                     const { data } = response;
                     const { folio } = data;
                     // console.log(data)
-                    
+
                     let retiro = formData.retiro * parseInt("-1");
-                    
+
                     const dataTemp = {
                         folio: folio,
                         fichaSocio: fichaSocioElegido,
                         tipo: getRazonSocial(),
+                        periodo: getPeriodo(),
                         retiro: formData.retiro,
                         createdAt: formData.fecha == "" ? fechaActual : formData.fecha
                     }
@@ -102,11 +103,11 @@ function RegistroRetiros(props) {
 
                         // Registra movimientos
                         registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", "0", "0", formData.retiro, "0", "Retiro")
-                        
+
                         actualizacionSaldosSocios(fichaSocioElegido, formData.retiro, "0", "0", folio, "Retiro")
-                        
+
                         registroAportacionInicial(fichaSocioElegido, retiro, formData.fecha);
-                        
+
                         toast.success(data.mensaje)
                         setTimeout(() => {
                             history({
@@ -173,20 +174,20 @@ function RegistroRetiros(props) {
                                                 disabled
                                             />
                                         </Form.Group>
-                                        
+
                                         <Row className="mb-3">
-                                        <Form.Group as={Col} controlId="formGridFicha">
-                                            <Form.Label>
-                                                Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
-                                            </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Nombre del socio"
-                                                name="nombre"
-                                                defaultValue={nombreSocioElegido}
-                                                disabled
-                                            />
-                                        </Form.Group>
+                                            <Form.Group as={Col} controlId="formGridFicha">
+                                                <Form.Label>
+                                                    Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
+                                                </Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Nombre del socio"
+                                                    name="nombre"
+                                                    defaultValue={nombreSocioElegido}
+                                                    disabled
+                                                />
+                                            </Form.Group>
                                         </Row>
                                     </>
                                 )
@@ -225,8 +226,8 @@ function RegistroRetiros(props) {
                                 )
                         }
                     </Row>
-                    
-                     <Row className="mb-3">
+
+                    <Row className="mb-3">
 
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
                             <Form.Label>
@@ -234,11 +235,11 @@ function RegistroRetiros(props) {
                             </Form.Label>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
-                                placeholder="Fecha"
-                                name="fecha"
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                    placeholder="Fecha"
+                                    name="fecha"
                                 />
                             </InputGroup>
                         </Form.Group>
@@ -263,7 +264,7 @@ function RegistroRetiros(props) {
 
                         </Form.Group>
                     </Row>
-                                       
+
                     <Form.Group as={Row} className="botones">
                         <Col>
                             <Button
@@ -297,7 +298,7 @@ function RegistroRetiros(props) {
     );
 }
 
-function initialFormData () {
+function initialFormData() {
     return {
         fichaSocio: "",
         retiro: "",

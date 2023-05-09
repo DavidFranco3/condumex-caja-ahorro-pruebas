@@ -9,6 +9,8 @@ export const API_HOST = 'https://isotech.mx/api-condumex';
 // API para la consulta de la IP pública
 // export const  API_IP = "https://obten-ip-api.herokuapp.com/"
 
-export const TOKEN = 'token-caja'
+export const TOKEN = 'token-caja';
 
-export const RAZON_SOCIAL = 'razon_social'
+export const PERIODO = "periodo";
+
+export const RAZON_SOCIAL = 'razon_social';

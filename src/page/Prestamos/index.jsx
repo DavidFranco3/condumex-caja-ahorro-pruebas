@@ -1,17 +1,11 @@
 import { useState, useEffect, Suspense } from 'react';
 import { withRouter } from "../../utils/withRouter";
-import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from "../../api/auth";
 import { toast } from "react-toastify";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faEye, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
-import {
-    listarPaginacionPrestamos,
-    listarPaginacionPrestamosxTipo,
-    totalPrestamos,
-    totalxTipoPrestamos,
-    listarPrestamo
-} from "../../api/prestamos";
+import { listarPrestamoPeriodo } from "../../api/prestamos";
 import ListPrestamos from "../../components/Prestamos/ListPrestamos";
 import RegistroPrestamos from "../../components/Prestamos/RegistroPrestamos";
 import BasicModal from "../../components/Modal/BasicModal";
@@ -21,6 +15,7 @@ import RestaurarPrestamos from '../../components/Prestamos/RestaurarPrestamos';
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
 import { map } from "lodash";
+import { listarPeriodo } from '../../api/periodos';
 
 function Prestamos(props) {
     const { datos, setRefreshCheckLogin, location, history } = props;
@@ -74,7 +69,7 @@ function Prestamos(props) {
     useEffect(() => {
         try {
             // Inicia listado de detalles de los articulos vendidos
-            listarPrestamo(getRazonSocial()).then(response => {
+            listarPrestamoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
                 const { data } = response;
                 // console.log(data)
                 if (!listPrestamos && data) {
@@ -126,6 +121,48 @@ function Prestamos(props) {
         })
         setListaFechas(listaFechasTemp);
     }, [listPrestamos]);
+
+    // Para almacenar las sucursales registradas
+    const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
+
+    const cargarListaPeriodos = () => {
+        try {
+            listarPeriodo(getRazonSocial()).then(response => {
+                const { data } = response;
+                //console.log(data)
+                const dataTemp = formatModelPeriodos(data);
+                //console.log(data)
+                setPeriodosRegistrados(dataTemp);
+            })
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        cargarListaPeriodos();
+    }, []);
+
+    // Almacena la razón social, si ya fue elegida
+    const [periodoElegido, setPeriodoElegido] = useState("");
+
+    // Para almacenar en localstorage la razon social
+    const almacenaPeriodo = (periodo) => {
+        if (periodo != "Elige una opción") {
+            setPeriodo(periodo)
+        }
+        window.location.reload()
+    }
+
+    const guardarPeriodoElegido = () => {
+        if (getPeriodo()) {
+            setPeriodoElegido(getPeriodo)
+        }
+    }
+
+    useEffect(() => {
+        guardarPeriodoElegido();
+    }, []);
 
     return (
         <>
@@ -209,6 +246,29 @@ function Prestamos(props) {
                 </Row>
             </Alert>
 
+            <Row>
+                <Col xs={6} md={4}>
+
+                </Col>
+                <Col xs={6} md={4}>
+                    <Form.Control
+                        as="select"
+                        aria-label="indicadorPeriodo"
+                        name="periodo"
+                        className="periodo"
+                        defaultValue={periodoElegido}
+                        onChange={(e) => {
+                            almacenaPeriodo(e.target.value)
+                        }}
+                    >
+                        <option>Elige una opción</option>
+                        {map(periodosRegistrados, (periodo, index) => (
+                            <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
+                        ))}
+                    </Form.Control>
+                </Col>
+            </Row>
+
             {
                 listPrestamos ?
                     (
@@ -271,6 +331,24 @@ function formatModelPrestamos2(data) {
             prestamoTotal: String(data.prestamoTotal),
             tasaInteres: data.tasaInteres,
             fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelPeriodos(data) {
+    //console.log(data)
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            id: data._id,
+            folio: data.folio,
+            nombre: data.nombre,
+            tipo: data.tipo,
+            fechaInicio: data.fechaInicio,
+            fechaCierre: data.fechaCierre,
+            fechaRegistro: data.createdAt,
             fechaActualizacion: data.updatedAt
         });
     });

@@ -3,15 +3,15 @@ import "./RegistroRendimientos.scss"
 import { Button, Col, Form, Row, Spinner, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import {obtenerFolioActualRendimientos, registraRendimientosSocios} from "../../../api/rendimientos";
+import { obtenerFolioActualRendimientos, registraRendimientosSocios } from "../../../api/rendimientos";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
-import {toast} from "react-toastify";
-import {getRazonSocial} from "../../../api/auth";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { toast } from "react-toastify";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
-import {actualizacionSaldosSocios} from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
+import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 
 function RegistroRendimientos({ setShowModal, history }) {
 
@@ -65,15 +65,15 @@ function RegistroRendimientos({ setShowModal, history }) {
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
-    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
+    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
 
     const onSubmit = (e) => {
         e.preventDefault()
 
-        if(!fichaSocioElegido) {
+        if (!fichaSocioElegido) {
             toast.warning("Debe elegir un socio")
         } else {
-            if(!formData.rendimiento) {
+            if (!formData.rendimiento) {
                 toast.warning("Faltan datos")
             } else {
 
@@ -88,20 +88,21 @@ function RegistroRendimientos({ setShowModal, history }) {
                         folio: folio,
                         fichaSocio: fichaSocioElegido,
                         tipo: getRazonSocial(),
+                        periodo: getPeriodo(),
                         rendimiento: formData.rendimiento,
                         createdAt: formData.fecha == "" ? fechaActual : formData.fecha
-                        
+
                     }
 
                     registraRendimientosSocios(dataTemp).then(() => {
                         // Registra movimientos
                         registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", "0", formData.rendimiento, "0", "0", "Interés")
-                        
+
                         // Registra Saldos
                         registroSaldoInicial(fichaSocioElegido, "0", "0", formData.rendimiento, folio, "Interés")
-                        
+
                         actualizacionSaldosSocios(fichaSocioElegido, "0", "0", formData.rendimiento, folio, "Interés")
-                        
+
                         toast.success(data.mensaje)
                         setTimeout(() => {
                             history({
@@ -157,7 +158,7 @@ function RegistroRendimientos({ setShowModal, history }) {
                                     <>
                                         <Form.Group as={Col} controlId="formGridFicha">
                                             <Form.Label>
-                                                Ficha <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => {eliminaBusqueda()}} />
+                                                Ficha <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
                                             </Form.Label>
                                             <Form.Control
                                                 type="text"
@@ -170,7 +171,7 @@ function RegistroRendimientos({ setShowModal, history }) {
 
                                         <Form.Group as={Row} controlId="formGridFicha">
                                             <Form.Label>
-                                                Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => {eliminaBusqueda()}} />
+                                                Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
                                             </Form.Label>
                                             <Form.Control
                                                 type="text"
@@ -217,7 +218,7 @@ function RegistroRendimientos({ setShowModal, history }) {
                                 )
                         }
                     </Row>
-                    
+
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
                             <Form.Label>
@@ -225,11 +226,11 @@ function RegistroRendimientos({ setShowModal, history }) {
                             </Form.Label>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
-                                placeholder="Fecha"
-                                name="fecha"
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                    placeholder="Fecha"
+                                    name="fecha"
                                 />
                             </InputGroup>
                         </Form.Group>

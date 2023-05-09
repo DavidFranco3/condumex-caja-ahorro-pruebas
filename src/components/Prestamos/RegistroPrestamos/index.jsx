@@ -6,7 +6,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
 import { toast } from "react-toastify";
-import { getRazonSocial } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import queryString from "query-string";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
@@ -94,6 +94,7 @@ function RegistroPrestamos(props) {
                         folio: folio,
                         fichaSocio: fichaSocioElegido,
                         tipo: getRazonSocial(),
+                        periodo: getPeriodo(),
                         prestamo: formData.prestamo,
                         prestamoTotal: interesGenerado,
                         tasaInteres: formData.tasaInteres,

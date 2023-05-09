@@ -3,6 +3,7 @@ import {
   ENDPOINTRegistroBajaSocios,
   ENDPOINTListarBajaSocios,
   ENDPOINTListarBajasSocios,
+  ENDPOINTListarBajaSociosPeriodo,
   ENDPOINTTotalBajaSocios,
   ENDPOINTTotalxTipoBajaSocios,
   ENDPOINTListarPaginandoBajaSocios,
@@ -69,6 +70,20 @@ export async function listarBajaSocio(razonSocial) {
   }
   return await axios.get(
     API_HOST + ENDPOINTListarBajasSocios + `/?tipo=${razonSocial}`,
+    config
+  )
+}
+
+export async function listarBajaSocioPeriodo(razonSocial, periodo) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarBajaSociosPeriodo + `/?tipo=${razonSocial}&&periodo=${periodo}`,
     config
   )
 }

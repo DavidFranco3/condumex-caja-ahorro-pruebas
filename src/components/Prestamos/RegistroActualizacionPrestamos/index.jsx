@@ -1,4 +1,4 @@
-import { getRazonSocial, getTokenApi, obtenidusuarioLogueado } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registraPrestamos, 
     actualizaPrestamos, 
     obtenerFolioActualPrestamo, 
@@ -24,6 +24,7 @@ export function registroPrestamoInicial (
                 folio: folio,
                 fichaSocio: fichaSocio,
                 tipo: getRazonSocial(),
+                periodo: getPeriodo(),
                 prestamo: prestamo,
                 prestamoTotal: prestamoTotal,
                 tasaInteres: tasaInteres,

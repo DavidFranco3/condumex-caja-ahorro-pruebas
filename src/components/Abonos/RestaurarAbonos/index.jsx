@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import queryString from "query-string";
-import { getRazonSocial } from '../../../api/auth';
+import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
 import { obtenerFolioActualAbono, registraAbonos } from "../../../api/abonos";
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
@@ -32,16 +32,18 @@ const RestaurarAbonos = ({ setShowModal, history }) => {
         }
 
         const razonSocial = getRazonSocial();
+        const periodo = getPeriodo();
         setLoading(true);
         for (const { fichaSocio, abono, createdAt } of dataFile) {
             const fecha = createdAt.split("T");
-            console.log(new Date (fecha[0]))
+            console.log(new Date(fecha[0]))
             const responseFolio = await obtenerFolioActualAbono();
             const { data: { folio } } = responseFolio;
             const dataAbonos = {
                 folio,
                 fichaSocio,
                 abono,
+                periodo: periodo,
                 tipo: razonSocial,
                 createdAt: fecha[0]
             }
@@ -71,25 +73,25 @@ const RestaurarAbonos = ({ setShowModal, history }) => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-      
+
         const { files } = e.target;
         if (files.length > 0) {
-          const [file] = files;
-          const reader = new FileReader();
-          reader.readAsText(file, 'UTF-8');
-          reader.onload = (evt) => {
-            const { result } = evt.target;
-            const lines = result.split('\n'); // Cambiar el delimitador de línea a '\n'
-            const data = lines.map(line => {
-                const [fichaSocio, abono, createdAt] = line.split(',');
-                return { fichaSocio, abono, createdAt}
-            });
-            setDataFile(data.filter(({ fichaSocio, abono, createdAt }) => fichaSocio && abono && createdAt));
-          };
-          reader.onerror = (_evt) => toast.error('Error al leer el archivo');
+            const [file] = files;
+            const reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+            reader.onload = (evt) => {
+                const { result } = evt.target;
+                const lines = result.split('\n'); // Cambiar el delimitador de línea a '\n'
+                const data = lines.map(line => {
+                    const [fichaSocio, abono, createdAt] = line.split(',');
+                    return { fichaSocio, abono, createdAt }
+                });
+                setDataFile(data.filter(({ fichaSocio, abono, createdAt }) => fichaSocio && abono && createdAt));
+            };
+            reader.onerror = (_evt) => toast.error('Error al leer el archivo');
         }
-      };
-    
+    };
+
     const Loading = () => (
         !loading ? 'Cargar' : <Spinner animation='border' />
     )

@@ -3,6 +3,7 @@ import {
   ENDPOINTAbonos,
   ENDPOINTRegistroAbonos,
   ENDPOINTListarAbonos,
+  ENDPOINTListarAbonosPeriodo,
   ENDPOINTListarAbono,
   ENDPOINTTotalAbonos,
   ENDPOINTTotalxTipoAbonos,
@@ -62,6 +63,23 @@ export async function listarAbonos(razonSocial, inicio, fin) {
     API_HOST +
       ENDPOINTListarAbonos +
       `/?tipo=${razonSocial}&&inicio=${inicio}&&fin=${fin}`,
+    config
+  )
+}
+
+// Listar todos los abonos
+export async function listarAbonosPeriodo(razonSocial, periodo) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST +
+      ENDPOINTListarAbonosPeriodo +
+      `/?periodo=${periodo}&&tipo=${razonSocial}`,
     config
   )
 }

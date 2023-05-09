@@ -6,7 +6,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
 import { toast } from "react-toastify";
-import { getRazonSocial } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import queryString from "query-string";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import { registroPatrimonioInicial } from "../RegistroBajaSocioPatrimonio";
@@ -87,6 +87,7 @@ function Registrar(props) {
                         folio: folio,
                         fichaSocio: fichaSocioElegido,
                         tipo: getRazonSocial(),
+                        periodo: getPeriodo(),
                         patrimonio: formData.patrimonio,
                         createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
                     }

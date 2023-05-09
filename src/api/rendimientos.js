@@ -4,6 +4,7 @@ import {
   ENDPOINTRegistroRendimientos2,
   ENDPOINTListarRendimientos,
   ENDPOINTListarRendimiento,
+  ENDPOINTListarRendimientosPeriodo,
   ENDPOINTNumeroRendimientos,
   ENDPOINTTotalxTipoRendimientos,
   ENDPOINTListarPaginandoRendimientos,
@@ -36,9 +37,9 @@ export async function obtenerRendimientoxFicha(fichaSocio) {
   )
 }
 
-export async function getTotalGeneralByRazon(fecha, razonSocial) {
+export async function getTotalGeneralByRazon(fecha, razonSocial, periodo) {
   const token = getTokenApi()
-  const url = `${API_HOST}/rendimientos/totalGeneralByRazon?fecha=${fecha}&&razonSocial=${razonSocial}`
+  const url = `${API_HOST}/rendimientos/totalGeneralByRazon?fecha=${fecha}&&razonSocial=${razonSocial}&&periodo=${periodo}`
 
   return axios.get(url, {
     headers: {
@@ -47,9 +48,9 @@ export async function getTotalGeneralByRazon(fecha, razonSocial) {
   })
 }
 
-export async function totalGeneralBySocios(fecha, razonSocial) {
+export async function totalGeneralBySocios(fecha, razonSocial, periodo) {
   const token = getTokenApi()
-  const url = `${API_HOST}/rendimientos/totalGeneralBySocios?fecha=${fecha}&&razonSocial=${razonSocial}`
+  const url = `${API_HOST}/rendimientos/totalGeneralBySocios?fecha=${fecha}&&razonSocial=${razonSocial}&&periodo=${periodo}`
 
   return axios.get(url, {
     headers: {
@@ -132,6 +133,21 @@ export async function listarRendimiento(razonSocial) {
   }
   return axios.get(
     API_HOST + ENDPOINTListarRendimiento + `/?tipo=${razonSocial}`,
+    config
+  )
+}
+
+// Listar todas las Rendimientos
+export async function listarRendimientoPeriodo(razonSocial, periodo) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return axios.get(
+    API_HOST + ENDPOINTListarRendimientosPeriodo + `/?tipo=${razonSocial}&&periodo=${periodo}`,
     config
   )
 }

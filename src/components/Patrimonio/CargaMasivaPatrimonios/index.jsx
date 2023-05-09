@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import queryString from "query-string";
-import { getRazonSocial } from '../../../api/auth';
+import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
 import { obtenerFolioActualPatrimonio, registraPatrimonio } from "../../../api/patrimonio";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
@@ -29,6 +29,7 @@ const CargaMasivaPatrimonios = ({ setShowModal, history }) => {
         }
 
         const razonSocial = getRazonSocial();
+        const periodo = getPeriodo();
         setLoading(true);
         for (const { fichaSocio, patrimonio } of dataFile) {
             const responseFolio = await obtenerFolioActualPatrimonio();
@@ -37,6 +38,7 @@ const CargaMasivaPatrimonios = ({ setShowModal, history }) => {
                 folio,
                 fichaSocio,
                 patrimonio,
+                periodo: periodo,
                 tipo: razonSocial,
                 createdAt: formData.fecha,
             }

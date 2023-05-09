@@ -3,7 +3,7 @@ import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import queryString from "query-string";
 import { obtenerFolioActualAportaciones, registraAportacionesSocios } from '../../../api/aportaciones';
-import { getRazonSocial } from '../../../api/auth';
+import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
@@ -35,6 +35,7 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
         }
 
         const razonSocial = getRazonSocial();
+        const periodo = getPeriodo()
 
         setLoading(true);
 
@@ -46,6 +47,7 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
                 fichaSocio,
                 aportacion,
                 tipo: razonSocial,
+                periodo: periodo,
                 createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
             }
 

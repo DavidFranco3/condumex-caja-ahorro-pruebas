@@ -1,4 +1,4 @@
-import { API_HOST, TOKEN, RAZON_SOCIAL } from "../utils/constants";
+import { API_HOST, TOKEN, PERIODO, RAZON_SOCIAL } from "../utils/constants";
 import { ENDPOINTLoginAdministrador } from "./endpoints";
 import jwtDecode from "jwt-decode";
 import axios from 'axios';
@@ -16,6 +16,18 @@ export async function login(data) {
     }
 
     return await axios.post(API_HOST + ENDPOINTLoginAdministrador, dataTemp, config);
+}
+
+export function setPeriodo(periodo) {
+    localStorage.setItem(PERIODO, periodo)
+}
+
+export function getPeriodo() {
+    return localStorage.getItem(PERIODO)
+}
+
+function eliminaPeriodo() {
+    return localStorage.removeItem(PERIODO)
 }
 
 export function setRazonSocial(razonSocial) {
@@ -39,7 +51,8 @@ function eliminaRazonSocial() {
 }
 
 export function logoutApi() {
-    eliminaRazonSocial()
+    eliminaRazonSocial();
+    eliminaPeriodo();
     return localStorage.removeItem(TOKEN);
 }
 

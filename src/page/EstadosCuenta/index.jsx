@@ -5,9 +5,11 @@ import {
     getTokenApi,
     isExpiredToken,
     logoutApi,
+    getPeriodo,
+    setPeriodo
 } from '../../api/auth';
 import { toast } from 'react-toastify';
-import { Alert, Col, Row, Tabs, Tab, Spinner } from 'react-bootstrap';
+import { Alert, Col, Row, Tabs, Tab, Spinner, Form } from 'react-bootstrap';
 import Lottie from 'react-lottie-player';
 import BasicModal from '../../components/Modal/BasicModal';
 import BusquedaSocios from '../../components/Socios/BusquedaSocios';
@@ -25,6 +27,7 @@ import { listarSocioSindicalizado } from "../../api/sociosSindicalizados";
 import { map } from "lodash";
 import moment from "moment";
 import 'moment/locale/es';
+import { listarPeriodo } from '../../api/periodos';
 
 function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const [tab, setTab] = useState('general')
@@ -90,6 +93,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const [loading, setLoading] = useState(false)
 
     const [razonSocial] = useState(getRazonSocial())
+    const [periodo] = useState(getPeriodo())
 
     const [statementsByRazon, setStatementsByRazon] = useState({
         contributions: 0,
@@ -204,7 +208,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const loadTotales = async () => {
         setLoading(true)
 
-        const response = await getStatementsByRazon(razonSocial)
+        const response = await getStatementsByRazon(razonSocial, periodo)
         setStatementsByRazon(response.data)
 
         setLoading(false)
@@ -213,7 +217,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const loadTotalesSocio = async () => {
         setLoading(true)
 
-        const response = await getStatementsBySocio(fichaSocioElegido)
+        const response = await getStatementsBySocio(fichaSocioElegido, periodo)
         setStatementsBySocio(response.data)
 
         setLoading(false)
@@ -233,7 +237,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const handleDownloadPDF = async () => {
         setLoading(true)
 
-        const fileURL = urlDownloadPDF(fichaSocioElegido)
+        const fileURL = urlDownloadPDF(fichaSocioElegido, periodo)
         const fileLink = document.createElement('a')
         fileLink.href = fileURL
 
@@ -248,7 +252,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const handleSendEmail = async () => {
         setLoading(true)
 
-        const response = await sendEmail(fichaSocioElegido)
+        const response = await sendEmail(fichaSocioElegido, periodo)
 
         if (response.status === 200) {
             toast.success('Correo enviado')
@@ -414,6 +418,48 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
         </table>
     )
 
+    // Para almacenar las sucursales registradas
+    const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
+
+    const cargarListaPeriodos = () => {
+        try {
+            listarPeriodo(getRazonSocial()).then(response => {
+                const { data } = response;
+                //console.log(data)
+                const dataTemp = formatModelPeriodos(data);
+                //console.log(data)
+                setPeriodosRegistrados(dataTemp);
+            })
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        cargarListaPeriodos();
+    }, []);
+
+    // Almacena la razón social, si ya fue elegida
+    const [periodoElegido, setPeriodoElegido] = useState("");
+
+    // Para almacenar en localstorage la razon social
+    const almacenaPeriodo = (periodo) => {
+        if (periodo != "Elige una opción") {
+            setPeriodo(periodo)
+        }
+        window.location.reload()
+    }
+
+    const guardarPeriodoElegido = () => {
+        if (getPeriodo()) {
+            setPeriodoElegido(getPeriodo)
+        }
+    }
+
+    useEffect(() => {
+        guardarPeriodoElegido();
+    }, []);
+
     return (
         <>
             <Alert className="fondoPrincipalAlert">
@@ -423,6 +469,29 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                     </Col>
                 </Row>
             </Alert>
+
+            <Row>
+                <Col xs={6} md={4}>
+
+                </Col>
+                <Col xs={6} md={4}>
+                    <Form.Control
+                        as="select"
+                        aria-label="indicadorPeriodo"
+                        name="periodo"
+                        className="periodo"
+                        defaultValue={periodoElegido}
+                        onChange={(e) => {
+                            almacenaPeriodo(e.target.value)
+                        }}
+                    >
+                        <option>Elige una opción</option>
+                        {map(periodosRegistrados, (periodo, index) => (
+                            <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
+                        ))}
+                    </Form.Control>
+                </Col>
+            </Row>
 
             <div className="flex flex-col space-x-5">
                 <Tabs
@@ -774,6 +843,24 @@ function formatModelSocios(data) {
             correo: data.correo ? data.correo : "No especificado",
             estado: data.estado === "true" ? "Activo" : "Inactivo",
             fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelPeriodos(data) {
+    //console.log(data)
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            id: data._id,
+            folio: data.folio,
+            nombre: data.nombre,
+            tipo: data.tipo,
+            fechaInicio: data.fechaInicio,
+            fechaCierre: data.fechaCierre,
+            fechaRegistro: data.createdAt,
             fechaActualizacion: data.updatedAt
         });
     });

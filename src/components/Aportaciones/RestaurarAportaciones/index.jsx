@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import queryString from "query-string";
-import { getRazonSocial } from '../../../api/auth';
+import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
 import { obtenerFolioActualAportaciones, registraAportacionesSocios} from "../../../api/aportaciones";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
@@ -33,6 +33,7 @@ const RestaurarAportaciones = ({ setShowModal, history }) => {
         }
 
         const razonSocial = getRazonSocial();
+        const periodo = getPeriodo();
         setLoading(true);
         for (const { fichaSocio, aportacion, createdAt } of dataFile) {
             const fecha = createdAt.split("T");
@@ -43,6 +44,7 @@ const RestaurarAportaciones = ({ setShowModal, history }) => {
                 folio,
                 fichaSocio,
                 aportacion,
+                periodo: periodo,
                 tipo: razonSocial,
                 createdAt: fecha[0]
             }

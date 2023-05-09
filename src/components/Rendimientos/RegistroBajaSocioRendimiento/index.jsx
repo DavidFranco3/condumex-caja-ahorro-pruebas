@@ -1,4 +1,4 @@
-import { getRazonSocial, getTokenApi, obtenidusuarioLogueado } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registraRendimientosSocios, 
     obtenerFolioActualRendimientos, 
 } from "../../../api/rendimientos";
@@ -19,6 +19,7 @@ export function registroRendimientoInicial (
                 folio: folio,
                 fichaSocio: fichaSocio,
                 tipo: getRazonSocial(),
+                periodo: getPeriodo(),
                 rendimiento: rendimiento,
                 createdAt: fecha,
             }

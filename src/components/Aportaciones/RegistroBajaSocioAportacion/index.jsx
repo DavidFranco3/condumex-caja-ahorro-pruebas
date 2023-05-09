@@ -1,4 +1,4 @@
-import { getRazonSocial, getTokenApi, obtenidusuarioLogueado } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registraAportacionesSocios, 
     obtenerFolioActualAportaciones, 
 } from "../../../api/aportaciones";
@@ -19,6 +19,7 @@ export const registroAportacionInicial = async(
                 folio: folio,
                 fichaSocio: fichaSocio,
                 tipo: getRazonSocial(),
+                periodo: getPeriodo(),
                 aportacion: aportacion,
                 createdAt: fecha,
             }

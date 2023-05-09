@@ -3,6 +3,7 @@ import {
   ENDPOINTRegistroAportaciones,
   ENDPOINTRegistroAportaciones2,
   ENDPOINTListarAportaciones,
+  ENDPOINTListarAportacionesPeriodo,
   ENDPOINTListarAportacion,
   ENDPOINTNumeroAportaciones,
   ENDPOINTTotalxTipoAportaciones,
@@ -102,6 +103,21 @@ export async function listarAportacion(razonSocial) {
   }
   return await axios.get(
     API_HOST + ENDPOINTListarAportacion + `/?tipo=${razonSocial}`,
+    config
+  )
+}
+
+// Listar todas las aportacion
+export async function listarAportacionesPeriodo(razonSocial, periodo) {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(
+    API_HOST + ENDPOINTListarAportacionesPeriodo + `/?tipo=${razonSocial}&&periodo=${periodo}`,
     config
   )
 }

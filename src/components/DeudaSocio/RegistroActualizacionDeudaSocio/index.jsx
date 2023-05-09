@@ -1,4 +1,4 @@
-import { getRazonSocial, getTokenApi, obtenidusuarioLogueado } from "../../../api/auth";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registraDeudaSocio, 
     actualizaDeudaSocio, 
     obtenerFolioActualDeudaSocio, 
@@ -80,6 +80,7 @@ export const registroDeudaSocioInicial = async (fichaSocio, abonoTotal, prestamo
                 folio: folio,
                 fichaSocio: parseInt(fichaSocio),
                 tipo: getRazonSocial(),
+                periodo: getPeriodo(),
                 abonoTotal: abonoTotal,
                 prestamoTotal: prestamoTotal,
                 movimiento: movimiento,

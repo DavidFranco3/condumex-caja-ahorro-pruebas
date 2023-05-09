@@ -3,13 +3,13 @@ import "./RegistroAportaciones.scss"
 import { Button, Col, Form, Row, Spinner, InputGroup, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import {obtenerFolioActualAportaciones, registraAportacionesSocios} from "../../../api/aportaciones";
+import { obtenerFolioActualAportaciones, registraAportacionesSocios } from "../../../api/aportaciones";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
-import {toast} from "react-toastify";
-import {getRazonSocial} from "../../../api/auth";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
+import { toast } from "react-toastify";
+import { getRazonSocial, getPeriodo } from "../../../api/auth";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
 import queryString from "query-string";
@@ -69,15 +69,15 @@ function RegistroAportaciones(props) {
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
-    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
+    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
 
     const onSubmit = (e) => {
         e.preventDefault()
 
-        if(!fichaSocioElegido) {
+        if (!fichaSocioElegido) {
             toast.warning("Debe elegir un socio")
         } else {
-            if(!formData.aportacion) {
+            if (!formData.aportacion) {
                 toast.warning("Faltan datos")
             } else {
 
@@ -91,6 +91,7 @@ function RegistroAportaciones(props) {
                         folio: folio,
                         fichaSocio: fichaSocioElegido,
                         tipo: getRazonSocial(),
+                        periodo: getPeriodo(),
                         aportacion: formData.aportacion,
                         createdAt: formData.fecha == "" ? fechaActual : formData.fecha
                     }
@@ -100,12 +101,12 @@ function RegistroAportaciones(props) {
 
                         // Registra movimientos
                         registroMovimientosSaldosSocios(fichaSocioElegido, formData.aportacion, "0", "0", "0", "0", "0", "0", "Aportación")
-                        
+
                         // Registra Saldos
                         registroSaldoInicial(fichaSocioElegido, formData.aportacion, "0", "0", folio, "Aportación")
-                        
+
                         actualizacionSaldosSocios(fichaSocioElegido, formData.aportacion, "0", "0", folio, "Aportación")
-                        
+
                         toast.success(data.mensaje)
                         setTimeout(() => {
                             setLoading(false)
@@ -162,7 +163,7 @@ function RegistroAportaciones(props) {
                                     <>
                                         <Form.Group as={Col} controlId="formGridFicha">
                                             <Form.Label>
-                                                Ficha <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => {eliminaBusqueda()}} />
+                                                Ficha <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
                                             </Form.Label>
                                             <Form.Control
                                                 type="text"
@@ -172,20 +173,20 @@ function RegistroAportaciones(props) {
                                                 disabled
                                             />
                                         </Form.Group>
-                                        
+
                                         <Row className="mb-3">
-                                        <Form.Group as={Col} controlId="formGridFicha">
-                                            <Form.Label>
-                                                Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => {eliminaBusqueda()}} />
-                                            </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Nombre del socio"
-                                                name="nombre"
-                                                defaultValue={nombreSocioElegido}
-                                                disabled
-                                            />
-                                        </Form.Group>
+                                            <Form.Group as={Col} controlId="formGridFicha">
+                                                <Form.Label>
+                                                    Nombre <FontAwesomeIcon className="eliminaBusqueda" icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
+                                                </Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Nombre del socio"
+                                                    name="nombre"
+                                                    defaultValue={nombreSocioElegido}
+                                                    disabled
+                                                />
+                                            </Form.Group>
                                         </Row>
                                     </>
                                 )
@@ -225,7 +226,7 @@ function RegistroAportaciones(props) {
                         }
                     </Row>
                     {/* Tipo de socio, correo */}
-                    
+
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
                             <Form.Label>
@@ -233,11 +234,11 @@ function RegistroAportaciones(props) {
                             </Form.Label>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
-                                placeholder="Fecha"
-                                name="fecha"
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                    placeholder="Fecha"
+                                    name="fecha"
                                 />
                             </InputGroup>
                         </Form.Group>
@@ -250,7 +251,7 @@ function RegistroAportaciones(props) {
                                 <InputGroup.Text>$</InputGroup.Text>
                                 <Form.Control
                                     type="number"
-                                    
+
                                     step="0.01"
                                     placeholder="Escribe la aportación"
                                     name="aportacion"
@@ -261,7 +262,7 @@ function RegistroAportaciones(props) {
 
                         </Form.Group>
                     </Row>
-                    
+
                     <Form.Group as={Row} className="botones">
                         <Col>
                             <Button

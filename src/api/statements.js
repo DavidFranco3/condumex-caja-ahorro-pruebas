@@ -3,7 +3,7 @@ import axios from 'axios'
 import { API_HOST } from '../utils/constants'
 import { getTokenApi } from './auth'
 
-export const getStatementsBySocio = async (ficha) => {
+export const getStatementsBySocio = async (ficha, periodo) => {
   const token = getTokenApi()
 
   const headers = {
@@ -11,10 +11,10 @@ export const getStatementsBySocio = async (ficha) => {
     Authorization: `Bearer ${token}`,
   }
 
-  return axios.get(`${API_HOST}/statements/socio/${ficha}`, { headers })
+  return axios.get(`${API_HOST}/statements/socio?fichaSocio=${ficha}&&periodo=${periodo}`, { headers })
 }
 
-export const getStatementsByRazon = async (razon) => {
+export const getStatementsByRazon = async (razon, periodo) => {
   const token = getTokenApi()
 
   const headers = {
@@ -22,7 +22,7 @@ export const getStatementsByRazon = async (razon) => {
     Authorization: `Bearer ${token}`,
   }
 
-  return axios.get(`${API_HOST}/statements/razon?tipo=${razon}`, { headers })
+  return axios.get(`${API_HOST}/statements/razon?tipo=${razon}&&periodo=${periodo}`, { headers })
 }
 
 // Download a file from the server
@@ -38,7 +38,7 @@ export const downloadPDF = async (ficha) => {
   return axios.get(`${API_HOST}/statements/pdf/${ficha}`, { headers })
 }
 
-export const sendEmail = async (ficha) => {
+export const sendEmail = async (ficha, periodo) => {
   const token = getTokenApi()
 
   const headers = {
@@ -46,8 +46,8 @@ export const sendEmail = async (ficha) => {
     Authorization: `Bearer ${token}`,
   }
 
-  return axios.get(`${API_HOST}/statements/email/${ficha}`, { headers })
+  return axios.get(`${API_HOST}/statements/email/${ficha}?periodo=${periodo}`, { headers })
 }
 
-export const urlDownloadPDF = (ficha) =>
-  `${API_HOST}/statements/pdf/${ficha}?q=${btoa(getTokenApi())}`
+export const urlDownloadPDF = (ficha, periodo) =>
+  `${API_HOST}/statements/pdf/${ficha}?periodo=${periodo}&&q=${btoa(getTokenApi())}`
