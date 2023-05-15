@@ -158,7 +158,7 @@ router.put("/actualizar/:id", verifyToken, async (req, res) => {
 router.delete("/eliminarMasivo/:fecha", async (req, res) => {
   const { fecha } = req.params;
   await sociosEspeciales
-    .remove( {
+    .deleteMany( {
         $and: [
         {createdAt: {$gte: (fecha+"T00:00:00.000Z")}},
         {createdAt: {$lte: (fecha+"T23:59:59.999Z")}}

@@ -176,7 +176,7 @@ router.put("/actualizar/:id", verifyToken, async (req, res) => {
 router.delete("/eliminarMasivo", verifyToken, async (req, res) => {
   const { fecha, tipo } = req.query;
   await empleados
-    .remove({
+    .deleteMany({
       tipo: tipo,
       $and: [
         { createdAt: { $gte: (fecha + "T00:00:00.000Z") } },

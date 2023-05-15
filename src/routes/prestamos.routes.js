@@ -268,7 +268,7 @@ router.put("/actualizar/:id", async (req, res) => {
 router.delete("/eliminarMasivo", async (req, res) => {
   const { fecha, tipo } = req.query;
   await prestamos
-    .remove({
+    .deleteMany({
       tipo: tipo,
       $and: [
         { createdAt: { $gte: (fecha + "T00:00:00.000Z") } },

@@ -316,6 +316,8 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
   const { fichaSocio } = req.params;
   const { periodo } = req.query;
 
+  console.log(periodo)
+
   const paramFindSocio = [
     { ficha: { $eq: fichaSocio } },
     { estatus: { $eq: "true" } },
@@ -389,7 +391,7 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
       secure: false,
       auth: {
         user: "ca.condutel@condumex.com.mx",
-        pass: "CahO.2023",
+        pass: "Cah0.2023",
       },
     });
 
