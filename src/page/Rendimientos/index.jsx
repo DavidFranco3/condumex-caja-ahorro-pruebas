@@ -178,6 +178,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         folio,
         fichaSocio,
         rendimiento,
+        periodo: periodo,
         tipo: razon,
         createdAt: earningsDate,
       }
