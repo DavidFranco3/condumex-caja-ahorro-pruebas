@@ -268,7 +268,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
 
         for (let i = 0; i < listaFichasSindicalizados.length; i++) {
 
-            const response = await sendEmail(parseInt(listaFichasSindicalizados[i]))
+            const response = await sendEmail(parseInt(listaFichasSindicalizados[i]), periodo)
 
 
 
@@ -287,7 +287,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
 
         for (let i = 0; i < listaFichasEmpleados.length; i++) {
 
-            const response = await sendEmail(parseInt(listaFichasEmpleados[i]))
+            const response = await sendEmail(parseInt(listaFichasEmpleados[i]), periodo)
 
 
 
