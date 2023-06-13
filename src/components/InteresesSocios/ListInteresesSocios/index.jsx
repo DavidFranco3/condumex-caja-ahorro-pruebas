@@ -3,12 +3,14 @@ import moment from 'moment';
 import 'moment/dist/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDownLong, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { Badge, Container, Button, Col, Form } from "react-bootstrap";
 import styled from 'styled-components';
 import DataTable from "react-data-table-component";
 import { estilos } from "../../../utils/tableStyled";
 import NombreSocio from './nombreSocio';
+import { exportCSVFile } from "../../../utils/exportCSV";
+import { toast } from "react-toastify";
 
 function ListInteresesSocios(props) {
     const { listInteresesSocios, history, location, setRefreshCheckLogin } = props;
@@ -16,20 +18,32 @@ function ListInteresesSocios(props) {
     const listInteresesSinDuplicados = listInteresesSocios.reduce((acumulador, valorActual) => {
         const elementoYaExiste = acumulador.find(elemento => elemento.fichaSocio == valorActual.fichaSocio);
         if (elementoYaExiste) {
-          return acumulador.map((elemento) => {
-            if (elemento.fichaSocio == valorActual.fichaSocio) {
-              return {
-                ...elemento,
-                monto: parseFloat(elemento.monto) + parseFloat(valorActual.monto)
-              }
-            }
-      
-            return elemento;
-          });
+            return acumulador.map((elemento) => {
+                if (elemento.fichaSocio == valorActual.fichaSocio) {
+                    return {
+                        ...elemento,
+                        monto: parseFloat(elemento.monto) + parseFloat(valorActual.monto)
+                    }
+                }
+
+                return elemento;
+            });
         }
-      
+
         return [...acumulador, valorActual];
-      }, []);
+    }, []);
+
+    const generacionCSV = () => {
+        try {
+            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+            const timer = setTimeout(() => {
+                exportCSVFile(listInteresesSinDuplicados, "LISTA_SOCIOS_SINDICALIZADOS");
+            }, 5600);
+            return () => clearTimeout(timer);
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
@@ -167,6 +181,17 @@ function ListInteresesSocios(props) {
     return (
         <>
             <Container fluid>
+                <Col sm="7">
+                    <Button
+                        className="btnMasivo"
+                        style={{ marginRight: '10px' }}
+                        onClick={() => {
+                            generacionCSV()
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
+                    </Button>
+                </Col>
                 <DataTable
                     columns={columns}
                     noDataComponent="No hay registros para mostrar"

@@ -13,7 +13,6 @@ import AnimacionLoading from '../../assets/json/loading.json';
 import { listarPeriodo } from '../../api/periodos';
 import { map } from "lodash";
 import "./InteresesSocios.scss";
-import { exportCSVFile } from "../../utils/exportCSV";
 
 function InteresesSocios(props) {
     const { setRefreshCheckLogin, location, history } = props;
@@ -21,67 +20,6 @@ function InteresesSocios(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Almacena los datos de los abonos
-    const [listSociosCSV, setListSociosCSV] = useState(null);
-
-    useEffect(() => {
-        try {
-            // Inicia listado de detalles de los articulos vendidos
-            listarRendimientoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
-                const { data } = response;
-                // console.log(data)
-                if (!listSociosCSV && data) {
-                    setListSociosCSV(formatModelInteresesSocios2(data));
-                } else {
-                    const datosSocios = formatModelInteresesSocios2(data);
-                    setListSociosCSV(datosSocios)
-                }
-            }).catch(e => {
-                console.log(e)
-            })
-        } catch (e) {
-            console.log(e)
-        }
-    }, [location]);
-
-    const generacionCSV = () => {
-        try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
-            const timer = setTimeout(() => {
-            exportCSVFile(listSociosCSV, "LISTA_INTERESES_SOCIOS");
-        }, 5600);
-        return () => clearTimeout(timer);
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    //Para el registro de Rendimientos
-    const eliminaAbonosMasivo = (content) => {
-        setTitulosModal('Eliminar elementos')
-        setContentModal(content)
-        setShowModal(true)
-    }
-
-    const registroAbonosCargaMasiva = (content) => {
-        setTitulosModal('Carga masiva')
-        setContentModal(content)
-        setShowModal(true)
-    }
-
-    const registroAbonosRestaurar = (content) => {
-        setTitulosModal('Restaurar')
-        setContentModal(content)
-        setShowModal(true)
-    }
-
-    // Para la lista de abonos
-    const registroAbonos = (content) => {
-        setTitulosModal("Registrar un abono");
-        setContentModal(content);
-        setShowModal(true);
-    }
 
     // Cerrado de sesión automatico
     useEffect(() => {
@@ -169,15 +107,6 @@ function InteresesSocios(props) {
                         <h1 className="font-bold">Intereses de los socios</h1>
                     </Col>
                     <Col xs={6} md={8}>
-                    <Button
-                                className="btnMasivo"
-                                style={{ marginRight: '10px' }}
-                                onClick={() => {
-                                    generacionCSV()
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
-                            </Button>
                     </Col>
                 </Row>
             </Alert>
@@ -235,22 +164,6 @@ function InteresesSocios(props) {
 }
 
 function formatModelInteresesSocios(data) {
-    const dataTemp = []
-    data.forEach(data => {
-        dataTemp.push({
-            id: data._id,
-            folio: data.folio,
-            fichaSocio: String(data.fichaSocio),
-            tipo: data.tipo,
-            monto: data.rendimiento,
-            fechaCreacion: data.createdAt,
-            fechaActualizacion: data.updatedAt
-        });
-    });
-    return dataTemp;
-}
-
-function formatModelInteresesSocios2(data) {
     const dataTemp = []
     data.forEach(data => {
         dataTemp.push({
