@@ -8,6 +8,7 @@ import { Badge, Container, Button, Col, Form } from "react-bootstrap";
 import styled from 'styled-components';
 import DataTable from "react-data-table-component";
 import { estilos } from "../../../utils/tableStyled";
+import NombreSocio from './nombreSocio';
 
 function ListInteresesSocios(props) {
     const { listInteresesSocios, history, location, setRefreshCheckLogin } = props;
@@ -39,6 +40,19 @@ function ListInteresesSocios(props) {
         {
             name: "Ficha del socio",
             selector: row => row.fichaSocio,
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+        {
+            name: "Nombre",
+            selector: row => (
+                <>
+                    <NombreSocio
+                        id={row.fichaSocio}
+                    />
+                </>
+            ),
             sortable: false,
             center: true,
             reorder: false
