@@ -17,7 +17,7 @@ import LogoBackup from '../../assets/png/backup.png';
 import LogoRendimientos from '../../assets/png/rendimientos.png';
 import LogoPeriodos from '../../assets/png/periodos.png';
 import LogoPatrimonio from '../../assets/png/patrimonio.png';
-import LogoUsuarios from '../../assets/png/usuarios.png';
+import LogoInteresesSocios from '../../assets/png/interesesSocios.png';
 import LogoAbonos from '../../assets/png/abonos.png';
 import LogoDeudaSocio from '../../assets/png/deudaSocio.png';
 import './Dashboard.scss';
@@ -116,6 +116,11 @@ function Dashboard(props) {
           path={'/deudaSocio'}
           logo={LogoDeudaSocio}
           title={'Deudas de los socios'}
+        />
+        <ItemCard
+          path={'/interesesSocios'}
+          logo={LogoInteresesSocios}
+          title={'Intereses de los socios'}
         />
         <ItemCard
           path={'/movimientos'}
