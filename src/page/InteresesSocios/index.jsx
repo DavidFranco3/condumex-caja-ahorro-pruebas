@@ -4,7 +4,7 @@ import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, set
 import { toast } from "react-toastify";
 import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faTrashCan, faWindowRestore, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { listarRendimientoPeriodo} from "../../api/rendimientos";
 import ListInteresesSocios from "../../components/InteresesSocios/ListInteresesSocios";
 import BasicModal from "../../components/Modal/BasicModal";
@@ -13,6 +13,7 @@ import AnimacionLoading from '../../assets/json/loading.json';
 import { listarPeriodo } from '../../api/periodos';
 import { map } from "lodash";
 import "./InteresesSocios.scss";
+import { exportCSVFile } from "../../utils/exportCSV";
 
 function InteresesSocios(props) {
     const { setRefreshCheckLogin, location, history } = props;
@@ -20,6 +21,41 @@ function InteresesSocios(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
+
+    // Almacena los datos de los abonos
+    const [listSociosCSV, setListSociosCSV] = useState(null);
+
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarRendimientoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+                const { data } = response;
+                // console.log(data)
+                if (!listSociosCSV && data) {
+                    setListSociosCSV(formatModelInteresesSocios2(data));
+                } else {
+                    const datosSocios = formatModelInteresesSocios2(data);
+                    setListSociosCSV(datosSocios)
+                }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location]);
+
+    const generacionCSV = () => {
+        try {
+            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+            const timer = setTimeout(() => {
+            exportCSVFile(listSociosCSV, "LISTA_INTERESES_SOCIOS");
+        }, 5600);
+        return () => clearTimeout(timer);
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     //Para el registro de Rendimientos
     const eliminaAbonosMasivo = (content) => {
@@ -133,6 +169,15 @@ function InteresesSocios(props) {
                         <h1 className="font-bold">Intereses de los socios</h1>
                     </Col>
                     <Col xs={6} md={8}>
+                    <Button
+                                className="btnMasivo"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    generacionCSV()
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
+                            </Button>
                     </Col>
                 </Row>
             </Alert>
@@ -200,6 +245,17 @@ function formatModelInteresesSocios(data) {
             monto: data.rendimiento,
             fechaCreacion: data.createdAt,
             fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelInteresesSocios2(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            fichaSocio: String(data.fichaSocio),
+            monto: parseFloat(data.rendimiento).toFixed(2),
         });
     });
     return dataTemp;
