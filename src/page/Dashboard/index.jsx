@@ -15,11 +15,11 @@ import LogoEstadoCuenta from '../../assets/png/estadoCuenta.png';
 import LogoCredito from '../../assets/png/credito.png';
 import LogoBackup from '../../assets/png/backup.png';
 import LogoRendimientos from '../../assets/png/rendimientos.png';
-import LogoPeriodos from '../../assets/png/periodos.png';
 import LogoPatrimonio from '../../assets/png/patrimonio.png';
 import LogoInteresesSocios from '../../assets/png/interesesSocios.png';
 import LogoAbonos from '../../assets/png/abonos.png';
 import LogoDeudaSocio from '../../assets/png/deudaSocio.png';
+import LogoSaldosSocios from '../../assets/png/saldosSocios.png';
 import './Dashboard.scss';
 
 function Dashboard(props) {
@@ -121,6 +121,11 @@ function Dashboard(props) {
           path={'/interesesSocios'}
           logo={LogoInteresesSocios}
           title={'Intereses de los socios'}
+        />
+        <ItemCard
+          path={'/saldosSocios'}
+          logo={LogoSaldosSocios}
+          title={'Saldos de los socios'}
         />
         <ItemCard
           path={'/movimientos'}

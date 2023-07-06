@@ -17,11 +17,16 @@ import Abonos from '../page/Abonos'
 import DeudaSocio from '../page/DeudaSocio'
 import Periodos from '../page/Periodos'
 import InteresesSocios from '../page/InteresesSocios'
+import SaldosSocios from '../page/SaldosSocios'
 
 const configRouting = [
   {
     path: '/interesesSocios',
     page: InteresesSocios,
+  },
+  {
+    path: '/saldosSocios',
+    page: SaldosSocios,
   },
   {
     path: '/patrimonio',

@@ -11,6 +11,8 @@ import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import queryString from "query-string";
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
+import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
+import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento';
 
 function RegistroAbonos(props) {
     const { setShowModal, location, history } = props;
@@ -86,6 +88,8 @@ function RegistroAbonos(props) {
                     const { folio } = data;
                     // console.log(data)
 
+                    let retiro = formData.abono * parseInt("-1");
+
                     const dataTemp = {
                         folio: folio,
                         fichaSocio: fichaSocioElegido,
@@ -104,6 +108,13 @@ function RegistroAbonos(props) {
                         registroDeudaSocioInicial(fichaSocioElegido, formData.abono, "0", "Abono", formData.fecha);
 
                         actualizacionDeudaSocio(fichaSocioElegido, formData.abono, "0", "Abono", formData.fecha);
+
+                        if (formData.tipo == "aportaciones") {
+                            registroAportacionInicial(fichaSocioElegido, retiro, formData.fecha);
+                        } else if (formData.tipo == "intereses"){
+                            registroRendimientoInicial(fichaSocioElegido, retiro, formData.fecha);
+                        }
+
 
                         toast.success(data.mensaje);
                         setTimeout(() => {
@@ -261,6 +272,25 @@ function RegistroAbonos(props) {
                         </Form.Group>
                     </Row>
 
+                    <Row className="mb-3">
+                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                            <Form.Label>
+                                Tipo de abono
+                            </Form.Label>
+                            <Form.Control
+                                className="mb-3"
+                                as="select"
+                                defaultValue={formData.tipo}
+                                name="tipo"
+                            >
+                                <option>Elige una opción</option>
+                                <option value="aportaciones">Aportaciones</option>
+                                <option value="intereses">Intereses</option>
+                                <option value="dinero propio">Dinero propio</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Row>
+
                     <Form.Group as={Row} className="botones">
                         <Col>
                             <Button
@@ -299,6 +329,7 @@ function initialFormData() {
         fichaSocio: "",
         abono: "",
         fecha: "",
+        tipo: ""
     }
 
 }

@@ -12,6 +12,7 @@ import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
+import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento';
 
 function RegistroRetiros(props) {
     const { setShowModal, location, history } = props;
@@ -76,7 +77,7 @@ function RegistroRetiros(props) {
         if (!fichaSocioElegido) {
             toast.warning("Debe elegir un socio")
         } else {
-            if (!formData.retiro) {
+            if (!formData.retiro || !formData.tipo) {
                 toast.warning("Faltan datos")
             } else {
 
@@ -106,7 +107,11 @@ function RegistroRetiros(props) {
 
                         actualizacionSaldosSocios(fichaSocioElegido, formData.retiro, "0", "0", folio, "Retiro")
 
-                        registroAportacionInicial(fichaSocioElegido, retiro, formData.fecha);
+                        if (formData.tipo == "aportaciones") {
+                            registroAportacionInicial(fichaSocioElegido, retiro, formData.fecha);
+                        } else if (formData.tipo == "intereses"){
+                            registroRendimientoInicial(fichaSocioElegido, retiro, formData.fecha);
+                        }
 
                         toast.success(data.mensaje)
                         setTimeout(() => {
@@ -265,6 +270,24 @@ function RegistroRetiros(props) {
                         </Form.Group>
                     </Row>
 
+                    <Row className="mb-3">
+                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                            <Form.Label>
+                                Tipo de retiro
+                            </Form.Label>
+                            <Form.Control
+                                className="mb-3"
+                                as="select"
+                                defaultValue={formData.tipo}
+                                name="tipo"
+                            >
+                                <option>Elige una opción</option>
+                                <option value="aportaciones">Aportaciones</option>
+                                <option value="intereses">Intereses</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Row>
+
                     <Form.Group as={Row} className="botones">
                         <Col>
                             <Button
@@ -302,7 +325,8 @@ function initialFormData() {
     return {
         fichaSocio: "",
         retiro: "",
-        fecha: ""
+        fecha: "",
+        tipo: ""
     }
 }
 
