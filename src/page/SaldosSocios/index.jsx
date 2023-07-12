@@ -174,7 +174,7 @@ function SaldosSocios(props) {
             <Alert className="fondoPrincipalAlert">
                 <Row>
                     <Col xs={12} md={4} className="titulo">
-                        <h1 className="font-bold">Intereses de los socios</h1>
+                        <h1 className="font-bold">Saldos de los socios</h1>
                     </Col>
                     <Col xs={6} md={8}>
                     </Col>
@@ -242,6 +242,7 @@ function formatModelInteresesSocios(data) {
         dataTemp.push({
             fichaSocio: String(data.fichaSocio),
             monto: data.rendimiento,
+            patrimonio: 0,
             saldoDeudor: 0,
         });
     });
@@ -253,7 +254,8 @@ function formatModelPatrimonioSocios(data) {
     data.forEach(data => {
         dataTemp.push({
             fichaSocio: String(data.fichaSocio),
-            monto: data.patrimonio,
+            monto: 0,
+            patrimonio: data.patrimonio,
             saldoDeudor: 0,
         });
     });
@@ -266,6 +268,7 @@ function formatModelAportacionesSocios(data) {
         dataTemp.push({
             fichaSocio: String(data.fichaSocio),
             monto: data.aportacion,
+            patrimonio: 0,
             saldoDeudor: 0,
         });
     });
@@ -278,6 +281,7 @@ function formatModelDeudasSocios(data) {
         dataTemp.push({
             fichaSocio: String(data.fichaSocio),
             monto: 0,
+            patrimonio: 0,
             saldoDeudor: data.prestamoTotal - data.abonoTotal,
         });
     });

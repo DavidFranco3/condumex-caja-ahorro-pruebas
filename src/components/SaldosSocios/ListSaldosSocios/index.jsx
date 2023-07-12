@@ -32,6 +32,7 @@ function ListSaldosSocios(props) {
                 if (elemento.fichaSocio === valorActual.fichaSocio) {
                     return {
                         ...elemento,
+                        patrimonio: elemento.patrimonio + valorActual.patrimonio,
                         monto: elemento.monto + valorActual.monto,
                         saldoDeudor: elemento.saldoDeudor + valorActual.saldoDeudor
                     };
@@ -85,7 +86,7 @@ function ListSaldosSocios(props) {
             reorder: false
         },
         {
-            name: "Saldo a favor",
+            name: "Ahorro",
             selector: row => (
                 <>
                     ${''}
@@ -93,6 +94,21 @@ function ListSaldosSocios(props) {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                     }).format(row.monto)} MXN
+                </>
+            ),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+        {
+            name: "Patrimonio",
+            selector: row => (
+                <>
+                    ${''}
+                    {new Intl.NumberFormat('es-MX', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    }).format(row.patrimonio)} MXN
                 </>
             ),
             sortable: false,
