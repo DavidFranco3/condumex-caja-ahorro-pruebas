@@ -21,8 +21,6 @@ function ListSaldosSocios(props) {
 
     const listSaldosSocios = listInteresesSocios.concat(listAportacionesSocios, listPatrimoniosSocios, listPrestamosSocios, listAbonosSocios);
 
-    console.log(listSaldosSocios);
-
     const listInteresesSinDuplicados = listSaldosSocios.reduce((acumulador, valorActual) => {
         const elementoExistente = acumulador.find(elemento => elemento.fichaSocio === valorActual.fichaSocio);
 
@@ -45,8 +43,6 @@ function ListSaldosSocios(props) {
 
         return [...acumulador, valorActual];
     }, []);
-
-    console.log(listInteresesSinDuplicados)
 
     const generacionCSV = () => {
         try {

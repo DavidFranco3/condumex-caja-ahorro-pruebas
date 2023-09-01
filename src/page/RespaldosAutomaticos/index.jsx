@@ -71,6 +71,28 @@ function RespaldosAutomaticos(props) {
         }
     }, [location, formData.inicio, formData.fin]);
 
+    // Almacena los datos de los abonos
+    const [listAbonos2, setListAbonos2] = useState([]);
+
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarAbonos(getRazonSocial(), formData.inicio, formData.fin).then(response => {
+                const { data } = response;
+                // console.log(data)
+                if (!listAbonos2 && data) {
+                    setListAbonos2(formatModelAbonos2(data));
+                } else {
+                    setListAbonos2(formatModelAbonos2(data));
+                }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location, formData.inicio, formData.fin]);
+
     const totalAbonos = listAbonos.reduce((amount, item) => (amount + parseInt(item.abono)), 0);
 
     // Almacena los datos de los abonos
@@ -137,6 +159,29 @@ function RespaldosAutomaticos(props) {
                 } else {
                     const datosPrestamos = formatModelPrestamos(data);
                     setListPrestamos(datosPrestamos)
+                }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location, formData.inicio, formData.fin]);
+
+    // Almacena los datos de los abonos
+    const [listPrestamos2, setListPrestamos2] = useState([]);
+
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarPrestamos(getRazonSocial(), formData.inicio, formData.fin).then(response => {
+                const { data } = response;
+                // console.log(data)
+                if (!listPrestamos2 && data) {
+                    setListPrestamos2(formatModelPrestamos2(data));
+                } else {
+                    const datosPrestamos = formatModelPrestamos2(data);
+                    setListPrestamos2(datosPrestamos)
                 }
             }).catch(e => {
                 console.log(e)
@@ -247,13 +292,11 @@ function RespaldosAutomaticos(props) {
         }
     }, [location, formData.inicio, formData.fin]);
 
-    const totalDeudaSocios = listDeudaSocios.reduce((amount, item) => (amount + parseInt(item.saldoActual)), 0);
-
     const generacionCSVAbonos = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalAbonos}])
+                const dataConcatTitulos = dataTitulo.concat([{ totalAbonos }])
                 const datosTemp = listAbonos.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_ABONOS_" + formData.inicio + "_" + formData.fin);
             }, 5600);
@@ -267,7 +310,7 @@ function RespaldosAutomaticos(props) {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalAportaciones}])
+                const dataConcatTitulos = dataTitulo.concat([{ totalAportaciones }])
                 const datosTemp = listAportaciones.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_APORTACIONES_" + formData.inicio + "_" + formData.fin);
             }, 5600);
@@ -281,7 +324,7 @@ function RespaldosAutomaticos(props) {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalPatrimonio}])
+                const dataConcatTitulos = dataTitulo.concat([{ totalPatrimonio }])
                 const datosTemp = listPatrimonio.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_PATRIMONIOS_" + formData.inicio + "_" + formData.fin);
             }, 5600);
@@ -295,7 +338,7 @@ function RespaldosAutomaticos(props) {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalPrestamos}])
+                const dataConcatTitulos = dataTitulo.concat([{ totalPrestamos }])
                 const datosTemp = listPrestamos.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_PRESTAMOS_" + formData.inicio + "_" + formData.fin);
             }, 5600);
@@ -309,7 +352,7 @@ function RespaldosAutomaticos(props) {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalRendimiento}])
+                const dataConcatTitulos = dataTitulo.concat([{ totalRendimiento }])
                 const datosTemp = listRendimientos.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_INTERESES_" + formData.inicio + "_" + formData.fin);
             }, 5600);
@@ -323,7 +366,7 @@ function RespaldosAutomaticos(props) {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalRetiros}])
+                const dataConcatTitulos = dataTitulo.concat([{ totalRetiros }])
                 const datosTemp = listRetiros.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_RETIROS_" + formData.inicio + "_" + formData.fin);
             }, 5600);
@@ -337,7 +380,7 @@ function RespaldosAutomaticos(props) {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalBajasSocios}])
+                const dataConcatTitulos = dataTitulo.concat([{ totalBajasSocios }])
                 const datosTemp = listBajaSocios.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_BAJA_SOCIOS_" + formData.inicio + "_" + formData.fin);
             }, 5600);
@@ -347,12 +390,41 @@ function RespaldosAutomaticos(props) {
         }
     }
 
+    const listSaldosSocios = listPrestamos2.concat(listAbonos2);
+
+    const listInteresesSinDuplicados = listSaldosSocios.reduce((acumulador, valorActual) => {
+        const elementoExistente = acumulador.find(elemento => elemento.fichaSocio === valorActual.fichaSocio);
+
+        if (elementoExistente) {
+            return acumulador.map(elemento => {
+                if (elemento.fichaSocio === valorActual.fichaSocio) {
+                    return {
+                        ...elemento,
+                        prestamoTotal: elemento.prestamoTotal + valorActual.prestamoTotal,
+                        abono: elemento.abono + valorActual.abono,
+                        saldoDeudor: (elemento.prestamoTotal + valorActual.prestamoTotal) - (elemento.abono + valorActual.abono)
+
+                    };
+                }
+
+                return elemento;
+            });
+        }
+
+        return [...acumulador, valorActual];
+    }, []);
+    console.log(listPrestamos2)
+    console.log(listAbonos2)
+    console.log(listInteresesSinDuplicados)
+
+    const totalDeudaSocios = listInteresesSinDuplicados.reduce((amount, item) => (amount + parseInt(item.saldoActual)), 0);
+
     const generacionCSVDeudaSocios = () => {
         try {
             toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
             const timer = setTimeout(() => {
-                const dataConcatTitulos = dataTitulo.concat([{totalDeudaSocios}])
-                const datosTemp = listDeudaSocios.concat(dataConcatTitulos)
+                const dataConcatTitulos = dataTitulo.concat([{ totalDeudaSocios }])
+                const datosTemp = listInteresesSinDuplicados.concat(dataConcatTitulos)
                 exportCSVFile(datosTemp, "LISTA_DEUDA_SOCIOS_" + formData.inicio + "_" + formData.fin);
             }, 5600);
             return () => clearTimeout(timer);
@@ -616,6 +688,32 @@ function formatModelAbonos(data) {
         dataTemp.push({
             fichaSocio: parseInt(data.fichaSocio),
             abono: data.abono.toFixed(2),
+            fechaCreacion: data.createdAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelAbonos2(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            fichaSocio: parseInt(data.fichaSocio),
+            prestamoTotal: 0,
+            abono: parseFloat(data.abono.toFixed(2)),
+            fechaCreacion: data.createdAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelPrestamos2(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            fichaSocio: parseInt(data.fichaSocio),
+            prestamoTotal: parseFloat(data.prestamoTotal.toFixed(2)),
+            abono: 0,
             fechaCreacion: data.createdAt
         });
     });
