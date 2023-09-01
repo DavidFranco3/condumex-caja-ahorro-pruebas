@@ -12,11 +12,37 @@ import styled from 'styled-components';
 import ListBajaSocios from '../../BajaSocios/ListBajaSocios';
 
 function ListDeudaSocio(props) {
-    const { listDeudaSocio, history, location, setRefreshCheckLogin } = props;
+    const { listAbonos, listPrestamos, history, location, setRefreshCheckLogin } = props;
 
+    const listSaldosSocios = listPrestamos.concat(listAbonos);
+
+    const listDeudaSocio = listSaldosSocios.reduce((acumulador, valorActual, index) => {
+        const elementoExistente = acumulador.find(elemento => elemento.fichaSocio === valorActual.fichaSocio);
+    
+        if (elementoExistente) {
+            return acumulador.map(elemento => {
+                if (elemento.fichaSocio === valorActual.fichaSocio) {
+                    return {
+                        ...elemento,
+                        prestamo: elemento.prestamo + valorActual.prestamo,
+                        abono: elemento.abono + valorActual.abono,
+                    };
+                }
+    
+                return elemento;
+            });
+        }
+    
+        return [
+            ...acumulador,
+            {
+                ...valorActual,
+                folio: listSaldosSocios.length - index, // Calculate the "Folio" based on the current index
+            },
+        ];
+    }, []);
     // Configura el idioma a español
     moment.locale("es");
-
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
@@ -45,7 +71,7 @@ function ListDeudaSocio(props) {
                     {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                    }).format(row.prestamoTotal)} MXN
+                    }).format(row.prestamo)} MXN
                 </>
             ),
             sortable: false,
@@ -60,7 +86,7 @@ function ListDeudaSocio(props) {
                     {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                    }).format(row.abonoTotal)} MXN
+                    }).format(row.abono)} MXN
                 </>
             ),
             sortable: false,
@@ -75,7 +101,7 @@ function ListDeudaSocio(props) {
                     {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                    }).format(row.prestamoTotal - row.abonoTotal)} MXN
+                    }).format(row.prestamo - row.abono)} MXN
                 </>
             ),
             sortable: false,
@@ -88,36 +114,7 @@ function ListDeudaSocio(props) {
             center: true,
             reorder: false,
             selector: row => moment(row.fechaCreacion).format('LL')
-        },
-        {
-            name: "Acciones",
-            selector: row => (
-                <>
-                    <div className="flex justify-end items-center space-x-4">
-                        <Badge
-                            bg="danger"
-                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                eliminacionDeudaSocio(
-                                    <EliminaDeudaSocio
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
-                                    />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-                        </Badge>
-                    </div>
-                </>
-            ),
-            sortable: false,
-            center: true,
-            reorder: false
-        },
+        }
     ];
 
     // Elimina prestamos

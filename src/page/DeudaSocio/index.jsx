@@ -5,8 +5,9 @@ import { toast } from "react-toastify";
 import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { listarDeudasSociosPeriodo } from "../../api/deudaSocio";
-import ListDeudaSocio from "../../components/DeudaSocio/ListDeudaSocio";
+import ListDeudaSocio from '../../components/DeudaSocio/ListDeudaSocio';
+import { listarPrestamoPeriodo } from "../../api/prestamos";
+import { listarAbonosPeriodo } from '../../api/abonos';
 import BasicModal from "../../components/Modal/BasicModal";
 import Lottie from 'react-lottie-player';
 import AnimacionLoading from '../../assets/json/loading.json';
@@ -43,20 +44,43 @@ function DeudaSocio(props) {
     // Termina cerrado de sesión automatico
 
 
+   // Almacena los datos de los abonos
+   const [listPrestamosSocios, setListPrestamosSocios] = useState(null);
+
+   useEffect(() => {
+       try {
+           // Inicia listado de detalles de los articulos vendidos
+           listarPrestamoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+               const { data } = response;
+               // console.log(data)
+               if (!listPrestamosSocios && data) {
+                   setListPrestamosSocios(formatModelPrestamosSocios(data));
+               } else {
+                   const datosPrestamosSocios = formatModelPrestamosSocios(data);
+                   setListPrestamosSocios(datosPrestamosSocios)
+               }
+           }).catch(e => {
+               console.log(e)
+           })
+       } catch (e) {
+           console.log(e)
+       }
+   }, [location]);
+
     // Almacena los datos de los abonos
-    const [listDeudaSocio, setListDeudaSocio] = useState(null);
+    const [listAbonosSocios, setListAbonosSocios] = useState(null);
 
     useEffect(() => {
         try {
             // Inicia listado de detalles de los articulos vendidos
-            listarDeudasSociosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+            listarAbonosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
                 const { data } = response;
                 // console.log(data)
-                if (!listDeudaSocio && data) {
-                    setListDeudaSocio(formatModelDeudaSocio(data));
+                if (!listAbonosSocios && data) {
+                    setListAbonosSocios(formatModelAbonosSocios(data));
                 } else {
-                    const datosDeudaSocio = formatModelDeudaSocio(data);
-                    setListDeudaSocio(datosDeudaSocio)
+                    const datosAbonosSocios = formatModelAbonosSocios(data);
+                    setListAbonosSocios(datosAbonosSocios)
                 }
             }).catch(e => {
                 console.log(e)
@@ -115,26 +139,6 @@ function DeudaSocio(props) {
                     <Col xs={12} md={4} className="titulo">
                         <h1 className="font-bold">Deudas de socios</h1>
                     </Col>
-                    <Col xs={6} md={8}>
-                        <div style={{ float: 'right' }}>
-                            <Button
-                                className="btnMasivo"
-                                style={{ marginRight: '10px' }}
-                                onClick={() => {
-                                    eliminaDeudaSocioMasivo(
-                                        <EliminaDeudaSocioMasivo
-                                            setShowModal={setShowModal}
-                                            location={location}
-                                            history={history}
-                                        />
-                                    )
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faTrashCan} /> Eliminar por fecha
-                            </Button>
-
-                        </div>
-                    </Col>
                 </Row>
             </Alert>
 
@@ -162,12 +166,13 @@ function DeudaSocio(props) {
             </Row>
 
             {
-                listDeudaSocio ?
+                listPrestamosSocios && listAbonosSocios ?
                     (
                         <>
                             <Suspense fallback={<Spinner />}>
                                 <ListDeudaSocio
-                                    listDeudaSocio={listDeudaSocio}
+                                    listAbonos={listAbonosSocios}
+                                    listPrestamos={listPrestamosSocios}
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
@@ -202,6 +207,34 @@ function formatModelDeudaSocio(data) {
             prestamoTotal: data.prestamoTotal,
             saldoActual: parseFloat(data.prestamoTotal - data.abonoTotal),
             movimiento: data.movimiento,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelPrestamosSocios(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            fichaSocio: String(data.fichaSocio),
+            prestamo: data.prestamo,
+            abono: 0,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
+}
+
+function formatModelAbonosSocios(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            fichaSocio: String(data.fichaSocio),
+            prestamo: 0,
+            abono: data.abono,
             fechaCreacion: data.createdAt,
             fechaActualizacion: data.updatedAt
         });

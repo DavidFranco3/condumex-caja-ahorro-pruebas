@@ -13,14 +13,13 @@ import { exportCSVFile } from "../../../utils/exportCSV";
 import { toast } from "react-toastify";
 
 function ListSaldosSocios(props) {
-    const { listInteresesSocios, listAportacionesSocios, listPatrimoniosSocios, listDeudasSocios, history, location, setRefreshCheckLogin } = props;
+    const { listInteresesSocios, listAportacionesSocios, listPatrimoniosSocios, listPrestamosSocios, listAbonosSocios, history, location, setRefreshCheckLogin } = props;
 
     console.log("rendimientos", listInteresesSocios);
     console.log("aportaciones", listAportacionesSocios);
     console.log("patrimonios", listPatrimoniosSocios);
-    console.log("deudas", listDeudasSocios);
 
-    const listSaldosSocios = listInteresesSocios.concat(listAportacionesSocios, listPatrimoniosSocios, listDeudasSocios);
+    const listSaldosSocios = listInteresesSocios.concat(listAportacionesSocios, listPatrimoniosSocios, listPrestamosSocios, listAbonosSocios);
 
     console.log(listSaldosSocios);
 
@@ -34,7 +33,9 @@ function ListSaldosSocios(props) {
                         ...elemento,
                         patrimonio: elemento.patrimonio + valorActual.patrimonio,
                         monto: elemento.monto + valorActual.monto,
-                        saldoDeudor: elemento.saldoDeudor + valorActual.saldoDeudor
+                        prestamo: elemento.prestamo + valorActual.prestamo,
+                        abono: elemento.abono + valorActual.abono,
+                        
                     };
                 }
 
@@ -123,7 +124,7 @@ function ListSaldosSocios(props) {
                     {new Intl.NumberFormat('es-MX', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                    }).format(row.saldoDeudor)} MXN
+                    }).format(row.prestamo - row.abono)} MXN
                 </>
             ),
             sortable: false,
