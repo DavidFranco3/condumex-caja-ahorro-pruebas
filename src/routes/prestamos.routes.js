@@ -15,7 +15,6 @@ router.get("/bySocio", async (req, res) => {
   try {
     const result = await prestamos.find({ fichaSocio: { $eq: ficha } });
     const total = result.reduce((acc, cur) => acc + cur.prestamo, 0);
-
     if (result.length === 0) {
       res.json({
         message: "No hay prestamos registrados",

@@ -14,8 +14,9 @@ router.get("/bySocio", async (req, res) => {
 
   try {
     const result = await patrimonios.find({ fichaSocio: { $eq: ficha } });
-    const total = result.reduce((acc, cur) => acc + cur.patrimonio, 0);
-
+    const total = result.reduce((acc, cur) => {
+      return acc + Number(cur.patrimonio);
+    }, 0);
     if (result.length === 0) {
       res.json({
         message: "No hay patrimonios registrados",
@@ -79,8 +80,8 @@ router.get("/acumuladoByRazonSocial", async (req, res) => {
 // Obtener todos los abonos
 router.get("/listar", async (req, res) => {
   const { tipo, inicio, fin } = req.query;
-    await patrimonios
-    .find({ tipo, createdAt: { $gte: new Date(inicio+'T00:00:00.000Z'), $lte: new Date(fin+'T23:59:59.999Z') } })
+  await patrimonios
+    .find({ tipo, createdAt: { $gte: new Date(inicio + 'T00:00:00.000Z'), $lte: new Date(fin + 'T23:59:59.999Z') } })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
@@ -88,7 +89,7 @@ router.get("/listar", async (req, res) => {
 
 router.get("/listarPatrimonios", async (req, res) => {
   const { tipo } = req.query;
-    await patrimonios
+  await patrimonios
     .find({ tipo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
@@ -97,7 +98,7 @@ router.get("/listarPatrimonios", async (req, res) => {
 
 router.get("/listarPeriodo", async (req, res) => {
   const { tipo, periodo } = req.query;
-    await patrimonios
+  await patrimonios
     .find({ tipo, periodo })
     .sort({ _id: -1 })
     .then((data) => res.json(data))
