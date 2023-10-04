@@ -4,7 +4,7 @@ const patrimonios = require("../models/patrimonio");
 
 // Obtener todos los patrimonios por socio
 router.get("/bySocio", async (req, res) => {
-  const { ficha } = req.query;
+  const { ficha, periodo } = req.query;
 
   if (!ficha) {
     return res.status(400).json({
@@ -13,10 +13,10 @@ router.get("/bySocio", async (req, res) => {
   }
 
   try {
-    const result = await patrimonios.find({ fichaSocio: { $eq: ficha } });
+    const result = await patrimonios.find({ fichaSocio: { $eq: ficha }, periodo });
     const total = result.reduce((acc, cur) => {
       return acc + Number(cur.patrimonio);
-    }, 0);
+    }, 0)
     if (result.length === 0) {
       res.json({
         message: "No hay patrimonios registrados",

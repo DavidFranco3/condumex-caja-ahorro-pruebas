@@ -184,7 +184,7 @@ router.get("/totalGeneralBySocios", async (req, res) => {
 
 // Obtener todos los rendimientos por socio
 router.get("/bySocio", async (req, res) => {
-  const { ficha } = req.query;
+  const { ficha, periodo } = req.query;
 
   if (!ficha) {
     return res.status(400).json({
@@ -193,7 +193,7 @@ router.get("/bySocio", async (req, res) => {
   }
 
   try {
-    const result = await rendimientos.find({ fichaSocio: { $eq: ficha } });
+    const result = await rendimientos.find({ fichaSocio: { $eq: ficha }, periodo });
     const total = result.reduce((acc, cur) => {
       return acc + Number(cur.rendimiento);
     }, 0);

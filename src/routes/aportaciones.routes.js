@@ -80,7 +80,7 @@ router.get("/acumuladoByRazonSocial", async (req, res) => {
 
 // Obtener todas las aportaciones por ficha del socio
 router.get("/bySocio", async (req, res) => {
-  const { ficha } = req.query;
+  const { ficha, periodo } = req.query;
 
   if (!ficha) {
     return res.status(400).json({
@@ -89,7 +89,7 @@ router.get("/bySocio", async (req, res) => {
   }
 
   try {
-    const result = await aportaciones.find({ fichaSocio: { $eq: ficha } });
+    const result = await aportaciones.find({ fichaSocio: { $eq: ficha }, periodo });
     const total = result.reduce((acc, cur) => {
       return acc + Number(cur.aportacion);
     }, 0);
