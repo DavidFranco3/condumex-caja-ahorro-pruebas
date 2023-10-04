@@ -278,7 +278,7 @@ function RegistroBajaSocios(props) {
                                                         type="number"
                                                         placeholder="Rendimiento"
                                                         name="rendimiento"
-                                                        value={rendimientoSocioElegido.toFixed(2)}
+                                                        value={rendimientoSocioElegido}
                                                         disabled
                                                     />
                                                     <InputGroup.Text>.00 MXN</InputGroup.Text>
@@ -296,7 +296,7 @@ function RegistroBajaSocios(props) {
                                                         type="number"
                                                         placeholder="Aportacion"
                                                         name="aportacion"
-                                                        value={aportacionSocioElegido.toFixed(2)}
+                                                        value={aportacionSocioElegido}
                                                         disabled
                                                     />
                                                     <InputGroup.Text>.00 MXN</InputGroup.Text>
@@ -322,7 +322,7 @@ function RegistroBajaSocios(props) {
                                                                     type="number"
                                                                     placeholder="Patriminio"
                                                                     name="patrimonio"
-                                                                    value={patrimonioSocioElegido.toFixed(2)}
+                                                                    value={patrimonioSocioElegido}
                                                                     disabled
                                                                 />
                                                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
@@ -342,7 +342,7 @@ function RegistroBajaSocios(props) {
                                                         type="number"
                                                         placeholder="Total a entregar"
                                                         name="totalEntregar"
-                                                        value={(rendimientoSocioElegido + aportacionSocioElegido + patrimonioSocioElegido).toFixed(2)}
+                                                        value={(rendimientoSocioElegido + aportacionSocioElegido + patrimonioSocioElegido)}
                                                         disabled
                                                     />
                                                     <InputGroup.Text>.00 MXN</InputGroup.Text>
