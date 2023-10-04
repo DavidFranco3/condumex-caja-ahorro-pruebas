@@ -124,6 +124,7 @@ function BajaSocios(props) {
                                 onClick={() => {
                                     registroSocios(
                                         <RegistroBajaSocios
+                                            periodoElegido={periodoElegido}
                                             setShowModal={setShowModal}
                                             location={location}
                                             history={history}
@@ -213,18 +214,18 @@ function formatModelPeriodos(data) {
     //console.log(data)
     const dataTemp = []
     data.forEach(data => {
-      dataTemp.push({
-        id: data._id,
-        folio: data.folio,
-        nombre: data.nombre,
-        tipo: data.tipo,
-        fechaInicio: data.fechaInicio,
-        fechaCierre: data.fechaCierre,
-        fechaRegistro: data.createdAt,
-        fechaActualizacion: data.updatedAt
-      });
+        dataTemp.push({
+            id: data._id,
+            folio: data.folio,
+            nombre: data.nombre,
+            tipo: data.tipo,
+            fechaInicio: data.fechaInicio,
+            fechaCierre: data.fechaCierre,
+            fechaRegistro: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
     });
     return dataTemp;
-  }
+}
 
 export default withRouter(BajaSocios);

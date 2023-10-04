@@ -60,7 +60,7 @@ export async function totalGeneralBySocios(fecha, razonSocial, periodo) {
 }
 
 // Obtener rendimientos por ficha del socio
-export async function getRendimientosBySocio(ficha) {
+export async function getRendimientosBySocio(ficha, periodo) {
   const token = getTokenApi()
   const headers = {
     'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export async function getRendimientosBySocio(ficha) {
   }
 
   return axios.get(
-    `${API_HOST}${ENDPOINTRendimientos}/bySocio?ficha=${ficha}`,
+    `${API_HOST}${ENDPOINTRendimientos}/bySocio?ficha=${ficha}&&periodo=${periodo}`,
     { headers }
   )
 }

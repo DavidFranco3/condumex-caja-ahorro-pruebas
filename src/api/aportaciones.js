@@ -23,7 +23,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Obtener aportaciones por ficha del socio
-export const getAportacionesBySocio = async (ficha) => {
+export const getAportacionesBySocio = async (ficha, periodo) => {
   const token = getTokenApi()
   const headers = {
     'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export const getAportacionesBySocio = async (ficha) => {
   }
 
   return axios.get(
-    `${API_HOST}${ENDPOINTAportaciones}/bySocio?ficha=${ficha}`,
+    `${API_HOST}${ENDPOINTAportaciones}/bySocio?ficha=${ficha}&&periodo=${periodo}`,
     { headers }
   )
 }

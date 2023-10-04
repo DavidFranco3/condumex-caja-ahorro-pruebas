@@ -21,14 +21,14 @@ import {
 import axios from 'axios'
 import { getTokenApi } from './auth'
 
-export const getPatrimonioBySocio = async (ficha) => {
+export const getPatrimonioBySocio = async (ficha, periodo) => {
   const token = getTokenApi()
   const headers = {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${token}`,
   }
   return await axios.get(
-    `${API_HOST}${ENDPOINTPatrimonio}/bySocio?ficha=${ficha}`,
+    `${API_HOST}${ENDPOINTPatrimonio}/bySocio?ficha=${ficha}&&periodo=${periodo}`,
     {
       headers,
     }

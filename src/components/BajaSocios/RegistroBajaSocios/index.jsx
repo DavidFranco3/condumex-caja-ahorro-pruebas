@@ -19,7 +19,7 @@ import { getRendimientosBySocio } from '../../../api/rendimientos';
 import { getAportacionesBySocio } from '../../../api/aportaciones';
 
 function RegistroBajaSocios(props) {
-    const { setShowModal, location, history } = props;
+    const { setShowModal, location, history, periodoElegido } = props;
 
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
@@ -163,7 +163,7 @@ function RegistroBajaSocios(props) {
             // Busqueda de saldos del socio
             try {
                 // Búsqueda de los saldos del socio
-                getPatrimonioBySocio(parseInt(fichaSocioElegido)).then(response => {
+                getPatrimonioBySocio(parseInt(fichaSocioElegido), periodoElegido).then(response => {
                     const { data } = response;
                     //console.log(data)
                     const { total } = data;
@@ -177,7 +177,7 @@ function RegistroBajaSocios(props) {
 
             try {
                 // Búsqueda de los saldos del socio
-                getRendimientosBySocio(parseInt(fichaSocioElegido)).then(response => {
+                getRendimientosBySocio(parseInt(fichaSocioElegido), periodoElegido).then(response => {
                     const { data } = response;
                     //console.log(data)
                     const { total } = data;
@@ -191,7 +191,7 @@ function RegistroBajaSocios(props) {
 
             try {
                 // Búsqueda de los saldos del socio
-                getAportacionesBySocio(parseInt(fichaSocioElegido)).then(response => {
+                getAportacionesBySocio(parseInt(fichaSocioElegido), periodoElegido).then(response => {
                     const { data } = response;
                     //console.log(data)
                     const { total } = data;
