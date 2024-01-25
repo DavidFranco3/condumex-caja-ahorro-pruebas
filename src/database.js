@@ -11,9 +11,7 @@ mongoose.set('strictQuery', true);
 mongoose.Promise = global.Promise;
 
 mongoose
-  .connect(URI, {
-    useNewUrlParser: true,
-  })
+  .connect(URI)
   .then(() => {
     console.log("Database connection successful");
   })
