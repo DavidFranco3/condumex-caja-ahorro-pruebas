@@ -39,17 +39,13 @@ app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 
 // CORS Configuration
-app.all("*", (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Authorization, responseType, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // Permitir cualquier dominio
+  res.header("Access-Control-Allow-Headers", "Authorization, responseType, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"); // Cabeceras permitidas
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE"); // Métodos permitidos
   res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
-
   if (req.method === "OPTIONS") {
-    res.status(200).end();
+    res.status(200).end(); // Respuesta para preflight requests (OPTIONS)
   } else {
     next();
   }
