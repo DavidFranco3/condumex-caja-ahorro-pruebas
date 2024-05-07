@@ -2,7 +2,7 @@
 // export const API_HOST = 'http://localhost:5050';
 
 // Constantes para puesta en produccion
-export const API_HOST = 'https://isotech.mx/api-condumex';
+export const API_HOST = 'https://condumex-caja-ahorro-api.vercel.app';
 
 // export const API_CLOUDINARY = "https://api.cloudinary.com/v1_1/omarlestrella/image/upload";
 
