@@ -41,6 +41,7 @@ app.use(Sentry.Handlers.tracingHandler());
 // Configuracion para desplegar
 const PORT = process.env.PORT || 5050;
 
+// CORS Configuration
 app.all("*", (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
