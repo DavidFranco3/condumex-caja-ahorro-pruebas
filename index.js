@@ -17,6 +17,7 @@ const { verifyToken } = require("./src/middleware/verifyToken");
 // Configuración del servidor
 const app = express();
 
+// Initialize Sentry
 Sentry.init({
   dsn: "https://34cda94143a14ff3938078498a0bc8e4@o1301469.ingest.sentry.io/6538433",
   integrations: [
@@ -25,7 +26,6 @@ Sentry.init({
     // enable Express.js middleware tracing
     new Tracing.Integrations.Express({ app }),
   ],
-
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
@@ -37,9 +37,6 @@ Sentry.init({
 app.use(Sentry.Handlers.requestHandler());
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
-
-// Configuracion para desplegar
-const PORT = process.env.PORT || 5050;
 
 // CORS Configuration
 app.all("*", (req, res, next) => {
@@ -74,26 +71,11 @@ app.use(cors());
 app.use(require("./src/routes/login.routes"));
 app.use("/usuarios/", verifyToken, require("./src/routes/usuarios.routes"));
 app.use("/empleados/", verifyToken, require("./src/routes/empleados.routes"));
-app.use(
-  "/sindicalizados/",
-  verifyToken,
-  require("./src/routes/sindicalizados.routes")
-);
-app.use(
-  "/sociosEspeciales/",
-  verifyToken,
-  require("./src/routes/sociosEspeciales.routes")
-);
-app.use(
-  "/infoRespaldosAutomaticos/",
-  require("./src/routes/infoRespaldosAutomaticos.routes")
-);
+app.use("/sindicalizados/", verifyToken, require("./src/routes/sindicalizados.routes"));
+app.use("/sociosEspeciales/", verifyToken, require("./src/routes/sociosEspeciales.routes"));
+app.use("/infoRespaldosAutomaticos/", require("./src/routes/infoRespaldosAutomaticos.routes"));
 app.use("/correos/", verifyToken, require("./src/routes/correos.routes"));
-app.use(
-  "/aportaciones/",
-  verifyToken,
-  require("./src/routes/aportaciones.routes")
-);
+app.use("/aportaciones/", verifyToken, require("./src/routes/aportaciones.routes"));
 app.use("/bajaSocios/", verifyToken, require("./src/routes/bajaSocios.routes"));
 app.use("/prestamos/", verifyToken, require("./src/routes/prestamos.routes"));
 app.use("/abonos/", verifyToken, require("./src/routes/abonos.routes"));
@@ -101,33 +83,23 @@ app.use("/deudaSocio/", verifyToken, require("./src/routes/deudaSocio.routes"));
 app.use("/parametros/", verifyToken, require("./src/routes/parametros.routes"));
 app.use("/retiros/", verifyToken, require("./src/routes/retiros.routes"));
 app.use("/periodos/", verifyToken, require("./src/routes/periodos.routes"));
-app.use(
-  "/movimientosSaldos/",
-  verifyToken,
-  require("./src/routes/movimientosSaldos.routes")
-);
+app.use("/movimientosSaldos/", verifyToken, require("./src/routes/movimientosSaldos.routes"));
 app.use("/saldos/", verifyToken, require("./src/routes/saldoSocios.routes"));
-app.use(
-  "/saldosGlobales",
-  verifyToken,
-  require("./src/routes/saldosGlobales.routes")
-);
-app.use(
-  "/rendimientos",
-  verifyToken,
-  require("./src/routes/rendimientos.routes")
-);
+app.use("/saldosGlobales", verifyToken, require("./src/routes/saldosGlobales.routes"));
+app.use("/rendimientos", verifyToken, require("./src/routes/rendimientos.routes"));
 
 // Use routes from patrimonio
 app.use("/patrimonio", verifyToken, require("./src/routes/patrimonio.routes"));
 
 app.use("/statements", require("./src/routes/statements.routes"));
 
+// Error handling middleware
 app.use(notFound);
 app.use(Sentry.Handlers.errorHandler());
 app.use(handleErrors);
 
-// Inicio del servidor en modo local
+// Start the Express.js server
+const PORT = process.env.PORT || 5050;
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
