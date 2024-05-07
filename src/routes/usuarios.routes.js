@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const jwtDecode = require("jwt-decode");
+const { jwtDecode } = require("jwt-decode");
 const usuarios = require("../models/usuarios");
 
 // Registro de usuarios

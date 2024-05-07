@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const jwtDecode = require("jwt-decode");
+const { jwtDecode } = require("jwt-decode");
 const sindicalizados = require("../models/sindicalizados");
 
 // Registro de sindicalizados
@@ -166,12 +166,12 @@ router.put("/actualizar/:id", verifyToken, async (req, res) => {
       .json({ mensaje: "Ya existe un socio con este numero de ficha" });
   } else {
 
-  await sindicalizados
-    .updateOne({ _id: id }, { $set: { nombre, tipoSocio, correo, ficha } })
-    .then((data) =>
-      res.status(200).json({ mensaje: "Datos del socio actualizados" })
-    )
-    .catch((error) => res.json({ message: error }));
+    await sindicalizados
+      .updateOne({ _id: id }, { $set: { nombre, tipoSocio, correo, ficha } })
+      .then((data) =>
+        res.status(200).json({ mensaje: "Datos del socio actualizados" })
+      )
+      .catch((error) => res.json({ message: error }));
   }
 });
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const jwtDecode = require("jwt-decode");
+const { jwtDecode } = require("jwt-decode");
 const sociosEspeciales = require("../models/sociosEspeciales");
 
 // Registro de socios especiales
@@ -158,12 +158,12 @@ router.put("/actualizar/:id", verifyToken, async (req, res) => {
 router.delete("/eliminarMasivo/:fecha", async (req, res) => {
   const { fecha } = req.params;
   await sociosEspeciales
-    .deleteMany( {
-        $and: [
-        {createdAt: {$gte: (fecha+"T00:00:00.000Z")}},
-        {createdAt: {$lte: (fecha+"T23:59:59.999Z")}}
-        ]
-        } )
+    .deleteMany({
+      $and: [
+        { createdAt: { $gte: (fecha + "T00:00:00.000Z") } },
+        { createdAt: { $lte: (fecha + "T23:59:59.999Z") } }
+      ]
+    })
     .then((_data) => res.status(200).json({ mensaje: "Socios eliminados" }))
     .catch((error) => res.json({ message: error }));
 });

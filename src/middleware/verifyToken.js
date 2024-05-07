@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const jwtDecode = require("jwt-decode");
+const { jwtDecode } = require("jwt-decode");
 
 const isExpired = (token) => {
   const { exp } = jwtDecode(token);
