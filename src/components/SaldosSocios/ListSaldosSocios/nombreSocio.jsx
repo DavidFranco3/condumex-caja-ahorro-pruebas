@@ -24,7 +24,7 @@ function NombreSocio(props) {
 
     useEffect(() => {
         cargarNombreSocio();
-    }, []);
+    }, [id]);
 
     return (
         <>
