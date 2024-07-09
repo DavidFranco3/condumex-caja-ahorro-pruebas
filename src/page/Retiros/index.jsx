@@ -161,6 +161,22 @@ function Retiros(props) {
                                 className="btnRegistro"
                                 style={{ marginRight: '10px' }}
                                 onClick={() => {
+                                    registroRetirosCargaMasiva(
+                                        <CargaMasivaRetiros
+                                            setShowModal={setShowModal}
+                                            location={location}
+                                            history={history}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faCirclePlus} /> Registro masivo
+                            </Button>
+
+                            <Button
+                                className="btnRegistro"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
                                     registroRetirosRestaurar(
                                         <RestaurarRetiros
                                             setShowModal={setShowModal}
@@ -265,18 +281,18 @@ function formatModelPeriodos(data) {
     //console.log(data)
     const dataTemp = []
     data.forEach(data => {
-      dataTemp.push({
-        id: data._id,
-        folio: data.folio,
-        nombre: data.nombre,
-        tipo: data.tipo,
-        fechaInicio: data.fechaInicio,
-        fechaCierre: data.fechaCierre,
-        fechaRegistro: data.createdAt,
-        fechaActualizacion: data.updatedAt
-      });
+        dataTemp.push({
+            id: data._id,
+            folio: data.folio,
+            nombre: data.nombre,
+            tipo: data.tipo,
+            fechaInicio: data.fechaInicio,
+            fechaCierre: data.fechaCierre,
+            fechaRegistro: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
     });
     return dataTemp;
-  }
+}
 
 export default withRouter(Retiros);
