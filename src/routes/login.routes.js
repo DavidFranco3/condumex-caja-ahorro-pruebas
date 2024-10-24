@@ -1,30 +1,39 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const usuario = require("../models/usuarios");
 
 router.post("/login", async (req, res) => {
   const { correo, password } = req.body;
 
-  if (!correo || !password) res.status(400).json({ mensaje: "Faltan datos" });
+  // Validar que ambos campos estén presentes
+  if (!correo || !password) {
+    return res.status(400).json({ mensaje: "Faltan datos" });
+  }
 
+  // Buscar al usuario en la base de datos por correo
   const usuarios = await usuario.findOne({ correo });
-  // console.log(usuarios)
-  if (!usuarios)
+  if (!usuarios) {
     return res.status(401).json({ mensaje: "Usuario no registrado" });
+  }
+  // Verificar si el estado del usuario es "true"
   if (usuarios.estado === "true") {
-    if (usuarios.correo !== correo)
-      return res.status(401).json({ mensaje: "Correo Incorrecto" });
-    if (usuarios.password !== password)
+    // Comparar el hash de la contraseña almacenada con la proporcionada
+    const isMatch = await bcrypt.compare(password, usuarios.password);
+    if (!isMatch) {
       return res.status(401).json({ mensaje: "Contraseña Incorrecta" });
+    }
 
+    // Generar un token JWT
     const token = await jwt.sign({ _: usuarios._id }, "secretkey", {
-      expiresIn: 86400,
+      expiresIn: 86400, // Expira en 24 horas
     });
 
-    res.status(200).json({ token });
+    return res.status(200).json({ token });
+
   } else {
-    return res.status(401).json({ mensaje: "Inicio de sesion no autorizado" });
+    return res.status(401).json({ mensaje: "Inicio de sesión no autorizado" });
   }
 });
 
