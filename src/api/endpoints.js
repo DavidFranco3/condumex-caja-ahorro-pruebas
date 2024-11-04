@@ -6,6 +6,7 @@ export const ENDPOINTLoginAdministrador = '/login'
 // Usuarios
 export const ENDPOINTRegistraUsuarios = '/usuarios/registro'
 export const ENDPOINTListarUsuarios = '/usuarios/listar'
+export const ENDPOINTTotalUsuarios = '/usuarios/total'
 export const ENDPOINTObtenerUsuario = '/usuarios/obtener'
 export const ENDPOINTEliminarUsuario = '/usuarios/eliminar'
 export const ENDPOINTActualizarUsuario = '/usuarios/actualizar'

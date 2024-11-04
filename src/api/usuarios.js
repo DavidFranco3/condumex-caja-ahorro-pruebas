@@ -1,6 +1,7 @@
 import { API_HOST } from '../utils/constants'
 import {
   ENDPOINTRegistraUsuarios,
+  ENDPOINTTotalUsuarios,
   ENDPOINTListarUsuarios,
   ENDPOINTObtenerUsuario,
   ENDPOINTEliminarUsuario,
@@ -119,4 +120,16 @@ export async function actualizaUsuario(id, data) {
     data,
     config
   )
+}
+
+// Obtener el total de socios registrados
+export async function totalRegistrosUsuarios() {
+  const config = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getTokenApi()}`,
+    },
+  }
+  return await axios.get(API_HOST + ENDPOINTTotalUsuarios, config)
 }

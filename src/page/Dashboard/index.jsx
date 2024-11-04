@@ -20,6 +20,7 @@ import LogoInteresesSocios from '../../assets/png/interesesSocios.png';
 import LogoAbonos from '../../assets/png/abonos.png';
 import LogoDeudaSocio from '../../assets/png/deudaSocio.png';
 import LogoSaldosSocios from '../../assets/png/saldosSocios.png';
+import LogoUsuarios from '../../assets/png/usuarios.png';
 import './Dashboard.scss';
 
 function Dashboard(props) {
@@ -146,6 +147,11 @@ function Dashboard(props) {
           path={'/respaldo-informacion'}
           logo={LogoBackup}
           title={'Respaldos'}
+        />
+        <ItemCard
+          path={'/usuarios'}
+          logo={LogoUsuarios}
+          title={'Usuarios'}
         />
       </div>
       

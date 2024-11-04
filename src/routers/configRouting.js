@@ -18,6 +18,7 @@ import DeudaSocio from '../page/DeudaSocio'
 import Periodos from '../page/Periodos'
 import InteresesSocios from '../page/InteresesSocios'
 import SaldosSocios from '../page/SaldosSocios'
+import Usuarios from '../page/Usuarios'
 
 const configRouting = [
   {
@@ -91,6 +92,10 @@ const configRouting = [
   {
     path: '/socios',
     page: Socios,
+  },
+  {
+    path: '/usuarios',
+    page: Usuarios,
   },
   {
     path: '/',
