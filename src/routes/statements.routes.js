@@ -391,7 +391,7 @@ router.get("/email/:fichaSocio", verifyToken, async (req, res) => {
       secure: false,
       auth: {
         user: "ca.condutel@condumex.com.mx",
-        pass: "cah08.2024",
+        pass: "cah11.2024",
       },
     });
 
