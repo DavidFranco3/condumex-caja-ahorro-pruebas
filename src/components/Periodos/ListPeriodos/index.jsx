@@ -3,8 +3,8 @@ import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container, Button, Col, Form } from "react-bootstrap";
+import { faArrowDownLong, faPenToSquare, faTrashCan, faBars } from "@fortawesome/free-solid-svg-icons";
+import { Badge, Container, Button, Col, Form, Dropdown } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import EliminaPeriodos from '../EliminaPeriodos';
 import ModificaPeriodos from '../ModificaPeriodos';
@@ -60,46 +60,63 @@ function ListPeriodos(props) {
         },
         {
             name: "Acciones",
-            selector: row => (
-                <>
-                    <div className="flex justify-end items-center space-x-4">
-                    <Badge
-                            bg="success"
-                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                modificacionPeriodos(
-                                    <ModificaPeriodos
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
+            cell: row => {
+                return (
+                    <>
+                        <Dropdown>
+                            <Dropdown.Toggle className="botonDropdown" id="dropdown-basic">
+                                <FontAwesomeIcon icon={faBars} />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    bg="success"
+                                    className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                                    onClick={() => {
+                                        modificacionPeriodos(
+                                            <ModificaPeriodos
+                                                datos={row}
+                                                location={location}
+                                                history={history}
+                                                setShowModal={setShowModal}
+                                                setRefreshCheckLogin={setRefreshCheckLogin}
+                                            />
+                                        )
+                                    }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faPenToSquare}
+                                        style={{ color: "#1A66CC" }}
+                                        className="text-lg"
                                     />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faPenToSquare} className="text-lg" />
-                        </Badge>
-                        <Badge
-                            bg="danger"
-                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                eliminacionPeriodos(
-                                    <EliminaPeriodos
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    &nbsp; Modificar
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    bg="danger"
+                                    className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                                    onClick={() => {
+                                        eliminacionPeriodos(
+                                            <EliminaPeriodos
+                                                datos={row}
+                                                location={location}
+                                                history={history}
+                                                setShowModal={setShowModal}
+                                                setRefreshCheckLogin={setRefreshCheckLogin}
+                                            />
+                                        )
+                                    }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faTrashCan}
+                                        style={{ color: "#dc3545" }}
+                                        className="text-lg"
                                     />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-                        </Badge>
-                    </div>
-                </>
-            ),
+                                    &nbsp; Eliminar
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </>
+                )
+            },
             sortable: false,
             center: true,
             reorder: false

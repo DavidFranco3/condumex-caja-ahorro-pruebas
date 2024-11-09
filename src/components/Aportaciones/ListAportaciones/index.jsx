@@ -4,8 +4,8 @@ import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container, Button, Col, Form } from "react-bootstrap";
-import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { Badge, Container, Button, Col, Form, Dropdown } from "react-bootstrap";
+import { faPenToSquare, faTrashCan, faBars } from '@fortawesome/free-solid-svg-icons';
 import DataTable from "react-data-table-component";
 import EliminaAportaciones from "../EliminaAportaciones";
 import ModificaAportaciones from "../ModificaAportaciones";
@@ -62,46 +62,63 @@ function ListAportaciones(props) {
     },
     {
       name: "Acciones",
-      selector: row => (
-        <>
-          <div className="flex justify-end items-center space-x-4">
-            <Badge
-              bg="success"
-              className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-              onClick={() => {
-                modificacionAportaciones(
-                  <ModificaAportaciones
-                    datos={row}
-                    location={location}
-                    history={history}
-                    setShowModal={setShowModal}
-                    setRefreshCheckLogin={setRefreshCheckLogin}
-                  />
-                )
-              }}
-            >
-              <FontAwesomeIcon icon={faPenToSquare} className="text-lg" />
-            </Badge>
-            <Badge
-              bg="danger"
-              className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-              onClick={() => {
-                eliminacionAportaciones(
-                  <EliminaAportaciones
-                    datos={row}
-                    location={location}
-                    history={history}
-                    setShowModal={setShowModal}
-                    setRefreshCheckLogin={setRefreshCheckLogin}
-                  />
-                )
-              }}
-            >
-              <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-            </Badge>
-          </div>
-        </>
-      ),
+      cell: row => {
+        return (
+            <>
+                <Dropdown>
+                    <Dropdown.Toggle className="botonDropdown" id="dropdown-basic">
+                        <FontAwesomeIcon icon={faBars} />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item
+                            bg="success"
+                            className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                            onClick={() => {
+                                modificacionAportaciones(
+                                    <ModificaAportaciones
+                                        datos={row}
+                                        location={location}
+                                        history={history}
+                                        setShowModal={setShowModal}
+                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faPenToSquare}
+                                style={{ color: "#1A66CC" }}
+                                className="text-lg"
+                            />
+                            &nbsp; Modificar
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                            bg="danger"
+                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                            onClick={() => {
+                                eliminacionAportaciones(
+                                    <EliminaAportaciones
+                                        datos={row}
+                                        location={location}
+                                        history={history}
+                                        setShowModal={setShowModal}
+                                        setRefreshCheckLogin={setRefreshCheckLogin}
+                                    />
+                                )
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faTrashCan}
+                                style={{ color: "#dc3545" }}
+                                className="text-lg"
+                            />
+                            &nbsp; Eliminar
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </>
+        )
+    },
       sortable: false,
       center: true,
       reorder: false

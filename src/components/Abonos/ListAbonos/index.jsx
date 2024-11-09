@@ -3,8 +3,8 @@ import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container, Button, Col, Form } from "react-bootstrap";
+import { faArrowDownLong, faTrashCan, faBars } from "@fortawesome/free-solid-svg-icons";
+import { Badge, Container, Button, Col, Form, Dropdown } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import EliminaAbonos from "../EliminaAbonos";
 import { estilos } from "../../../utils/tableStyled";
@@ -60,29 +60,41 @@ function ListAbonos(props) {
         },
         {
             name: "Acciones",
-            selector: row => (
-                <>
-                    <div className="flex justify-end items-center space-x-4">
-                        <Badge
-                            bg="danger"
-                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                eliminacionAbonos(
-                                    <EliminaAbonos
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
+            cell: row => {
+                return (
+                    <>
+                        <Dropdown>
+                            <Dropdown.Toggle className="botonDropdown" id="dropdown-basic">
+                                <FontAwesomeIcon icon={faBars} />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    bg="danger"
+                                    className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                                    onClick={() => {
+                                        eliminacionAbonos(
+                                            <EliminaAbonos
+                                                datos={row}
+                                                location={location}
+                                                history={history}
+                                                setShowModal={setShowModal}
+                                                setRefreshCheckLogin={setRefreshCheckLogin}
+                                            />
+                                        )
+                                    }}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faTrashCan}
+                                        style={{ color: "#dc3545" }}
+                                        className="text-lg"
                                     />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-                        </Badge>
-                    </div>
-                </>
-            ),
+                                    &nbsp; Eliminar
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </>
+                )
+            },
             sortable: false,
             center: true,
             reorder: false
