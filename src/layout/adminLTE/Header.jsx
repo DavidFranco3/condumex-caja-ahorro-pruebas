@@ -112,15 +112,14 @@ const Header = (props) => {
           <a
             className="nav-link"
             data-widget="pushmenu"
-            href="#"
-            role="button"
-            style={{ color: 'white' }}
+            //href="#"
+            //role="button"
           >
             <i className="fas fa-bars" />
           </a>
         </li>
+        <li className="nav-item d-none d-sm-inline-block"></li>
       </ul>
-
       {/* Selector de Razón Social, centrado */}
       <div className="d-flex justify-content-center w-100">
         <div style={{ minWidth: '250px' }}> {/* Limita el ancho del contenedor */}

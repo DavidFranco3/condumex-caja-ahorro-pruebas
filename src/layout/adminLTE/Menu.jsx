@@ -61,7 +61,7 @@ const Menu = () => {
             style={{ height: '50px' }}
           />
         </Link>
-        <hr style={{ color: "white", marginTop: "5px" }} />
+        
         {/* Sidebar */}
         <div className="sidebar">
           <nav className="mt-2">
