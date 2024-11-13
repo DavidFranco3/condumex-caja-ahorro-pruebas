@@ -30,6 +30,38 @@
   color: red;
 }
 
+@media screen and (max-width: 990px) {
+  .sidebar-open .menuH{
+    margin-left: 32%;
+    display: none;
+  }
+  
+  .content-wrapper{
+    min-height: 60vh !important;
+  }
+
+}
+
+@media screen and (max-width: 770px) {
+  .sidebar-open .menuH{
+    margin-left: 62%;
+    display: none;
+  }
+
+  .nombreUsuario {
+    display: none;
+  }
+
+  .iconoUsuario {
+    display: inline-block;
+  }
+  
+  .buttonSearchBar{
+    width: 240px;
+  }
+
+}
+
 .perfilCierreBarra Button{
   color: #fff;
   font-weight: bold;

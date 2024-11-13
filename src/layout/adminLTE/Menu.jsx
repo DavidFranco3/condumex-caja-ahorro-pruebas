@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import LogoCajadeAhorro from '/src/assets/png/caja-de-ahorro.png';
 import { getRazonSocial } from '../../api/auth';
 import { Link, useNavigate } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
 
 const Menu = () => {
   const enrutamiento = useNavigate()
@@ -56,7 +55,7 @@ const Menu = () => {
       >
         {/* Brand Logo */}
         <Link to="/">
-          <Image
+          <img
             src={LogoCajadeAhorro}
             alt="Caja de ahorro"
             style={{ height: '50px' }}
