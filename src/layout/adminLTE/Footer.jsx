@@ -5,9 +5,11 @@ const Footer = () => {
   return (
     <footer className="main-footer">
       <strong>
-        Copyright © {currentYear}.<a href=""></a>
+        Copyright © {currentYear}: &nbsp; 
+        <a href="https://ideasysolucionestecnologicas.com" target="_blank" rel="noopener noreferrer">
+          https://ideasysolucionestecnologicas.com
+        </a>
       </strong>
-      All rights reserved.
       <div className="float-right d-none d-sm-inline-block">
         <b>Version</b> 1.0.0
       </div>
