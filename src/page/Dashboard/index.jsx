@@ -1,32 +1,28 @@
 import { useEffect, useState } from 'react';
-import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth';
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, obtenidusuarioLogueado } from '../../api/auth';
+import { obtenerUsuario } from '../../api/usuarios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import { Card, Container, CardGroup, Image } from 'react-bootstrap';
+import { Image, Row, Col } from 'react-bootstrap';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faWallet,
+  faDonate,
+  faMoneyBillWave,
+  faPercent,
+  faHandHoldingUsd,
+  faWarehouse,
+} from "@fortawesome/free-solid-svg-icons";
 // Importaciones de imagenes del dashboard
-import LogoSocios from '../../assets/png/usuarios.png';
-import LogoMovimientos from '../../assets/png/movimientos.png';
-import LogoAjustes from '../../assets/png/ajuste.png';
-import LogoAportacion from '../../assets/png/aportacion.png';
-import LogoSaldos from '../../assets/png/saldos.png';
-import LogoRetiros from '../../assets/png/retiros.png';
-import LogoBajaSocios from '../../assets/png/bajaSocios.png';
-import LogoEstadoCuenta from '../../assets/png/estadoCuenta.png';
-import LogoCredito from '../../assets/png/credito.png';
-import LogoBackup from '../../assets/png/backup.png';
-import LogoRendimientos from '../../assets/png/rendimientos.png';
-import LogoPatrimonio from '../../assets/png/patrimonio.png';
-import LogoInteresesSocios from '../../assets/png/interesesSocios.png';
-import LogoAbonos from '../../assets/png/abonos.png';
-import LogoDeudaSocio from '../../assets/png/deudaSocio.png';
-import LogoSaldosSocios from '../../assets/png/saldosSocios.png';
-import LogoUsuarios from '../../assets/png/usuarios.png';
+import { listarAbono } from '../../api/abonos';
+import { listarAportacion } from '../../api/aportaciones';
+import { listarRetiro } from '../../api/retiros';
+import { listarRendimiento } from '../../api/rendimientos';
+import { listarPrestamo } from '../../api/prestamos';
+import { listarPatrimonios } from '../../api/patrimonio';
 import './Dashboard.scss';
 
 function Dashboard(props) {
   const { setRefreshCheckLogin } = props;
-
-  const enrutamiento = useNavigate();
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -40,123 +36,423 @@ function Dashboard(props) {
     }
   }, []);
   // Termina cerrado de sesión automatico
-  
+
   // Almacena la razón social, si ya fue elegida
-    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+  const [razonSocialElegida, setRazonSocialElegida] = useState("");
+
+  useEffect(() => {
+    if (getRazonSocial()) {
+      setRazonSocialElegida(getRazonSocial)
+    }
+  }, []);
+  // Almacena los datos de los abonos
+  const [listAbonos, setListAbonos] = useState(null);
+
+  useEffect(() => {
+    try {
+      // Inicia listado de detalles de los articulos vendidos
+      listarAbono(razonSocialElegida).then(response => {
+        const { data } = response;
+        // console.log(data)
+        if (!listAbonos && data) {
+          setListAbonos(formatModelAbonos(data));
+        } else {
+          const datosAbonos = formatModelAbonos(data);
+          setListAbonos(datosAbonos)
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }, [razonSocialElegida]);
+
+  // Para almacenar el listado de aportaciones
+  const [listAportaciones, setListAportaciones] = useState(null)
+
+  useEffect(() => {
+    try {
+      // Inicia listado de detalles de los articulos vendidos
+      listarAportacion(razonSocialElegida).then(response => {
+        const { data } = response;
+        // console.log(data)
+        if (!listAportaciones && data) {
+          setListAportaciones(formatModelAportaciones(data));
+        } else {
+          const datosAportaciones = formatModelAportaciones(data);
+          setListAportaciones(datosAportaciones)
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }, [razonSocialElegida]);
+
+  // Almacena el listado de retiros
+  const [listRetiros, setListRetiros] = useState(null);
+
+  useEffect(() => {
+    try {
+      // Inicia listado de detalles de los articulos vendidos
+      listarRetiro(razonSocialElegida).then(response => {
+        const { data } = response;
+        // console.log(data)
+        if (!listRetiros && data) {
+          setListRetiros(formatModelRetiros(data));
+        } else {
+          const datosRetiros = formatModelRetiros(data);
+          setListRetiros(datosRetiros)
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }, [razonSocialElegida]);
+
+  // Para almacenar el listado de Rendimientos
+  const [listRendimientos, setListRendimientos] = useState(null)
+
+  useEffect(() => {
+    try {
+      listarRendimiento(razonSocialElegida)
+        .then((response) => {
+          const { data } = response
+          if (listRendimientos && data) {
+            setListRendimientos(formatModelRendimientos(data))
+          } else {
+            const datosRendimientos = formatModelRendimientos(data)
+            setListRendimientos(datosRendimientos)
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    } catch (e) {
+      console.log(e)
+    }
+  }, [razonSocialElegida]);
+
+  // Almacena los datos de los prestamos
+  const [listPrestamos, setListPrestamos] = useState(null);
+
+  useEffect(() => {
+    try {
+      // Inicia listado de detalles de los articulos vendidos
+      listarPrestamo(razonSocialElegida).then(response => {
+        const { data } = response;
+        // console.log(data)
+        if (!listPrestamos && data) {
+          setListPrestamos(formatModelPrestamos(data));
+        } else {
+          const datosPrestamos = formatModelPrestamos(data);
+          setListPrestamos(datosPrestamos)
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }, [razonSocialElegida]);
+
+    // Almacena los datos de los patrimonios
+    const [listPatrimonios, setListPatrimonios] = useState(null);
 
     useEffect(() => {
-        if (getRazonSocial()) {
-            setRazonSocialElegida(getRazonSocial)
-        }
-    }, []);
+      try {
+        // Inicia listado de detalles de los articulos vendidos
+        listarPatrimonios(razonSocialElegida).then(response => {
+          const { data } = response;
+          // console.log(data)
+          if (!listPatrimonios && data) {
+            setListPatrimonios(formatModelPatrimonio(data));
+          } else {
+            const datosPatrimonio = formatModelPatrimonio(data);
+            setListPatrimonios(datosPatrimonio)
+          }
+        }).catch(e => {
+          console.log(e)
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    }, [razonSocialElegida]);
 
-  const goTo = (ruta) => enrutamiento(ruta);
+  const [nombreUsuario, setNombreUsuario] = useState("");
 
-  const ItemCard = ({ path, logo, title }) => (
-    <Card>
-      <Card.Body onClick={() => goTo(path)}>
-        <div className="flex flex-col items-center justify-center">
-          <Image src={logo} style={{ width: '95px' }} />
-          <span className="inline-block text-lg font-normal">{title}</span>
-        </div>
-      </Card.Body>
-    </Card>
-  )
+  const obtenerDatosUsuario = () => {
+    try {
+      obtenerUsuario(obtenidusuarioLogueado(getTokenApi()))
+        .then((response) => {
+          const { data } = response;
+          setNombreUsuario(data.nombre + " " + data.apellidos);
+        })
+        .catch((e) => {
+          if (e.message === "Network Error") {
+            //console.log("No hay internet")
+            toast.error("Conexión al servidor no disponible");
+          }
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    obtenerDatosUsuario();
+  }, []);
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-4">
-        <ItemCard
-        path={'/socios'}
-        logo={LogoSocios}
-        title={'Socios'}
-        />
-        <ItemCard
-          path={'/baja-de-socios'}
-          logo={LogoBajaSocios}
-          title={'Baja de socios'}
-        />
-        <ItemCard
-          path={'/aportaciones'}
-          logo={LogoAportacion}
-          title={'Aportaciones'}
-        />
-        <ItemCard
-          path={'/prestamos'}
-          logo={LogoCredito} 
-          title={'Préstamos'}
-        />
-        <ItemCard 
-          path={'/retiros'} 
-          logo={LogoRetiros} 
-          title={'Retiros'} 
-        />
-        <ItemCard
-          path={'/intereses'}
-          logo={LogoRendimientos}
-          title={'Intereses'}
-        />
-        {
-            razonSocialElegida === "Asociación de Empleados Sector Cables A.C." &&
-                (
-                    <>
-        <ItemCard
-          path={'/patrimonio'}
-          logo={LogoPatrimonio}
-          title={'Patrimonio'}
-        />
-        </>
-                                                    )
-                                                }
-        <ItemCard
-          path={'/abonos'}
-          logo={LogoAbonos}
-          title={'Abonos'}
-        />
-        <ItemCard
-          path={'/deudaSocio'}
-          logo={LogoDeudaSocio}
-          title={'Deudas de los socios'}
-        />
-        <ItemCard
-          path={'/interesesSocios'}
-          logo={LogoInteresesSocios}
-          title={'Intereses de los socios'}
-        />
-        <ItemCard
-          path={'/saldosSocios'}
-          logo={LogoSaldosSocios}
-          title={'Saldos de los socios'}
-        />
-        <ItemCard
-          path={'/movimientos'}
-          logo={LogoMovimientos}
-          title={'Movimientos'}
-        />
-        <ItemCard
-          path={'/estados-de-cuenta'}
-          logo={LogoEstadoCuenta}
-          title={'Estados de cuenta'}
-        />
-        <ItemCard
-          path={'/periodos'}
-          logo={LogoAjustes}
-          title={'Ajustes'}
-        />
-        <ItemCard
-          path={'/respaldo-informacion'}
-          logo={LogoBackup}
-          title={'Respaldos'}
-        />
-        <ItemCard
-          path={'/usuarios'}
-          logo={LogoUsuarios}
-          title={'Usuarios'}
-        />
+      <div style={{ margin: "1vw" }}>
+        <div>
+          <div className="card card-widget widget-user shadow">
+            <div
+              className="widget-user-header bg-success"
+              style={{ textTransform: "capitalize" }}
+            >
+              <p
+                className="widget-user-username homeUserName"
+                style={{
+                  textAlign: "center",
+                  fontStyle: "italic",
+                  fontWeight: "bold",
+                }}
+              >
+                Bienvenido!!! {nombreUsuario}
+              </p>
+              <p className="widget-user-desc rolUser">{nombreUsuario}</p>
+            </div>
+            <div className="widget-user-image">
+              <Image
+                className="img-circle elevation-2"
+                src="../dist/img/admin.png"
+                alt="User Avatar"
+              />
+            </div>
+            <div className="card-footer">
+              <Row>
+                <Col sm={12} md={6} lg={6}>
+                  <div class="small-box bg-info">
+                    <div class="inner">
+                      <h3>Monto total de abonos</h3>
+                      <h2>
+                        ${''}
+                        {new Intl.NumberFormat('es-MX', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(listAbonos?.reduce((acc, item) => acc + item.abono, 0))} MXN
+                      </h2>
+                    </div>
+                    <div class="icon">
+                      <FontAwesomeIcon icon={faWallet} />
+                    </div>
+                  </div>
+                </Col>
+                <Col sm={12} md={6} lg={6}>
+                  <div class="small-box bg-danger">
+                    <div class="inner">
+                      <h3>Monto total de aportaciones</h3>
+                      <h2>
+                        ${''}
+                        {new Intl.NumberFormat('es-MX', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(listAportaciones?.reduce((acc, item) => acc + item.aportacion, 0))} MXN
+                      </h2>
+                    </div>
+                    <div class="icon">
+                      <FontAwesomeIcon icon={faDonate} />
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={12} md={6} lg={6}>
+                  <div class="small-box bg-light">
+                    <div class="inner">
+                      <h3>Monto total de retiros</h3>
+                      <h2>
+                        ${''}
+                        {new Intl.NumberFormat('es-MX', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(listRetiros?.reduce((acc, item) => acc + item.retiro, 0))} MXN
+                      </h2>
+                    </div>
+                    <div class="icon">
+                      <FontAwesomeIcon icon={faMoneyBillWave} />
+                    </div>
+                  </div>
+                </Col>
+                <Col sm={12} md={6} lg={6}>
+                  <div class="small-box bg-white">
+                    <div class="inner">
+                      <h3>Monto total de aportaciones</h3>
+                      <h2>
+                        ${''}
+                        {new Intl.NumberFormat('es-MX', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(listRendimientos?.reduce((acc, item) => acc + item.rendimiento, 0))} MXN
+                      </h2>
+                    </div>
+                    <div class="icon">
+                      <FontAwesomeIcon icon={faPercent} />
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={12} md={6} lg={6}>
+                  <div class="small-box bg-primary">
+                    <div class="inner">
+                      <h3>Monto total de prestamos</h3>
+                      <h2>
+                        ${''}
+                        {new Intl.NumberFormat('es-MX', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(listPrestamos?.reduce((acc, item) => acc + item.prestamoTotal, 0))} MXN
+                      </h2>
+                    </div>
+                    <div class="icon">
+                      <FontAwesomeIcon icon={faHandHoldingUsd} />
+                    </div>
+                  </div>
+                </Col>
+                {razonSocialElegida ===
+                'Asociación de Empleados Sector Cables A.C.' && (
+                <Col sm={12} md={6} lg={6}>
+                  <div class="small-box bg-warning">
+                    <div class="inner">
+                      <h3>Monto total de patrimonios</h3>
+                      <h2>
+                        ${''}
+                        {new Intl.NumberFormat('es-MX', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(listPatrimonios?.reduce((acc, item) => acc + item.patrimonio, 0))} MXN
+                      </h2>
+                    </div>
+                    <div class="icon">
+                      <FontAwesomeIcon icon={faWarehouse} />
+                    </div>
+                  </div>
+                </Col>
+                )}
+              </Row>
+            </div>
+          </div>
+        </div>
       </div>
-      
     </>
   )
+}
+
+function formatModelAbonos(data) {
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      fichaSocio: String(data.fichaSocio),
+      tipo: data.tipo,
+      abono: data.abono,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    });
+  });
+  return dataTemp;
+}
+
+function formatModelAportaciones(data) {
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      fichaSocio: String(data.fichaSocio),
+      tipo: data.tipo,
+      aportacion: data.aportacion,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    });
+  });
+  return dataTemp;
+}
+
+function formatModelRetiros(data) {
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      fichaSocio: String(data.fichaSocio),
+      tipo: data.tipo,
+      retiro: data.retiro,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    });
+  });
+  return dataTemp;
+}
+
+function formatModelRendimientos(data) {
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      fichaSocio: String(data.fichaSocio),
+      tipo: data.tipo,
+      rendimiento: data.rendimiento,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    });
+  });
+  return dataTemp;
+}
+
+function formatModelPrestamos(data) {
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      cantidadPagos: data.cantidadPagos,
+      abonoPorPago: data.abonoPorPago,
+      folio: data.folio,
+      fichaSocio: String(data.fichaSocio),
+      tipo: data.tipo,
+      prestamo: data.prestamo,
+      prestamoTotal: data.prestamoTotal,
+      tasaInteres: data.tasaInteres,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    });
+  });
+  return dataTemp;
+}
+
+function formatModelPatrimonio(data) {
+  const dataTemp = []
+  data.forEach(data => {
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      fichaSocio: String(data.fichaSocio),
+      tipo: data.tipo,
+      patrimonio: data.patrimonio,
+      fechaCreacion: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    });
+  });
+  return dataTemp;
 }
 
 export default Dashboard

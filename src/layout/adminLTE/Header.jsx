@@ -1,6 +1,6 @@
 import { Disclosure } from '@headlessui/react'
 import React, { useEffect, useState } from 'react'
-import { Form } from 'react-bootstrap'
+import { Form, Dropdown, NavDropdown } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import {
   getRazonSocial,
@@ -9,23 +9,47 @@ import {
   logoutApi,
   obtenidusuarioLogueado,
   setRazonSocial,
-} from '../../api/auth'
-import ImagenPerfil from '../../assets/png/user-avatar.png'
-import LogoCajadeAhorro from '../../assets/png/caja-de-ahorro.png'
+} from '../../api/auth';
+import { obtenerUsuario } from "../../api/usuarios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 const Header = (props) => {
-  console.log('props', props)
-  const { setRefreshCheckLogin, children, setOptionSelect } = props
-
+  const { setRefreshCheckLogin, setOptionSelect } = props
   const redirecciona = useNavigate()
 
-  //Para cerrar la sesion
+  //Para cerrar la sesión
   const cerrarSesion = () => {
     toast.success('Sesión cerrada')
     redirecciona('')
     logoutApi()
     setRefreshCheckLogin(true)
   }
+
+  const [nombreUsuario, setNombreUsuario] = useState("");
+
+  const obtenerDatosUsuario = () => {
+    try {
+      obtenerUsuario(obtenidusuarioLogueado(getTokenApi()))
+        .then((response) => {
+          const { data } = response;
+          setNombreUsuario(data.nombre + " " + data.apellidos);
+        })
+        .catch((e) => {
+          if (e.message === "Network Error") {
+            //console.log("No hay internet")
+            toast.error("Conexión al servidor no disponible");
+          }
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    obtenerDatosUsuario();
+  }, []);
 
   // Para almacenar en localStorage la razón social
   const almacenaRazonSocial = (razonSocial) => {
@@ -34,22 +58,21 @@ const Header = (props) => {
       razonSocial === 'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.' ||
       razonSocial === 'CONDUMEX S.A. DE C.V.'
     ) {
-      setRazonSocial(razonSocial); // Actualiza el estado local para la razón social
-      setOptionSelect(razonSocial); // Actualiza el estado en el Layout
+      setRazonSocial(razonSocial)
+      setOptionSelect(razonSocial)
     }
     window.location.reload()
   };
 
-  // Almacena la razón social, si ya fue elegida
   const [razonSocialElegida, setRazonSocialElegida] = useState('')
 
   useEffect(() => {
     if (getRazonSocial()) {
-      setRazonSocialElegida(getRazonSocial)
+      setRazonSocialElegida(getRazonSocial())
     }
   }, [])
 
-  // Cerrado de sesión automatico
+  // Cerrado de sesión automático
   useEffect(() => {
     if (getTokenApi()) {
       if (isExpiredToken(getTokenApi())) {
@@ -60,24 +83,22 @@ const Header = (props) => {
       }
     }
   }, [])
-  // Termina cerrado de sesión automatico
 
   // Para ir hacia el inicio
   const enrutaInicio = () => {
     redirecciona('/')
   }
+
   return (
     <nav
-      className={`main-header navbar navbar-expand navbar-white navbar-light ${
-        razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'
-          ? 'bg-gray-900'
-          : razonSocialElegida ===
-              'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
-            ? 'bg-orange-900'
-            : razonSocialElegida === 'CONDUMEX S.A. DE C.V.'
-              ? 'bg-sky-900'
-              : 'bg-black'
-      }`}
+      className={`main-header navbar navbar-expand navbar-white navbar-light ${razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'
+        ? 'bg-gray-900'
+        : razonSocialElegida === 'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
+          ? 'bg-orange-900'
+          : razonSocialElegida === 'CONDUMEX S.A. DE C.V.'
+            ? 'bg-sky-900'
+            : 'bg-black'
+        }`}
       style={{
         backgroundColor:
           razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'
@@ -98,16 +119,18 @@ const Header = (props) => {
             <i className="fas fa-bars" />
           </a>
         </li>
-        <li className="nav-item flex justify-center w-full">
-          {/* Selector de Razón Social */}
+      </ul>
+
+      {/* Selector de Razón Social, centrado */}
+      <div className="d-flex justify-content-center w-100">
+        <div style={{ minWidth: '250px' }}> {/* Limita el ancho del contenedor */}
           <Form.Control
             as="select"
-            className="form-control form-control-sm"
+            className="form-control form-control-sm text-center"
             aria-label="indicadorRazonSocial"
             name="razonSocial"
             defaultValue={razonSocialElegida}
             onChange={(e) => almacenaRazonSocial(e.target.value)}
-            style={{ minWidth: '200px' }}
           >
             <option value="">Selecciona la razón social</option>
             <option
@@ -130,29 +153,29 @@ const Header = (props) => {
               A.C.
             </option>
           </Form.Control>
-        </li>
-      </ul>
+        </div>
+      </div>
 
       {/* Right navbar links */}
-      <ul className="navbar-nav ml-auto">
-        {/* Botón de perfil con menú desplegable */}
-        <li className="nav-item dropdown">
-          <a className="nav-link" data-toggle="dropdown" href="#" role="button">
-            <img
-              src={ImagenPerfil}
-              className="img-circle elevation-2"
-              alt="User Image"
-              style={{ width: '30px', height: '30px' }}
-            />
-          </a>
-          <div className="dropdown-menu dropdown-menu-right">
-            <button
-              className="dropdown-item cerrarSesion"
-              onClick={() => cerrarSesion()}
+      <ul class="navbar-nav ml-auto perfilDropdown text-right">
+        <li className="perfilCierreBarra">
+          <Dropdown>
+            <Dropdown.Toggle
+              variant="link"
+              className="dropPerfil"
+              id="dropdown-basic"
             >
-              Cerrar sesión
-            </button>
-          </div>
+              <FontAwesomeIcon icon={faCircleUser} className="iconoUsuario" />
+              <span className="nombreUsuario">
+                {nombreUsuario}
+              </span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <NavDropdown.Item onClick={() => cerrarSesion()}>
+                <i class="fas fa-user-times iconoCerrarS" /> Cerrar sesión
+              </NavDropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </li>
       </ul>
     </nav>

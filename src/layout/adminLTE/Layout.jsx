@@ -3,13 +3,13 @@ import Header from './Header'
 import Menu from './Menu'
 import Footer from './Footer'
 
-const Layout = ({ children }) => {
+const Layout = ({ children, setRefreshCheckLogin }) => {
   const [optionSelect, setOptionSelect] = useState(null)
 
   return (
     <>
       <div className="wrapper">
-        <Header setOptionSelect={setOptionSelect} />
+        <Header setRefreshCheckLogin={setRefreshCheckLogin} setOptionSelect={setOptionSelect} />
         <Menu optionSelect={optionSelect} />
         <div className="content-wrapper">{children}</div>
         <Footer />

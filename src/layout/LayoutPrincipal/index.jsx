@@ -22,33 +22,6 @@ import Layout from '../adminLTE/Layout';
 function LayoutPrincipal (props) {
     const { setRefreshCheckLogin, children } = props;
 
-    const redirecciona = useNavigate();
-
-    //Para cerrar la sesion
-    const cerrarSesion = () => {
-        toast.success("Sesión cerrada");
-        redirecciona("")
-        logoutApi();
-        setRefreshCheckLogin(true);
-    }
-
-    // Para almacenar en localstorage la razon social
-    const almacenaRazonSocial = (razonSocial) => {
-        if (razonSocial === "Asociación de Empleados Sector Cables A.C." || razonSocial === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." || razonSocial === "CONDUMEX S.A. DE C.V.") {
-            setRazonSocial(razonSocial)
-        }
-        window.location.reload()
-    }
-
-    // Almacena la razón social, si ya fue elegida
-    const [razonSocialElegida, setRazonSocialElegida] = useState("");
-
-    useEffect(() => {
-        if (getRazonSocial()) {
-            setRazonSocialElegida(getRazonSocial)
-        }
-    }, []);
-
     // Cerrado de sesión automatico
     useEffect(() => {
         if (getTokenApi()) {
@@ -62,14 +35,9 @@ function LayoutPrincipal (props) {
     }, []);
     // Termina cerrado de sesión automatico
 
-    // Para ir hacia el inicio
-    const enrutaInicio = () => {
-        redirecciona("/")
-    }
-
     return (
         <>
-        <Layout>
+        <Layout setRefreshCheckLogin={setRefreshCheckLogin}>
             {/* codigo de la barra */}
             <Container fluid>
                 <Row>

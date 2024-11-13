@@ -18,6 +18,26 @@
   border-color: #0c1b30 !important;
 }
 
+.iconoUsuario {
+  display: none;
+}
+
+.perfilCierreBarra{
+  width: 25%;
+}
+
+.iconoCerrarS{
+  color: red;
+}
+
+.perfilCierreBarra Button{
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-color: #fff;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

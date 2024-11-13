@@ -3,8 +3,8 @@ import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container, Button, Col, Form } from "react-bootstrap";
+import { faArrowDownLong, faTrashCan, faBars } from "@fortawesome/free-solid-svg-icons";
+import { Badge, Container, Button, Col, Form, Dropdown } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { estilos } from "../../../utils/tableStyled";
 import EliminaBajaSocios from "../EliminarBajaSocios";
@@ -67,27 +67,37 @@ function ListBajaSocios(props) {
         },
         {
             name: "Acciones",
-            selector: row => (
+            cell: row => (
                 <>
-                    <div className="flex justify-end items-center space-x-4">
-                        <Badge
-                            bg="danger"
-                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                eliminacionBajaSocios(
-                                    <EliminaBajaSocios
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
-                                    />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-                        </Badge>
-                    </div>
+                    <Dropdown>
+                        <Dropdown.Toggle className="botonDropdown" id="dropdown-basic">
+                            <FontAwesomeIcon icon={faBars} />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item
+                                bg="danger"
+                                className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                                onClick={() => {
+                                    eliminacionBajaSocios(
+                                        <EliminaBajaSocios
+                                            datos={row}
+                                            location={location}
+                                            history={history}
+                                            setShowModal={setShowModal}
+                                            setRefreshCheckLogin={setRefreshCheckLogin}
+                                        />
+                                    )
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faTrashCan}
+                                    style={{ color: "#dc3545" }}
+                                    className="text-lg"
+                                />
+                                &nbsp; Eliminar
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </>
             ),
             sortable: false,

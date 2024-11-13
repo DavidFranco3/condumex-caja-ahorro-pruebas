@@ -36,11 +36,11 @@ const Menu = () => {
     optionSelect === 'Asociación de Empleados Sector Cables A.C.'
       ? 'bg-gray-900'
       : optionSelect ===
-          'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
+        'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
         ? 'bg-orange-900'
         : optionSelect === 'CONDUMEX S.A. DE C.V.'
           ? 'bg-sky-900'
-          : 'bg-white' // Puedes agregar más condiciones si es necesario
+          : 'bg-white-900' // Puedes agregar más condiciones si es necesario
 
   return (
     <div>
@@ -61,29 +61,21 @@ const Menu = () => {
             style={{ height: '50px' }}
           />
         </Link>
-        <hr style={{color:"white", marginTop:"5px"}} />
+        <hr style={{ color: "white", marginTop: "5px" }} />
         {/* Sidebar */}
         <div className="sidebar">
-          {/* SidebarSearch Form */}
-          {/* <div className="form-inline">
-            <div className="input-group" data-widget="sidebar-search">
-              <input
-                className="form-control form-control-sidebar"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <div className="input-group-append">
-                <button className="btn btn-sidebar">
-                  <i className="fas fa-search fa-fw" />
-                </button>
-              </div>
-            </div>
-          </div> */}
-          {/* Sidebar Menu */}
           <nav className="mt-2">
             <ul className="nav nav-pills nav-sidebar flex-column">
-              <ItemCard path={'/socios'} logo={'fa-users'} title={'Socios'} />
+            <ItemCard
+                path={'/'}
+                logo={'fa-home'}
+                title={'Inicio'}
+              />
+              <ItemCard
+                path={'/socios'}
+                logo={'fa-users'}
+                title={'Socios'}
+              />
               <ItemCard
                 path={'/baja-de-socios'}
                 logo={'fa-user-minus'}
@@ -112,14 +104,18 @@ const Menu = () => {
 
               {optionSelect ===
                 'Asociación de Empleados Sector Cables A.C.' && (
-                <ItemCard
-                  path={'/patrimonio'}
-                  logo={'fa-warehouse'}
-                  title={'Patrimonio'}
-                />
-              )}
+                  <ItemCard
+                    path={'/patrimonio'}
+                    logo={'fa-warehouse'}
+                    title={'Patrimonio'}
+                  />
+                )}
 
-              <ItemCard path={'/abonos'} logo={'fa-wallet'} title={'Abonos'} />
+              <ItemCard
+                path={'/abonos'}
+                logo={'fa-wallet'}
+                title={'Abonos'}
+              />
               <ItemCard
                 path={'/deudaSocio'}
                 logo={'fa-user-clock'}
@@ -145,7 +141,11 @@ const Menu = () => {
                 logo={'fa-file-invoice-dollar'}
                 title={'Estados de cuenta'}
               />
-              <ItemCard path={'/periodos'} logo={'fa-cogs'} title={'Ajustes'} />
+              <ItemCard
+                path={'/periodos'}
+                logo={'fa-cogs'}
+                title={'Ajustes'}
+              />
               <ItemCard
                 path={'/respaldo-informacion'}
                 logo={'fa-database'}
