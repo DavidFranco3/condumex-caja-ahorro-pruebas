@@ -19,7 +19,7 @@ import { Button, Row, Container, Form } from "react-bootstrap";
 import "./LayoutPrincipal.scss"
 import Layout from '../adminLTE/Layout';
 
-function LayoutPrincipal (props) {
+function LayoutPrincipal(props) {
     const { setRefreshCheckLogin, children } = props;
 
     // Cerrado de sesión automatico
@@ -37,13 +37,13 @@ function LayoutPrincipal (props) {
 
     return (
         <>
-        <Layout setRefreshCheckLogin={setRefreshCheckLogin}>
-            {/* codigo de la barra */}
-            <Container fluid>
-                <Row>
-                    {children}
-                </Row>
-            </Container>
+            <Layout setRefreshCheckLogin={setRefreshCheckLogin}>
+                {/* codigo de la barra */}
+                <Container fluid>
+                    <Row>
+                        {children}
+                    </Row>
+                </Container>
             </Layout>
         </>
     );
