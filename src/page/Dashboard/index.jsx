@@ -293,7 +293,7 @@ function Dashboard(props) {
                 <Col sm={12} md={6} lg={6}>
                   <div class="small-box bg-white">
                     <div class="inner">
-                      <h3>Monto total de aportaciones</h3>
+                      <h3>Monto total de intereses</h3>
                       <h2>
                         ${''}
                         {new Intl.NumberFormat('es-MX', {

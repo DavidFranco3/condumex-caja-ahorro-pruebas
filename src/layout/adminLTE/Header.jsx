@@ -112,8 +112,9 @@ const Header = (props) => {
           <a
             className="nav-link"
             data-widget="pushmenu"
-            //href="#"
-            //role="button"
+            style={{ cursor: 'pointer' }} // Cambia a manita
+            href="#"
+            role="button"
           >
             <i className="fas fa-bars" />
           </a>
