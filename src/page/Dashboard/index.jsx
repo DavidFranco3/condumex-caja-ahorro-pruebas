@@ -19,6 +19,8 @@ import { listarRetiro } from '../../api/retiros';
 import { listarRendimiento } from '../../api/rendimientos';
 import { listarPrestamo } from '../../api/prestamos';
 import { listarPatrimonios } from '../../api/patrimonio';
+import Lottie from 'react-lottie-player';
+import AnimacionLoading from '../../assets/json/loading.json';
 import './Dashboard.scss';
 
 function Dashboard(props) {
@@ -160,28 +162,28 @@ function Dashboard(props) {
     }
   }, [razonSocialElegida]);
 
-    // Almacena los datos de los patrimonios
-    const [listPatrimonios, setListPatrimonios] = useState(null);
+  // Almacena los datos de los patrimonios
+  const [listPatrimonios, setListPatrimonios] = useState(null);
 
-    useEffect(() => {
-      try {
-        // Inicia listado de detalles de los articulos vendidos
-        listarPatrimonios(razonSocialElegida).then(response => {
-          const { data } = response;
-          // console.log(data)
-          if (!listPatrimonios && data) {
-            setListPatrimonios(formatModelPatrimonio(data));
-          } else {
-            const datosPatrimonio = formatModelPatrimonio(data);
-            setListPatrimonios(datosPatrimonio)
-          }
-        }).catch(e => {
-          console.log(e)
-        })
-      } catch (e) {
+  useEffect(() => {
+    try {
+      // Inicia listado de detalles de los articulos vendidos
+      listarPatrimonios(razonSocialElegida).then(response => {
+        const { data } = response;
+        // console.log(data)
+        if (!listPatrimonios && data) {
+          setListPatrimonios(formatModelPatrimonio(data));
+        } else {
+          const datosPatrimonio = formatModelPatrimonio(data);
+          setListPatrimonios(datosPatrimonio)
+        }
+      }).catch(e => {
         console.log(e)
-      }
-    }, [razonSocialElegida]);
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }, [razonSocialElegida]);
 
   const [nombreUsuario, setNombreUsuario] = useState("");
 
@@ -209,148 +211,157 @@ function Dashboard(props) {
 
   return (
     <>
-      <div style={{ margin: "1vw" }}>
-        <div>
-          <div className="card card-widget widget-user shadow">
-            <div
-              className="widget-user-header bg-success"
-              style={{ textTransform: "capitalize" }}
-            >
-              <p
-                className="widget-user-username homeUserName"
-                style={{
-                  textAlign: "center",
-                  fontStyle: "italic",
-                  fontWeight: "bold",
-                }}
-              >
-                Bienvenido!!! {nombreUsuario}
-              </p>
-              <p className="widget-user-desc rolUser">{nombreUsuario}</p>
+      {(listAbonos && listAportaciones && listPatrimonios && listPrestamos && listRendimientos && listRetiros) ?
+        (
+          <>
+            <div style={{ margin: "1vw" }}>
+              <div>
+                <div className="card card-widget widget-user shadow">
+                  <div
+                    className="widget-user-header bg-success"
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    <p
+                      className="widget-user-username homeUserName"
+                      style={{
+                        textAlign: "center",
+                        fontStyle: "italic",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Bienvenido!!! {nombreUsuario}
+                    </p>
+                    <p className="widget-user-desc rolUser">{nombreUsuario}</p>
+                  </div>
+                  <div className="widget-user-image">
+                    <Image
+                      className="img-circle elevation-2"
+                      src="../dist/img/admin.png"
+                      alt="User Avatar"
+                    />
+                  </div>
+                  <div className="card-footer">
+                    <Row>
+                      <Col sm={12} md={6} lg={6}>
+                        <div class="small-box bg-info">
+                          <div class="inner">
+                            <h3>Monto total de abonos</h3>
+                            <h2>
+                              ${''}
+                              {new Intl.NumberFormat('es-MX', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }).format(listAbonos?.reduce((acc, item) => acc + item.abono, 0))} MXN
+                            </h2>
+                          </div>
+                          <div class="icon">
+                            <FontAwesomeIcon icon={faWallet} />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col sm={12} md={6} lg={6}>
+                        <div class="small-box bg-danger">
+                          <div class="inner">
+                            <h3>Monto total de aportaciones</h3>
+                            <h2>
+                              ${''}
+                              {new Intl.NumberFormat('es-MX', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }).format(listAportaciones?.reduce((acc, item) => acc + item.aportacion, 0))} MXN
+                            </h2>
+                          </div>
+                          <div class="icon">
+                            <FontAwesomeIcon icon={faDonate} />
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm={12} md={6} lg={6}>
+                        <div class="small-box bg-light">
+                          <div class="inner">
+                            <h3>Monto total de retiros</h3>
+                            <h2>
+                              ${''}
+                              {new Intl.NumberFormat('es-MX', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }).format(listRetiros?.reduce((acc, item) => acc + item.retiro, 0))} MXN
+                            </h2>
+                          </div>
+                          <div class="icon">
+                            <FontAwesomeIcon icon={faMoneyBillWave} />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col sm={12} md={6} lg={6}>
+                        <div class="small-box bg-white">
+                          <div class="inner">
+                            <h3>Monto total de intereses</h3>
+                            <h2>
+                              ${''}
+                              {new Intl.NumberFormat('es-MX', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }).format(listRendimientos?.reduce((acc, item) => acc + item.rendimiento, 0))} MXN
+                            </h2>
+                          </div>
+                          <div class="icon">
+                            <FontAwesomeIcon icon={faPercent} />
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm={12} md={6} lg={6}>
+                        <div class="small-box bg-primary">
+                          <div class="inner">
+                            <h3>Monto total de prestamos</h3>
+                            <h2>
+                              ${''}
+                              {new Intl.NumberFormat('es-MX', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }).format(listPrestamos?.reduce((acc, item) => acc + item.prestamoTotal, 0))} MXN
+                            </h2>
+                          </div>
+                          <div class="icon">
+                            <FontAwesomeIcon icon={faHandHoldingUsd} />
+                          </div>
+                        </div>
+                      </Col>
+                      {razonSocialElegida ===
+                        'Asociación de Empleados Sector Cables A.C.' && (
+                          <Col sm={12} md={6} lg={6}>
+                            <div class="small-box bg-warning">
+                              <div class="inner">
+                                <h3>Monto total de patrimonios</h3>
+                                <h2>
+                                  ${''}
+                                  {new Intl.NumberFormat('es-MX', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  }).format(listPatrimonios?.reduce((acc, item) => acc + item.patrimonio, 0))} MXN
+                                </h2>
+                              </div>
+                              <div class="icon">
+                                <FontAwesomeIcon icon={faWarehouse} />
+                              </div>
+                            </div>
+                          </Col>
+                        )}
+                    </Row>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="widget-user-image">
-              <Image
-                className="img-circle elevation-2"
-                src="../dist/img/admin.png"
-                alt="User Avatar"
-              />
-            </div>
-            <div className="card-footer">
-              <Row>
-                <Col sm={12} md={6} lg={6}>
-                  <div class="small-box bg-info">
-                    <div class="inner">
-                      <h3>Monto total de abonos</h3>
-                      <h2>
-                        ${''}
-                        {new Intl.NumberFormat('es-MX', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(listAbonos?.reduce((acc, item) => acc + item.abono, 0))} MXN
-                      </h2>
-                    </div>
-                    <div class="icon">
-                      <FontAwesomeIcon icon={faWallet} />
-                    </div>
-                  </div>
-                </Col>
-                <Col sm={12} md={6} lg={6}>
-                  <div class="small-box bg-danger">
-                    <div class="inner">
-                      <h3>Monto total de aportaciones</h3>
-                      <h2>
-                        ${''}
-                        {new Intl.NumberFormat('es-MX', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(listAportaciones?.reduce((acc, item) => acc + item.aportacion, 0))} MXN
-                      </h2>
-                    </div>
-                    <div class="icon">
-                      <FontAwesomeIcon icon={faDonate} />
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={12} md={6} lg={6}>
-                  <div class="small-box bg-light">
-                    <div class="inner">
-                      <h3>Monto total de retiros</h3>
-                      <h2>
-                        ${''}
-                        {new Intl.NumberFormat('es-MX', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(listRetiros?.reduce((acc, item) => acc + item.retiro, 0))} MXN
-                      </h2>
-                    </div>
-                    <div class="icon">
-                      <FontAwesomeIcon icon={faMoneyBillWave} />
-                    </div>
-                  </div>
-                </Col>
-                <Col sm={12} md={6} lg={6}>
-                  <div class="small-box bg-white">
-                    <div class="inner">
-                      <h3>Monto total de intereses</h3>
-                      <h2>
-                        ${''}
-                        {new Intl.NumberFormat('es-MX', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(listRendimientos?.reduce((acc, item) => acc + item.rendimiento, 0))} MXN
-                      </h2>
-                    </div>
-                    <div class="icon">
-                      <FontAwesomeIcon icon={faPercent} />
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={12} md={6} lg={6}>
-                  <div class="small-box bg-primary">
-                    <div class="inner">
-                      <h3>Monto total de prestamos</h3>
-                      <h2>
-                        ${''}
-                        {new Intl.NumberFormat('es-MX', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(listPrestamos?.reduce((acc, item) => acc + item.prestamoTotal, 0))} MXN
-                      </h2>
-                    </div>
-                    <div class="icon">
-                      <FontAwesomeIcon icon={faHandHoldingUsd} />
-                    </div>
-                  </div>
-                </Col>
-                {razonSocialElegida ===
-                'Asociación de Empleados Sector Cables A.C.' && (
-                <Col sm={12} md={6} lg={6}>
-                  <div class="small-box bg-warning">
-                    <div class="inner">
-                      <h3>Monto total de patrimonios</h3>
-                      <h2>
-                        ${''}
-                        {new Intl.NumberFormat('es-MX', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(listPatrimonios?.reduce((acc, item) => acc + item.patrimonio, 0))} MXN
-                      </h2>
-                    </div>
-                    <div class="icon">
-                      <FontAwesomeIcon icon={faWarehouse} />
-                    </div>
-                  </div>
-                </Col>
-                )}
-              </Row>
-            </div>
-          </div>
-        </div>
-      </div>
+          </>
+        ) : (
+          <>
+            <Lottie loop={true} play={true} animationData={AnimacionLoading} />
+          </>
+        )}
     </>
   )
 }
